@@ -1,0 +1,947 @@
+PALMEL welcomeページプロトタイプ
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>PALMEL</title>
+
+<style>
+
+/* =========================
+   BASE
+========================= */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#0b0b0c;
+  color:#fff;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
+}
+
+.screen{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 45%,#29292b 0%,#171719 45%,#0b0b0c 85%);
+}
+
+.page{
+  position:absolute;
+  inset:0;
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+
+/* =========================
+   COMMON
+========================= */
+
+.copy{
+  position:absolute;
+  left:50%;
+  bottom:15vh;
+  transform:translateX(-50%);
+  width:100%;
+  text-align:center;
+  z-index:20;
+  animation:fadeUp .8s ease both;
+  animation-delay:1.6s;
+}
+
+.copy h1{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(23px,6vw,36px);
+  font-weight:normal;
+  letter-spacing:1.5px;
+  line-height:1.5;
+}
+
+.sub{
+  margin-top:8px;
+  font:7px Georgia,serif;
+  letter-spacing:3px;
+  color:#555;
+}
+
+.tap{
+  position:absolute;
+  left:50%;
+  bottom:4vh;
+  transform:translateX(-50%);
+  font-size:8px;
+  letter-spacing:3px;
+  color:#777;
+  animation:pulse 2s infinite;
+  z-index:30;
+}
+
+.replay{
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  z-index:50;
+  padding:8px 14px;
+  border:1px solid #333;
+  border-radius:20px;
+  background:#111;
+  color:#777;
+  font-size:9px;
+  letter-spacing:1px;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translate(-50%,12px);
+  }
+  to{
+    opacity:1;
+    transform:translate(-50%,0);
+  }
+}
+
+@keyframes pulse{
+  0%,100%{opacity:.3}
+  50%{opacity:.7}
+}
+
+
+/* =========================
+   PAGE 1
+========================= */
+
+.p1-logo{
+  position:absolute;
+  top:42%;
+  width:100%;
+  text-align:center;
+  font:normal 42px Georgia,serif;
+  letter-spacing:7px;
+  animation:fade .9s ease both;
+}
+
+.p1-sub{
+  position:absolute;
+  top:52%;
+  width:100%;
+  text-align:center;
+  font:8px Georgia,serif;
+  letter-spacing:4px;
+  color:#777;
+  animation:fade .9s ease .5s both;
+}
+
+@keyframes fade{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+
+/* =========================
+   PAGE 2
+========================= */
+
+.cards{
+  position:absolute;
+  inset:0;
+}
+
+.palcard{
+  position:absolute;
+  width:340px;
+  height:192px;
+  padding:17px 20px;
+  border-radius:20px;
+  box-shadow:0 20px 45px #0008;
+}
+
+.card1{
+  left:-35px;
+  top:15vh;
+  background:linear-gradient(135deg,#3a292e,#21191c);
+  transform:rotate(-7deg);
+  animation:cardLeft .7s ease .1s both;
+}
+
+.card2{
+  right:-35px;
+  top:30vh;
+  background:linear-gradient(135deg,#26343a,#141b1f);
+  transform:rotate(6deg);
+  animation:cardRight .7s ease .6s both;
+}
+
+.card3{
+  left:50%;
+  top:48%;
+  background:#1c1c1e;
+  transform:translate(-50%,-50%);
+  z-index:5;
+  animation:cardCenter .8s ease 1.1s both;
+}
+
+.card-title{
+  text-align:center;
+  font:12px Georgia,serif;
+  letter-spacing:3px;
+  color:#aaa;
+  margin-bottom:17px;
+}
+
+.card-body{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.card-info{
+  flex:1;
+}
+
+.card-name{
+  font:normal 23px Georgia,serif;
+  margin-bottom:16px;
+}
+
+.card-info p{
+  font-size:9px;
+  color:#aaa;
+  padding:5px 0;
+  border-bottom:1px solid #ffffff18;
+}
+
+.avatar{
+  width:105px;
+  height:105px;
+  border-radius:50%;
+  overflow:hidden;
+  flex-shrink:0;
+  border:2px solid #444;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@keyframes cardLeft{
+  from{opacity:0;transform:translateX(-50px) rotate(-7deg)}
+  to{opacity:.9;transform:rotate(-7deg)}
+}
+
+@keyframes cardRight{
+  from{opacity:0;transform:translateX(50px) rotate(6deg)}
+  to{opacity:.9;transform:rotate(6deg)}
+}
+
+@keyframes cardCenter{
+  from{opacity:0;transform:translate(-50%,-50%) scale(.9)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+
+
+/* =========================
+   PAGE 3
+========================= */
+
+.grid9{
+  position:absolute;
+  left:50%;
+  top:40%;
+  transform:translate(-50%,-50%) rotate(-2deg);
+  width:88vw;
+  max-width:470px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+  padding:2px;
+  background:#333;
+  box-shadow:0 25px 60px #000b;
+  animation:gridIn .9s ease .3s both;
+}
+
+.grid9 div{
+  aspect-ratio:1;
+  background:
+    linear-gradient(135deg,#384345,#141718);
+  position:relative;
+}
+
+.grid9 div:nth-child(2n){
+  background:
+    linear-gradient(135deg,#403538,#151314);
+}
+
+.grid9 div::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#fff1,transparent 35%);
+}
+
+@keyframes gridIn{
+  from{
+    opacity:0;
+    transform:translate(-50%,-30%) rotate(-5deg) scale(.9);
+  }
+  to{
+    opacity:1;
+    transform:translate(-50%,-50%) rotate(-2deg) scale(1);
+  }
+}
+
+
+/* =========================
+   PAGE 4
+========================= */
+
+.home{
+  padding:30px 10px;
+  max-width:420px;
+  margin:auto;
+}
+
+.profile{
+  position:relative;
+  width:100%;
+  aspect-ratio:1.75/1;
+  padding:20px;
+  background:linear-gradient(145deg,#2a2a2a,#1a1a1a);
+  border:1px solid #333;
+  border-radius:24px;
+  box-shadow:0 15px 30px #0008;
+  transition:
+    transform .55s cubic-bezier(.22,.8,.2,1),
+    width .55s ease;
+}
+
+.profile.open{
+  position:fixed;
+  z-index:100;
+  width:calc(100vh - 4px);
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) rotate(90deg);
+  border-radius:8px;
+}
+
+.tap-circle{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:70px;
+  height:70px;
+  transform:translate(-50%,-50%);
+  border:1px solid #ffd84d88;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#ffd84d;
+  font-size:11px;
+  letter-spacing:2px;
+  animation:pulse 1.8s infinite;
+}
+
+.profile.open .tap-circle{
+  display:none;
+}
+
+.usp{
+  position:fixed;
+  inset:0;
+  z-index:110;
+  display:none;
+  place-items:center;
+  text-align:center;
+  pointer-events:none;
+}
+
+.profile.open ~ .usp{
+  display:grid;
+}
+
+.usp h1{
+  font:normal 28px Georgia,serif;
+  letter-spacing:2px;
+}
+
+.open-grid{
+  display:none;
+}
+
+
+/* =========================
+   PAGE 5
+========================= */
+
+.stack{
+  position:absolute;
+  left:50%;
+  top:43%;
+  width:220px;
+  height:220px;
+  transform:translate(-50%,-50%);
+}
+
+.stack-grid{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+  padding:2px;
+  background:#222;
+  box-shadow:0 25px 55px #000b;
+}
+
+.stack-grid div{
+  background:linear-gradient(135deg,#393939,#111);
+}
+
+.stack1{
+  transform:translateY(-25px) rotate(-7deg);
+  opacity:.45;
+  animation:stack1 .7s ease .2s both;
+}
+
+.stack2{
+  transform:translateY(-5px) rotate(5deg);
+  opacity:.7;
+  animation:stack2 .7s ease .7s both;
+}
+
+.stack3{
+  transform:rotate(-2deg);
+  animation:stack3 .8s ease 1.2s both;
+}
+
+@keyframes stack1{
+  from{opacity:0;transform:translateY(30px) rotate(-7deg)}
+  to{opacity:.45;transform:translateY(-25px) rotate(-7deg)}
+}
+
+@keyframes stack2{
+  from{opacity:0;transform:translateY(35px) rotate(5deg)}
+  to{opacity:.7;transform:translateY(-5px) rotate(5deg)}
+}
+
+@keyframes stack3{
+  from{opacity:0;transform:translateY(45px) rotate(-2deg)}
+  to{opacity:1;transform:rotate(-2deg)}
+}
+
+
+/* =========================
+   PAGE 6
+========================= */
+
+.start{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font:normal 34px Georgia,serif;
+  letter-spacing:5px;
+  animation:fadeUp .9s ease .2s both;
+}
+
+
+/* =========================
+   PAGE TRANSITION
+========================= */
+
+.page.next{
+  animation:pageIn .45s ease both;
+}
+
+@keyframes pageIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:360px){
+
+  .palcard{
+    width:320px;
+    height:180px;
+  }
+
+  .avatar{
+    width:90px;
+    height:90px;
+  }
+
+  .copy h1{
+    font-size:21px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="screen">
+
+
+<!-- ==================================================
+     PAGE 1
+================================================== -->
+
+<section class="page active" id="p1">
+
+  <div class="p1-logo">
+    PALMEL
+  </div>
+
+  <div class="p1-sub">
+    YOUR PET · YOUR STORY
+  </div>
+
+  <div class="tap">
+    TAP TO CONTINUE
+  </div>
+
+  <button class="replay">
+    もう一度
+  </button>
+
+</section>
+
+
+
+<!-- ==================================================
+     PAGE 2
+================================================== -->
+
+<section class="page" id="p2">
+
+  <div class="cards">
+
+    <div class="palcard card1">
+      <div class="card-title">PALCARD</div>
+      <div class="card-name">Fleur</div>
+    </div>
+
+    <div class="palcard card2">
+      <div class="card-title">PALCARD</div>
+      <div class="card-name">Azure</div>
+    </div>
+
+    <div class="palcard card3">
+
+      <div class="card-title">
+        PALCARD
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-info">
+
+          <div class="card-name">
+            MEL
+          </div>
+
+          <p>生年月日　2026.2.10</p>
+          <p>好きな食べ物　ささみ</p>
+          <p>特技　サイレントニャー</p>
+          <p>ニックネーム　メル</p>
+
+        </div>
+
+        <div class="avatar">
+          <img
+            src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=70"
+            alt="MEL"
+          >
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="copy">
+    <h1>うちの子にも、名刺を。</h1>
+  </div>
+
+  <div class="tap">
+    TAP TO CONTINUE
+  </div>
+
+  <button class="replay">
+    もう一度
+  </button>
+
+</section>
+
+
+
+<!-- ==================================================
+     PAGE 3
+================================================== -->
+
+<section class="page" id="p3">
+
+  <div class="grid9">
+
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+    <div></div><div></div><div></div>
+
+  </div>
+
+  <div class="copy">
+
+    <h1>
+      うちの子の毎日を、<br>
+      9つの物語に。
+    </h1>
+
+    <div class="sub">
+      EVERYDAY · CHARACTER · MEMORY
+    </div>
+
+  </div>
+
+  <div class="tap">
+    TAP TO CONTINUE
+  </div>
+
+  <button class="replay">
+    もう一度
+  </button>
+
+</section>
+
+
+
+<!-- ==================================================
+     PAGE 4
+================================================== -->
+
+<section class="page" id="p4">
+
+  <div class="home">
+
+    <div
+      class="profile"
+      id="profile"
+    >
+
+      <div class="card-title">
+        PALCARD
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-info">
+
+          <div class="card-name">
+            メル
+          </div>
+
+          <p>生年月日　2026.2.10</p>
+          <p>好きな食べ物　ささみ</p>
+          <p>特技　サイレントニャー</p>
+          <p>ニックネーム　メル</p>
+
+        </div>
+
+        <div class="avatar">
+          <img
+            src="profile.jpg"
+            alt="メル"
+          >
+        </div>
+
+      </div>
+
+      <div class="tap-circle">
+        TAP
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="usp">
+
+    <h1>
+      友達と、交換しよう。
+    </h1>
+
+  </div>
+
+
+  <button
+    class="replay"
+    id="replay4"
+  >
+    もう一度
+  </button>
+
+</section>
+
+
+
+<!-- ==================================================
+     PAGE 5
+================================================== -->
+
+<section class="page" id="p5">
+
+  <div class="stack">
+
+    <div class="stack-grid stack1">
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+    </div>
+
+    <div class="stack-grid stack2">
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+    </div>
+
+    <div class="stack-grid stack3">
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
+    </div>
+
+  </div>
+
+
+  <div class="copy">
+
+    <h1>
+      友達の9投稿をチェックしよう。
+    </h1>
+
+  </div>
+
+
+  <div class="tap">
+    TAP TO CONTINUE
+  </div>
+
+
+  <button class="replay">
+    もう一度
+  </button>
+
+</section>
+
+
+
+<!-- ==================================================
+     PAGE 6
+================================================== -->
+
+<section class="page" id="p6">
+
+  <div class="start">
+    始める
+  </div>
+
+  <div class="tap">
+    TAP TO START
+  </div>
+
+  <button class="replay">
+    もう一度
+  </button>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+/* =========================================
+   PAGE CONTROL
+========================================= */
+
+let current = 1;
+
+const pages = document.querySelectorAll(".page");
+
+
+function showPage(number){
+
+  pages.forEach(page=>{
+    page.classList.remove("active","next");
+  });
+
+  const page =
+    document.getElementById("p"+number);
+
+  page.classList.add("active");
+
+  /*
+    アニメーション再生
+  */
+
+  void page.offsetWidth;
+
+  page.classList.add("next");
+
+  current = number;
+}
+
+
+/* =========================================
+   NEXT
+========================================= */
+
+function next(){
+
+  if(current < 6){
+
+    showPage(current + 1);
+
+  }else{
+
+    /*
+      ここを本番ホーム画面へ
+    */
+
+    alert("PALMEL HOME");
+
+  }
+
+}
+
+
+/* =========================================
+   SCREEN TAP
+========================================= */
+
+document.querySelector(".screen")
+.addEventListener("click",function(e){
+
+  /*
+    ボタンなら無視
+  */
+
+  if(e.target.closest(".replay")){
+    return;
+  }
+
+  /*
+    PAGE 4
+    名刺が開いている間は
+    まず閉じる処理ではなく
+    次ページへ
+  */
+
+  if(current === 4){
+
+    const profile =
+      document.getElementById("profile");
+
+    if(!profile.classList.contains("open")){
+
+      profile.classList.add("open");
+
+      return;
+
+    }
+
+    showPage(5);
+
+    return;
+
+  }
+
+  next();
+
+});
+
+
+/* =========================================
+   REPLAY
+========================================= */
+
+document.querySelectorAll(".replay")
+.forEach(button=>{
+
+  button.addEventListener("click",function(e){
+
+    e.stopPropagation();
+
+    /*
+      PAGE 4だけ
+      名刺を閉じる
+    */
+
+    const profile =
+      document.getElementById("profile");
+
+    if(profile){
+
+      profile.classList.remove("open");
+
+    }
+
+    showPage(current);
+
+  });
+
+});
+
+
+/* =========================================
+   PAGE 6
+========================================= */
+
+document.getElementById("p6")
+.addEventListener("click",function(e){
+
+  if(e.target.closest(".replay")){
+    return;
+  }
+
+  alert("PALMELを始める");
+
+});
+
+</script>
+
+</body>
+</html>
