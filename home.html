@@ -2,10 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PARMEL</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -17,21 +15,60 @@
       --text-main: #f5f6f8;
       --text-sub: #9aa0a6;
       --gold: #e5c07b;
-      --green: #52a397;
       --radius-card: 18px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
-    html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
-    body { background: var(--bg-main); color: var(--text-main); font-family: 'Noto Sans JP', sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 12px 12px 48px; }
+    
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Noto Sans JP', sans-serif;
+    }
 
-    .app-viewport { width: 100%; max-width: 414px; display: flex; flex-direction: column; gap: 16px; }
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 12px 12px 0px;
+    }
 
-    /* PALFILE Card */
+    .app-viewport {
+      width: 100%;
+      max-width: 414px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .page { display: none; flex-direction: column; gap: 16px; width: 100%; }
+    .page.active { display: flex; }
+
+    /* 9マス下の操作ボタンエリア */
+    .bottom-grid-action-bar { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      width: 100%; 
+      gap: 6px; 
+      margin-top: 4px;
+    }
+    .action-btn-sub {
+      flex: 1; background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px; padding: 10px 0; font-size: 0.7rem; cursor: pointer; font-weight: bold; text-align: center;
+    }
+    .action-btn-main {
+      flex: 1; background: linear-gradient(135deg, var(--gold), #d4a359);
+      color: #000; font-weight: bold; border: none; border-radius: 20px;
+      padding: 10px 0; font-size: 0.75rem; cursor: pointer; box-shadow: 0 4px 12px rgba(229,192,123,0.3); text-align: center;
+    }
+
+    /* 名刺カードデザイン */
     .palcard {
       background: var(--card-bg);
       border-radius: var(--radius-card);
-      padding: 14px 16px 12px;
+      padding: 12px 14px 44px; /* 下部にボタン配置領域(44px)を確保 */
       box-shadow: var(--card-shadow);
       border: 1px solid var(--card-border);
       position: relative;
@@ -39,307 +76,488 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(20px);
-      transition: background 0.3s, border-color 0.3s;
+      justify-content: flex-start;
+      overflow: hidden;
+      transition: background 0.3s ease;
     }
 
-    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 2px; }
-    .palcard-body { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex: 1; padding-bottom: 2px; }
-    
-    .profile-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; height: 100%; margin-top: 6px; }
-    .title-input { font-size: 0.68rem; color: var(--gold); background: transparent; border: none; outline: none; width: 100%; font-weight: 500; }
-    .pet-name { font-family: 'Cinzel', serif; font-size: 2.1rem; line-height: 1.0; margin-bottom: 4px; font-weight: 700; border: none; background: transparent; color: #fff; width: 100%; outline: none; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    
-    .profile-fields { display: flex; flex-direction: column; gap: 3px; }
-    .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 1px; }
-    .field-label { font-size: 0.55rem; color: var(--text-sub); width: 58px; flex-shrink: 0; }
-    .field-input { background: transparent; border: none; color: var(--text-main); font-size: 0.65rem; outline: none; width: 100%; }
-
-    /* Avatar Container */
-    .right-avatar-container { position: relative; width: 44%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex-shrink: 0; }
-    
-    .avatar-wrapper { 
-      position: relative; 
-      width: 100%; 
-      aspect-ratio: 1; 
-      border-radius: 50%; 
-      padding: 3px; 
-      margin-bottom: -18px;
-      background: var(--avatar-bg); 
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); 
-      cursor: pointer; 
-      transition: transform 0.2s, background 0.3s; 
+    /* 名刺テーマバリエーション */
+    .palcard.theme-navy {
+      background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
     }
-    .avatar-wrapper:active { transform: scale(0.96); }
+
+    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
+    
+    /* プロフィール情報：少しだけ下げて配置＆行間にゆとり持たせ */
+    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
+    .title-input { font-size: 0.68rem; color: var(--gold); background: transparent; border: none; outline: none; font-weight: 500; margin-bottom: 1px; line-height: 1.2; }
+    .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; border: none; background: transparent; outline: none; }
+    
+    .profile-fields { display: flex; flex-direction: column; gap: 4px; } /* 縦の間隔を広げた */
+    .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2px; }
+    .field-label { font-size: 0.58rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
+    .field-input { background: transparent; border: none; color: var(--text-main); font-size: 0.65rem; outline: none; width: 100%; font-weight: 500; }
+
+    /* 名刺の丸アイコン（大きく名刺の半分近くを占めるサイズ） */
+    .right-avatar-container { position: relative; width: 140px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .avatar-wrapper { width: 138px; height: 138px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); cursor: pointer; display: block; transition: all 0.3s ease; }
+    
+    /* アイコン枠バリエーション */
+    .avatar-wrapper.frame-gold {
+      background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
+      box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
+    }
+
     .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
     .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* 着せ替えアイコン */
-    .customize-btn {
-      position: absolute; 
-      bottom: 12px; 
-      right: 14px; 
-      width: 26px; 
-      height: 26px; 
-      border-radius: 50%;
-      background: rgba(30, 34, 40, 0.95); 
-      border: 1px solid rgba(255, 255, 255, 0.3); 
-      color: var(--gold);
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      z-index: 10;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6); 
-      transition: transform 0.2s, background 0.2s;
-    }
-    .customize-btn:active { transform: scale(0.9); }
-
-    /* ボタン群エリア */
-    .palcard-footer { 
-      position: absolute;
-      left: 16px;
-      bottom: 10px;
-      display: flex; 
-      align-items: center;
-      gap: 10px; 
-    }
+    /* 名刺下部ボタンの位置調整 */
+    .palcard-footer { position: absolute; left: 14px; right: 14px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+    .footer-left-group { display: flex; gap: 6px; }
     .icon-btn {
-      width: 50px;
-      height: 50px;
-      background: rgba(255, 255, 255, 0.08); 
-      border: 1px solid rgba(255, 255, 255, 0.18); 
-      border-radius: 12px;
-      color: var(--text-main); 
-      font-size: 0.5rem; 
-      font-weight: 500; 
-      cursor: pointer;
-      display: flex; 
-      flex-direction: column;
-      align-items: center; 
-      justify-content: center;
-      gap: 3px; 
-      transition: transform 0.2s, background 0.2s;
-      text-align: center;
-      line-height: 1.1;
-      padding: 4px;
-    }
-    .icon-btn:active { transform: scale(0.94); background: rgba(255, 255, 255, 0.15); }
-
-    /* ▼ シルバートロフィーアイコン（四角背景なし・タップ無効） ▼ */
-    .trophy-icon-btn {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #c0c0c0; /* シルバー */
-      pointer-events: none; /* タップ不可 */
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); 
+      border-radius: 8px; color: var(--text-main); font-size: 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 500;
     }
 
-    /* Grid Area */
+    /* 着せ替えモーダル専用スタイル */
+    .customize-section { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .customize-label { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
+    .customize-options { display: flex; gap: 8px; }
+    .customize-btn {
+      flex: 1; padding: 8px 0; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; color: var(--text-main); font-size: 0.65rem; cursor: pointer; text-align: center;
+    }
+    .customize-btn.active {
+      border-color: var(--gold); background: rgba(229,192,123,0.15); color: var(--gold); font-weight: bold;
+    }
+
+    /* 9マス Grid */
     .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
     .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); }
     .grid-label { font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-align: center; padding: 5px 2px 4px; background: rgba(0, 0, 0, 0.4); color: var(--text-sub); }
     .grid-image-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .grid-image-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .upload-placeholder { font-size: 1.2rem; color: var(--text-sub); opacity: 0.3; }
+    .grid-image-box img { width: 100%; height: 100%; object-fit: cover; }
     input[type="file"] { display: none; }
 
-    .brand-footer { text-align: center; font-family: 'Cinzel', serif; letter-spacing: 0.4em; color: var(--green); font-size: 1rem; margin-top: 4px; }
-
-    /* Modal Base */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.95); backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.2s; }
-    .modal-overlay.active { display: flex; opacity: 1; }
-
-    /* Rotated Card Modal */
-    .card-rotated {
-      width: 86vh; height: 86vw; max-width: 680px; max-height: 380px; aspect-ratio: 1.655 / 1;
-      transform: rotate(90deg); background: var(--card-bg); border-radius: 24px; padding: 20px 28px 24px;
-      border: 1px solid var(--card-border); box-shadow: 0 0 60px rgba(0,0,0,0.9); display: flex;
-      flex-direction: column; justify-content: space-between; position: relative; pointer-events: none;
+    /* ─── みんなのパル：投稿カード ─── */
+    .feed-post-card {
+      background: #16181b; border-radius: var(--radius-card); border: 1px solid var(--card-border);
+      padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.1s ease;
     }
-    .rotated-body { display: flex; justify-content: space-between; height: 100%; gap: 20px; align-items: center; margin-top: 8px; }
-    .rotated-left { flex: 1; display: flex; flex-direction: column; justify-content: space-around; height: 100%; }
-    #m-title { color: var(--gold); font-size: 1.15rem; font-weight: 600; }
-    #m-name { font-family: 'Cinzel', serif; font-size: 3.6rem; font-weight: 700; line-height: 1.0; color: #fff; }
-    .rotated-fields { font-size: 1.05rem; color: var(--text-sub); display: flex; flex-direction: column; gap: 6px; }
-    .rotated-fields span { color: #fff; }
-    .rotated-right { display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%; width: 150px; }
-    .rotated-avatar { width: 130px; height: 130px; border-radius: 50%; overflow: hidden; padding: 3px; background: var(--avatar-bg); }
-    .rotated-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .dummy-qr { background: #fff; padding: 6px; border-radius: 12px; width: 110px; height: 110px; }
-    .dummy-qr img { width: 100%; height: 100%; }
-    .close-hint { position: absolute; bottom: -42px; left: 50%; transform: translateX(-50%); color: var(--text-sub); font-size: 0.85rem; white-space: nowrap; }
-
-    /* Option Modal Content */
-    .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 8px; font-family: 'Cinzel', serif; }
-    .close-btn { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
+    .feed-post-card:active { transform: scale(0.99); }
     
-    .custom-section { display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem; color: var(--text-sub); }
-    .option-group { display: flex; gap: 10px; flex-wrap: wrap; }
-    .color-opt { width: 34px; height: 34px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-    .color-opt.selected { border-color: #fff; transform: scale(1.08); }
-    .title-opt { padding: 5px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; color: #fff; font-size: 0.7rem; cursor: pointer; }
-    .title-opt.selected { background: var(--gold); color: #000; font-weight: bold; }
+    .feed-header { display: flex; align-items: center; gap: 10px; }
+    .feed-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; border: 1px solid var(--gold); flex-shrink: 0; }
+    .feed-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .feed-user-info { display: flex; flex-direction: column; }
+    .feed-pet-name { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.1; }
+    .feed-title { font-size: 0.6rem; color: var(--gold); }
+
+    .single-media-box { width: 100%; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.05); }
+    .single-media-box img { width: 100%; height: 100%; object-fit: cover; }
+    .mini-grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 100%; border-radius: 12px; overflow: hidden; }
+    .mini-grid-item { aspect-ratio: 1; background: #202428; overflow: hidden; }
+    .mini-grid-item img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* モーダル共通 */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.95); backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+
+    /* プロフィールモーダル */
+    .user-profile-modal { display: none; position: fixed; inset: 0; background: #0b0d0e; z-index: 10000; overflow-y: auto; padding: 16px 12px 100px; }
+    .user-profile-modal.active { display: flex; flex-direction: column; align-items: center; }
+    .profile-modal-container { width: 100%; max-width: 414px; display: flex; flex-direction: column; gap: 16px; position: relative; }
+    .close-modal-btn {
+      position: absolute; right: 0; top: -5px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; border-radius: 50%; width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;
+    }
+
+    /* ナビゲーションバーで隠れないための空白スペーサー */
+    .nav-spacer {
+      width: 100%;
+      height: 90px;
+      flex-shrink: 0;
+    }
+
+    /* 固定ボトムナビ */
+    .bottom-nav {
+      position: fixed; 
+      bottom: 0; 
+      left: 50%; 
+      transform: translateX(-50%);
+      width: 100%; 
+      max-width: 414px; 
+      height: 60px;
+      background: rgba(15, 17, 20, 0.95); 
+      backdrop-filter: blur(16px); 
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex; 
+      justify-content: space-around; 
+      align-items: center; 
+      z-index: 9000;
+    }
+    .nav-btn { background: none; border: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; width: 33%; }
+    .nav-btn.active { color: var(--gold); }
+
+    .loading-tag { text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 20px; }
+    .album-history-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+    .album-date { font-size: 0.75rem; color: var(--gold); margin-bottom: 8px; }
+
+    /* 名刺を渡す（90度回転＆拡大モーダル） */
+    .card-present-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 6, 7, 0.92);
+      backdrop-filter: blur(16px);
+      z-index: 20000;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .card-present-overlay.active { display: flex; }
+    .card-present-wrapper {
+      width: 360px;
+      transition: transform 0.4s cubic-bezier(0.25, 1.3, 0.5, 1);
+      transform: rotate(0deg) scale(0.7);
+      opacity: 0;
+    }
+    .card-present-overlay.active .card-present-wrapper {
+      transform: rotate(90deg) scale(1.45);
+      opacity: 1;
+    }
+    .card-present-tip {
+      position: absolute;
+      bottom: 40px;
+      color: var(--text-sub);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
 
   <div class="app-viewport">
-    <div class="palcard" id="main-palcard">
-      <div class="palcard-brand">PALFILE</div>
+    
+    <!-- 1. マイパル ページ -->
+    <div id="page-mypal" class="page active">
 
-      <div class="palcard-body">
-        <div class="profile-info">
-          <input type="text" id="in-title" class="title-input" value="★ 甘えん坊将軍" readonly>
-          <input type="text" id="in-name" class="pet-name" value="MEL">
-          <div class="profile-fields">
-            <div class="field-row"><span class="field-label">生年月日</span><input type="text" id="in-birth" class="field-input" value="2026.02.10"></div>
-            <div class="field-row"><span class="field-label">好きな食べ物</span><input type="text" id="in-food" class="field-input" value="ささみ / まぐろ"></div>
-            <div class="field-row"><span class="field-label">特技</span><input type="text" id="in-skill" class="field-input" value="どこでも寝れる"></div>
-            <div class="field-row"><span class="field-label">ニックネーム</span><input type="text" id="in-nick" class="field-input" value="パルちゃん"></div>
+      <!-- 名刺カード -->
+      <div class="palcard" id="main-palcard">
+        <div class="palcard-brand">PALFILE</div>
+        <div class="palcard-body">
+          <div class="profile-info">
+            <input type="text" id="in-title" class="title-input" value="FOUNDER" readonly>
+            <input type="text" id="in-name" class="pet-name" value="MEL">
+            <div class="profile-fields">
+              <div class="field-row"><span class="field-label">生年月日</span><input type="text" id="in-birth" class="field-input" value="2026.02.10"></div>
+              <div class="field-row"><span class="field-label">好物</span><input type="text" id="in-food" class="field-input" value="ささみ / まぐろ"></div>
+              <div class="field-row"><span class="field-label">特技</span><input type="text" id="in-skill" class="field-input" value="どこでも寝れる"></div>
+              <div class="field-row"><span class="field-label">ニックネーム</span><input type="text" id="in-nickname" class="field-input" value="メルちゃん"></div>
+            </div>
           </div>
-        </div>
-
-        <div class="right-avatar-container">
-          <label class="avatar-wrapper" id="main-avatar-wrapper">
-            <div class="avatar-inner"><img id="avatar-img" src="https://placehold.co/300x300/222/aaa?text=Photo" alt="Profile"></div>
-            <input type="file" accept="image/*" onchange="previewImg(this, 'avatar-img')">
-          </label>
-        </div>
-
-        <!-- 着せ替えボタン -->
-        <button class="customize-btn" onclick="toggleModal('custom-modal', true)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3c0 .8.3 1.5.8 2.1L2 14v3h20v-3l-7.8-6.9c.5-.6.8-1.3.8-2.1a3 3 0 0 0-3-3z"/></svg>
-        </button>
-      </div>
-
-      <!-- ボタン群＋シルバートロフィー -->
-      <div class="palcard-footer">
-        <button class="icon-btn" onclick="openCardModal()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
-          <span>名刺を渡す</span>
-        </button>
-        <button class="icon-btn" onclick="toggleModal('history-modal', true)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          <span>過去投稿</span>
-        </button>
-
-        <!-- シルバートロフィー（実装予定アイコン） -->
-        <div class="trophy-icon-btn">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-            <path d="M4 22h16"/>
-            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-            <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- 9マス -->
-    <div class="grid-container">
-      <script>
-        const labels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
-        document.write(labels.map((lbl, i) => `
-          <div class="grid-item">
-            <div class="grid-label">${lbl}</div>
-            <label class="grid-image-box">
-              <img id="g${i}" alt="">
-              <span class="upload-placeholder">+</span>
-              <input type="file" accept="image/*" onchange="previewGrid(this, 'g${i}')">
+          <div class="right-avatar-container">
+            <label class="avatar-wrapper" id="main-avatar-wrapper">
+              <div class="avatar-inner"><img id="avatar-img" src="https://picsum.photos/id/1025/300/300"></div>
+              <input type="file" accept="image/*" onchange="previewImg(this, 'avatar-img')">
             </label>
           </div>
-        `).join(''));
-      </script>
+        </div>
+        <div class="palcard-footer">
+          <div class="footer-left-group">
+            <button class="icon-btn" onclick="presentCard()"><span>名刺を渡す</span></button>
+            <label class="icon-btn" style="cursor:pointer;">
+              <span>名刺を受け取る</span>
+              <input type="file" accept="image/*" capture="environment" onchange="alert('名刺を受け取りました！')">
+            </label>
+          </div>
+          <button class="icon-btn" onclick="toggleModal('customize-modal', true)"><span>🎨 着せ替え</span></button>
+        </div>
+      </div>
+
+      <!-- 9マス Grid -->
+      <div class="grid-container">
+        <script>
+          const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
+          gridLabels.forEach((lbl, i) => {
+            document.write(`
+              <div class="grid-item">
+                <div class="grid-label">${lbl}</div>
+                <label class="grid-image-box">
+                  <img id="g${i}">
+                  <input type="file" accept="image/*" onchange="previewGrid(this, 'g${i}')">
+                </label>
+              </div>`);
+          });
+        </script>
+      </div>
+
+      <!-- 9マスの下のコントロールバー -->
+      <div class="bottom-grid-action-bar">
+        <button class="action-btn-main" onclick="postToPublicFeed()">投稿する</button>
+        <button class="action-btn-sub" onclick="toggleModal('history-modal', true)">過去の9マス</button>
+        <button class="action-btn-sub" onclick="saveCurrentGridOnly()">現在の9マスを保存</button>
+      </div>
+
+      <div class="nav-spacer"></div>
+
     </div>
 
-    <div class="brand-footer">PALMEL</div>
+    <!-- 2. みんなのパル ページ -->
+    <div id="page-feed" class="page">
+      <h2 style="font-family:'Cinzel'; color:var(--gold); font-size:1.1rem; text-align:center;">EVERYONE'S PAL</h2>
+      <div id="feed-container" style="display:flex; flex-direction:column; gap:16px;"></div>
+      <div id="scroll-marker" class="loading-tag">パルを読み込み中...</div>
+      
+      <div class="nav-spacer"></div>
+    </div>
+
   </div>
 
-  <!-- 回転名刺モーダル -->
-  <div id="card-modal" class="modal-overlay" onclick="toggleModal('card-modal', false)">
-    <div class="card-rotated" id="modal-palcard">
-      <div class="palcard-brand">PALFILE</div>
-      <div class="rotated-body">
-        <div class="rotated-left">
-          <div><div id="m-title"></div><div id="m-name"></div></div>
-          <div class="rotated-fields">
-            <div>生年月日: <span id="m-birth"></span></div>
-            <div>好きな食べ物: <span id="m-food"></span></div>
-            <div>特技: <span id="m-skill"></span></div>
-            <div>ニックネーム: <span id="m-nick"></span></div>
+  <!-- 着せ替え設定 モーダル -->
+  <div id="customize-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">CARD CUSTOMIZE</h3>
+      
+      <div class="customize-section">
+        <div class="customize-label">称号選択</div>
+        <div class="customize-options">
+          <button class="customize-btn active" id="title-btn-1" onclick="selectTitle('FOUNDER', 'title-btn-1')">FOUNDER</button>
+          <button class="customize-btn" id="title-btn-2" onclick="selectTitle('パルメル初期ユーザー', 'title-btn-2')">パルメル初期ユーザー</button>
+        </div>
+      </div>
+
+      <div class="customize-section">
+        <div class="customize-label">アイコン枠</div>
+        <div class="customize-options">
+          <button class="customize-btn active" id="frame-btn-1" onclick="selectFrame('normal', 'frame-btn-1')">ノーマル</button>
+          <button class="customize-btn" id="frame-btn-2" onclick="selectFrame('gold', 'frame-btn-2')">ゴールド</button>
+        </div>
+      </div>
+
+      <div class="customize-section">
+        <div class="customize-label">名刺の色</div>
+        <div class="customize-options">
+          <button class="customize-btn active" id="color-btn-1" onclick="selectCardColor('dark', 'color-btn-1')">ダークブラック</button>
+          <button class="customize-btn" id="color-btn-2" onclick="selectCardColor('navy', 'color-btn-2')">エレガントネイビー</button>
+        </div>
+      </div>
+
+      <button style="margin-top:20px; width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="toggleModal('customize-modal', false)">完了</button>
+    </div>
+  </div>
+
+  <!-- 他ユーザーのプロフ モーダル -->
+  <div id="user-profile-modal" class="user-profile-modal">
+    <div class="profile-modal-container">
+      <button class="close-modal-btn" onclick="closeUserProfile()">✕</button>
+      
+      <div class="palcard">
+        <div class="palcard-brand">PALFILE</div>
+        <div class="palcard-body">
+          <div class="profile-info">
+            <div id="target-title" class="title-input"></div>
+            <div id="target-name" class="pet-name"></div>
+            <div class="profile-fields">
+              <div class="field-row"><span class="field-label">生年月日</span><div id="target-birth" class="field-input">2024.05.12</div></div>
+              <div class="field-row"><span class="field-label">好物</span><div id="target-food" class="field-input">チュール / チキン</div></div>
+              <div class="field-row"><span class="field-label">特技</span><div id="target-skill" class="field-input">ハイタッチ</div></div>
+              <div class="field-row"><span class="field-label">ニックネーム</span><div id="target-nickname" class="field-input">ココちゃん</div></div>
+            </div>
+          </div>
+          <div class="right-avatar-container">
+            <div class="avatar-wrapper">
+              <div class="avatar-inner"><img id="target-avatar" src=""></div>
+            </div>
           </div>
         </div>
-        <div class="rotated-right">
-          <div class="rotated-avatar" id="modal-avatar-wrapper"><img id="m-avatar" src="" alt=""></div>
-          <div class="dummy-qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://aya7oo4-tails.github.io/PALMEL/" alt="QR"></div>
+        <div class="palcard-footer">
+          <button class="icon-btn" onclick="alert('名刺を交換しました！')"><span>名刺交換</span></button>
         </div>
       </div>
-      <div class="close-hint">画面のどこでもタップして閉じる</div>
+
+      <div class="grid-container" id="target-grid-container"></div>
+      <div class="nav-spacer"></div>
     </div>
   </div>
 
-  <!-- 過去投稿モーダル -->
+  <!-- 名刺全画面回転プレビューモーダル -->
+  <div id="card-present-modal" class="card-present-overlay" onclick="closePresentCard()">
+    <div class="card-present-wrapper" id="present-card-container"></div>
+    <div class="card-present-tip">タップして閉じる</div>
+  </div>
+
+  <!-- ボトムナビ -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="btn-mypal" onclick="switchTab('mypal')">🏠 マイパル</button>
+    <button class="nav-btn" onclick="toggleModal('exchanged-modal', true)">🎴 名刺/9マス</button>
+    <button class="nav-btn" id="btn-feed" onclick="switchTab('feed')">🐾 みんなのパル</button>
+  </nav>
+
+  <div id="exchanged-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px;">EXCHANGED CARDS</h3>
+      <p style="font-size:0.75rem; color:var(--text-sub); margin-top:12px;">交換した名刺や9マスがここに溜まります。</p>
+      <button style="margin-top:16px; background:none; border:none; color:var(--gold); cursor:pointer;" onclick="toggleModal('exchanged-modal', false)">閉じる</button>
+    </div>
+  </div>
+
+  <!-- 過去の9マス（アルバム）モーダル -->
   <div id="history-modal" class="modal-overlay">
     <div class="modal-content">
-      <div class="modal-header"><span>PAST POSTS</span><button class="close-btn" onclick="toggleModal('history-modal', false)">✕</button></div>
-      <div style="text-align:center; color:var(--text-sub); font-size:0.8rem; padding:30px 0;">保存された過去の9マス投稿はありません</div>
-    </div>
-  </div>
-
-  <!-- カスタマイズモーダル -->
-  <div id="custom-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header"><span>DRESS-UP / CUSTOMIZE</span><button class="close-btn" onclick="toggleModal('custom-modal', false)">✕</button></div>
-      
-      <div class="custom-section">
-        <span>称号の変更</span>
-        <div class="option-group">
-          <button class="title-opt selected" onclick="setTitle('★ 甘えん坊将軍', this)">甘えん坊将軍</button>
-          <button class="title-opt" onclick="setTitle('★ ねぼすけ大臣', this)">ねぼすけ大臣</button>
-          <button class="title-opt" onclick="setTitle('★ はーいまねーみず', this)">はーいまねーみず</button>
-        </div>
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px;">PAST 9-GRIDS</h3>
+      <div id="album-list" style="margin-top:12px;">
+        <p style="font-size:0.75rem; color:var(--text-sub);">保存された過去の9マスはありません。</p>
       </div>
-
-      <div class="custom-section">
-        <span>名刺の背景</span>
-        <div class="option-group">
-          <div class="color-opt selected" style="background: linear-gradient(135deg, #24292e, #16181b);" onclick="setTheme('bg', 'linear-gradient(135deg, #24292e, #16181b)', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #2b1f3d, #140d1f);" onclick="setTheme('bg', 'linear-gradient(135deg, #2b1f3d, #140d1f)', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #1d332d, #0d1a16);" onclick="setTheme('bg', 'linear-gradient(135deg, #1d332d, #0d1a16)', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #3a2518, #1c1009);" onclick="setTheme('bg', 'linear-gradient(135deg, #3a2518, #1c1009)', this)"></div>
-        </div>
-      </div>
-
-      <div class="custom-section">
-        <span>アイコンフレーム</span>
-        <div class="option-group">
-          <div class="color-opt selected" style="background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.05));" onclick="setTheme('frame', 'linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.05))', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #f1c40f, #e67e22);" onclick="setTheme('frame', 'linear-gradient(135deg, #f1c40f, #e67e22)', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #e84393, #6c5ce7);" onclick="setTheme('frame', 'linear-gradient(135deg, #e84393, #6c5ce7)', this)"></div>
-          <div class="color-opt" style="background: linear-gradient(135deg, #00b894, #0984e3);" onclick="setTheme('frame', 'linear-gradient(135deg, #00b894, #0984e3)', this)"></div>
-        </div>
-      </div>
+      <button style="margin-top:16px; background:none; border:none; color:var(--gold); cursor:pointer;" onclick="toggleModal('history-modal', false)">閉じる</button>
     </div>
   </div>
 
   <script>
+    let palCount = 1;
+    const names = ['COCO', 'LUNA', 'ROKI', 'TORA', 'LEO', 'MUKU', 'CHIP', 'BELL'];
+    const titles = ['★ おやつハンター', '★ 爆走隊長', '★ 日向ぼっこプロ', '★ いたずら妖精'];
+    const myHistoryAlbum = [];
+    const postDataStore = {};
+
+    /* 着せ替え切り替え処理 */
+    function selectTitle(titleText, btnId) {
+      document.getElementById('in-title').value = titleText;
+      document.querySelectorAll('#customize-modal .customize-section:nth-child(1) .customize-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(btnId).classList.add('active');
+    }
+
+    function selectFrame(frameType, btnId) {
+      const wrapper = document.getElementById('main-avatar-wrapper');
+      if (frameType === 'gold') {
+        wrapper.classList.add('frame-gold');
+      } else {
+        wrapper.classList.remove('frame-gold');
+      }
+      document.querySelectorAll('#customize-modal .customize-section:nth-child(2) .customize-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(btnId).classList.add('active');
+    }
+
+    function selectCardColor(colorType, btnId) {
+      const card = document.getElementById('main-palcard');
+      if (colorType === 'navy') {
+        card.classList.add('theme-navy');
+      } else {
+        card.classList.remove('theme-navy');
+      }
+      document.querySelectorAll('#customize-modal .customize-section:nth-child(3) .customize-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(btnId).classList.add('active');
+    }
+
+    function generatePalPost() {
+      const feed = document.getElementById('feed-container');
+      const postId = 'post_' + palCount + '_' + Date.now();
+      const rName = names[Math.floor(Math.random() * names.length)];
+      const rTitle = titles[Math.floor(Math.random() * titles.length)];
+      const avatarUrl = `https://picsum.photos/100?random=avatar_${palCount}_${Math.random()}`;
+      
+      const isNineGrid = Math.random() > 0.5;
+
+      const userGridImgs = [];
+      for (let i = 0; i < 9; i++) {
+        userGridImgs.push(`https://picsum.photos/300?random=grid_${palCount}_${i}`);
+      }
+
+      postDataStore[postId] = {
+        name: rName,
+        title: rTitle,
+        avatar: avatarUrl,
+        gridImgs: userGridImgs
+      };
+
+      const card = document.createElement('div');
+      card.className = 'feed-post-card';
+      card.setAttribute('onclick', `openUserProfile('${postId}')`);
+
+      let mediaHtml = '';
+      if (isNineGrid) {
+        mediaHtml = `<div class="mini-grid-container">`;
+        for (let i = 0; i < 9; i++) {
+          mediaHtml += `<div class="mini-grid-item"><img src="${userGridImgs[i]}"></div>`;
+        }
+        mediaHtml += `</div>`;
+      } else {
+        const singleImg = `https://picsum.photos/400?random=single_${palCount}`;
+        mediaHtml = `<div class="single-media-box"><img src="${singleImg}"></div>`;
+      }
+
+      card.innerHTML = `
+        <div class="feed-header">
+          <div class="feed-avatar"><img src="${avatarUrl}"></div>
+          <div class="feed-user-info">
+            <div class="feed-pet-name">${rName}</div>
+            <div class="feed-title">${rTitle}</div>
+          </div>
+        </div>
+        ${mediaHtml}
+      `;
+
+      feed.appendChild(card);
+      palCount++;
+    }
+
+    function openUserProfile(postId) {
+      const data = postDataStore[postId];
+      if(!data) return;
+
+      document.getElementById('target-name').innerText = data.name;
+      document.getElementById('target-title').innerText = data.title;
+      document.getElementById('target-avatar').src = data.avatar;
+
+      const gridContainer = document.getElementById('target-grid-container');
+      gridContainer.innerHTML = '';
+      gridLabels.forEach((lbl, i) => {
+        const imgSrc = data.gridImgs[i] || 'https://picsum.photos/300';
+        gridContainer.innerHTML += `
+          <div class="grid-item">
+            <div class="grid-label">${lbl}</div>
+            <div class="grid-image-box">
+              <img src="${imgSrc}" style="display:block;">
+            </div>
+          </div>
+        `;
+      });
+
+      const modal = document.getElementById('user-profile-modal');
+      modal.classList.add('active');
+    }
+
+    function closeUserProfile() {
+      document.getElementById('user-profile-modal').classList.remove('active');
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      if(tabName === 'mypal') {
+        document.getElementById('page-mypal').classList.add('active');
+        document.getElementById('btn-mypal').classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } else if(tabName === 'feed') {
+        document.getElementById('page-feed').classList.add('active');
+        document.getElementById('btn-feed').classList.add('active');
+        
+        const feed = document.getElementById('feed-container');
+        if (feed.children.length === 0) {
+          generatePalPost();
+          generatePalPost();
+        }
+      }
+    }
+
     function toggleModal(id, show) {
       const el = document.getElementById(id);
-      if (show) {
-        el.style.display = 'flex';
-        setTimeout(() => el.classList.add('active'), 10);
-      } else {
-        el.classList.remove('active');
-        setTimeout(() => el.style.display = 'none', 200);
-      }
+      if (show) { el.style.display = 'flex'; setTimeout(() => el.classList.add('active'), 10); }
+      else { el.classList.remove('active'); setTimeout(() => el.style.display = 'none', 200); }
     }
 
     function previewImg(input, targetId) {
@@ -357,39 +575,125 @@
           const img = document.getElementById(imgId);
           img.src = e.target.result;
           img.style.display = 'block';
-          input.parentElement.querySelector('.upload-placeholder').style.display = 'none';
         };
         r.readAsDataURL(input.files[0]);
       }
     }
 
-    function openCardModal() {
-      ['title', 'name', 'birth', 'food', 'skill', 'nick'].forEach(k => {
-        document.getElementById(`m-${k}`).innerText = document.getElementById(`in-${k}`).value;
-      });
-      document.getElementById('m-avatar').src = document.getElementById('avatar-img').src;
-      toggleModal('card-modal', true);
-    }
-
-    function setTitle(val, el) {
-      document.getElementById('in-title').value = val;
-      updateSel(el);
-    }
-
-    function setTheme(type, val, el) {
-      if (type === 'bg') {
-        document.getElementById('main-palcard').style.background = val;
-        document.getElementById('modal-palcard').style.background = val;
-      } else if (type === 'frame') {
-        document.getElementById('main-avatar-wrapper').style.background = val;
-        document.getElementById('modal-avatar-wrapper').style.background = val;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && document.getElementById('page-feed').classList.contains('active')) {
+        generatePalPost();
       }
-      updateSel(el);
+    }, { rootMargin: '200px' });
+
+    observer.observe(document.getElementById('scroll-marker'));
+
+    function getMyGridImages() {
+      const imgs = [];
+      for (let i = 0; i < 9; i++) {
+        imgs.push(document.getElementById(`g${i}`).src || 'https://picsum.photos/300?random=empty');
+      }
+      return imgs;
     }
 
-    function updateSel(el) {
-      Array.from(el.parentElement.children).forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
+    function postToPublicFeed() {
+      const name = document.getElementById('in-name').value;
+      const title = document.getElementById('in-title').value;
+      const avatarSrc = document.getElementById('avatar-img').src;
+      const postId = 'post_my_' + Date.now();
+      const myGridImgs = getMyGridImages();
+
+      saveToAlbum(myGridImgs, '投稿');
+
+      postDataStore[postId] = {
+        name: name,
+        title: title,
+        avatar: avatarSrc,
+        gridImgs: myGridImgs
+      };
+
+      const feed = document.getElementById('feed-container');
+      const card = document.createElement('div');
+      card.className = 'feed-post-card';
+      card.style.borderColor = 'var(--gold)';
+      card.setAttribute('onclick', `openUserProfile('${postId}')`);
+      
+      let mediaHtml = `<div class="mini-grid-container">`;
+      for (let i = 0; i < 9; i++) {
+        mediaHtml += `<div class="mini-grid-item"><img src="${myGridImgs[i]}"></div>`;
+      }
+      mediaHtml += `</div>`;
+
+      card.innerHTML = `
+        <div class="feed-header">
+          <div class="feed-avatar"><img src="${avatarSrc}"></div>
+          <div class="feed-user-info">
+            <div class="feed-pet-name">${name}</div>
+            <div class="feed-title">${title}</div>
+          </div>
+        </div>
+        ${mediaHtml}
+      `;
+      feed.prepend(card);
+      switchTab('feed');
+    }
+
+    function saveCurrentGridOnly() {
+      const myGridImgs = getMyGridImages();
+      saveToAlbum(myGridImgs, '保存');
+      alert('現在の9マスをアルバムに保存しました！');
+    }
+
+    function saveToAlbum(imgs, typeStr) {
+      const albumList = document.getElementById('album-list');
+      if(myHistoryAlbum.length === 0) albumList.innerHTML = '';
+
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}.${now.getMonth()+1}.${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      myHistoryAlbum.push({ date: dateStr, imgs: imgs });
+
+      const itemHtml = document.createElement('div');
+      itemHtml.className = 'album-history-item';
+      
+      let gridInner = `<div class="album-date">📅 ${dateStr} (${typeStr})</div><div class="mini-grid-container">`;
+      for (let i = 0; i < 9; i++) {
+        gridInner += `<div class="mini-grid-item"><img src="${imgs[i]}"></div>`;
+      }
+      gridInner += `</div>`;
+      itemHtml.innerHTML = gridInner;
+
+      albumList.prepend(itemHtml);
+    }
+
+    /* 名刺を渡す（90度回転＆拡大モーダル）処理 */
+    function presentCard() {
+      const cardSrc = document.getElementById('main-palcard');
+      const clone = cardSrc.cloneNode(true);
+      clone.removeAttribute('id');
+      
+      // コピーした入力欄の値を引き継ぐ
+      const origInputs = cardSrc.querySelectorAll('input');
+      const cloneInputs = clone.querySelectorAll('input');
+      origInputs.forEach((inp, idx) => {
+        cloneInputs[idx].value = inp.value;
+      });
+
+      // ボタンエリア非表示
+      const footer = clone.querySelector('.palcard-footer');
+      if (footer) footer.style.display = 'none';
+
+      const container = document.getElementById('present-card-container');
+      container.innerHTML = '';
+      container.appendChild(clone);
+
+      const modal = document.getElementById('card-present-modal');
+      modal.classList.add('active');
+    }
+
+    function closePresentCard() {
+      const modal = document.getElementById('card-present-modal');
+      modal.classList.remove('active');
     }
   </script>
 </body>
