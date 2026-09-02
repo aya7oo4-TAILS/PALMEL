@@ -113,8 +113,15 @@
     .footer-left-group { display: flex; gap: 6px; }
     .icon-btn {
       height: 28px; padding: 0 10px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); 
-      border-radius: 8px; color: var(--text-main); font-size: 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 500;
+      border-radius: 8px; color: var(--text-main); font-size: 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 500; text-decoration: none;
     }
+
+    .sns-links-container { display: flex; gap: 6px; align-items: center; }
+    .sns-btn {
+      display: none; height: 28px; width: 28px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px; color: var(--text-main); font-size: 0.75rem; align-items: center; justify-content: center; text-decoration: none;
+    }
+    .sns-btn.active { display: flex; }
 
     .customize-section { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
     .customize-label { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
@@ -159,6 +166,12 @@
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.95); backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
     .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+
+    /* 入力フォームモーダル用 */
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .form-label { font-size: 0.7rem; color: var(--text-sub); }
+    .form-input { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; color: #fff; font-size: 0.8rem; outline: none; }
+    .form-input:focus { border-color: var(--gold); }
 
     .user-profile-modal { display: none; position: fixed; inset: 0; background: #0b0d0e; z-index: 10000; overflow-y: auto; padding: 16px 12px 100px; }
     .user-profile-modal.active { display: flex; flex-direction: column; align-items: center; }
@@ -248,7 +261,7 @@
         <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
       </div>
       <div class="drawer-menu-list">
-        <button class="drawer-item" onclick="alert('アカウント設定を開きます'); closeDrawer();">👤 アカウント・プロフ設定</button>
+        <button class="drawer-item" onclick="toggleModal('account-modal', true); closeDrawer();">👤 アカウント・プロフ設定</button>
         <button class="drawer-item" onclick="toggleModal('customize-modal', true); closeDrawer();">🎨 デザイン着せ替え</button>
         <button class="drawer-item" onclick="alert('通知設定'); closeDrawer();">🔔 通知設定</button>
         <button class="drawer-item" onclick="alert('プライバシー設定'); closeDrawer();">🔒 プライバシー・セキュリティ</button>
@@ -297,6 +310,11 @@
               <input type="file" accept="image/*" capture="environment" onchange="alert('名刺を受け取りました！')">
             </label>
           </div>
+          <!-- SNS リンクアイコン表示部分 -->
+          <div class="sns-links-container">
+            <a id="btn-sns-instagram" href="#" target="_blank" class="sns-btn" title="Instagram">📸</a>
+            <a id="btn-sns-x" href="#" target="_blank" class="sns-btn" title="X (Twitter)">𝕏</a>
+          </div>
           <button class="icon-btn" onclick="toggleModal('customize-modal', true)"><span>🎨 着せ替え</span></button>
         </div>
       </div>
@@ -340,6 +358,25 @@
   </div>
 
   <!-- モーダル類 -->
+
+  <!-- アカウント・プロフ設定モーダル -->
+  <div id="account-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">ACCOUNT & PROFILE</h3>
+      <div style="margin-top:14px;">
+        <div class="form-group">
+          <label class="form-label">Instagram ID (例: username)</label>
+          <input type="text" id="acc-instagram" class="form-input" placeholder="ユーザー名を入力">
+        </div>
+        <div class="form-group">
+          <label class="form-label">X (Twitter) ID (例: username)</label>
+          <input type="text" id="acc-x" class="form-input" placeholder="ユーザー名を入力">
+        </div>
+      </div>
+      <button style="margin-top:16px; width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="saveAccountSettings()">保存する</button>
+    </div>
+  </div>
+
   <div id="customize-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">CARD CUSTOMIZE</h3>
@@ -462,14 +499,12 @@
 
     // タッチ開始
     window.addEventListener('touchstart', (e) => {
-      // 入力エリアやボタンを触っている時はスワイプ動作を邪魔しない
       if (['INPUT', 'BUTTON', 'LABEL', 'TEXTAREA'].includes(e.target.tagName)) return;
       
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
       isTracking = true;
 
-      // アニメーション用classを外し、指の動きと完全同期させる
       drawer.classList.remove('animated');
     }, { passive: true });
 
@@ -482,14 +517,12 @@
       const diffX = touchX - startX;
       const diffY = Math.abs(touchY - startY);
 
-      // 縦スクロール判定の場合はスワイプを中断
       if (diffY > Math.abs(diffX) && diffY > 10) {
         isTracking = false;
         return;
       }
 
       if (!isOpen) {
-        // 閉じた状態から右スワイプで引き出す
         if (diffX > 0) {
           let translateX = -DRAWER_WIDTH + diffX;
           if (translateX > 0) translateX = 0;
@@ -498,7 +531,6 @@
           drawerOverlay.style.pointerEvents = 'auto';
         }
       } else {
-        // 開いた状態から左スワイプで押し戻す
         if (diffX < 0) {
           let translateX = diffX;
           if (translateX < -DRAWER_WIDTH) translateX = -DRAWER_WIDTH;
@@ -508,7 +540,7 @@
       }
     }, { passive: true });
 
-    // タッチ終了（判定して開くか閉じるかを確定）
+    // タッチ終了
     window.addEventListener('touchend', (e) => {
       if (!isTracking) return;
       isTracking = false;
@@ -520,14 +552,12 @@
       drawerOverlay.style.pointerEvents = '';
 
       if (!isOpen) {
-        // 50px以上右に引っ張ったら開く
         if (diffX > 50) {
           openDrawer();
         } else {
           closeDrawer();
         }
       } else {
-        // 50px以上左に戻したら閉じる
         if (diffX < -50) {
           closeDrawer();
         } else {
@@ -535,6 +565,34 @@
         }
       }
     }, { passive: true });
+
+    /* アカウント設定の保存処理 */
+    function saveAccountSettings() {
+      const instaId = document.getElementById('acc-instagram').value.trim();
+      const xId = document.getElementById('acc-x').value.trim();
+
+      const btnInsta = document.getElementById('btn-sns-instagram');
+      const btnX = document.getElementById('btn-sns-x');
+
+      if (instaId) {
+        const cleanInsta = instaId.replace(/^@/, '');
+        btnInsta.href = `https://instagram.com/${cleanInsta}`;
+        btnInsta.classList.add('active');
+      } else {
+        btnInsta.classList.remove('active');
+      }
+
+      if (xId) {
+        const cleanX = xId.replace(/^@/, '');
+        btnX.href = `https://x.com/${cleanX}`;
+        btnX.classList.add('active');
+      } else {
+        btnX.classList.remove('active');
+      }
+
+      toggleModal('account-modal', false);
+      alert('アカウント情報を更新しました！');
+    }
 
     /* その他の機能 */
     function selectTitle(titleText, btnId) {
