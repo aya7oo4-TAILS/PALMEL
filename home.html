@@ -123,23 +123,11 @@
     }
     .sns-btn.active { display: flex; }
 
-    .customize-section { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-    .customize-label { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
-    .customize-options { display: flex; gap: 8px; }
-    .customize-btn {
-      flex: 1; padding: 8px 0; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px; color: var(--text-main); font-size: 0.65rem; cursor: pointer; text-align: center;
-    }
-    .customize-btn.active {
-      border-color: var(--gold); background: rgba(229,192,123,0.15); color: var(--gold); font-weight: bold;
-    }
-
     /* 9マス Grid */
     .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
     .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); }
     .grid-label { font-family: 'Cinzel', 'Noto Sans JP', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-align: center; padding: 4px 2px; background: rgba(0, 0, 0, 0.4); color: var(--text-sub); display: flex; align-items: center; justify-content: center; }
     
-    /* 編集可能な自由タイトル用入力スタイル */
     .grid-label-input {
       background: transparent;
       border: none;
@@ -261,7 +249,7 @@
     .drawer-item {
       display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: var(--text-main); font-size: 0.8rem;
-      cursor: pointer; text-align: left; transition: background 0.2s ease;
+      cursor: pointer; text-align: left; transition: background 0.2s ease; text-decoration: none;
     }
     .drawer-item:active { background: rgba(229,192,123,0.15); border-color: var(--gold); }
 
@@ -285,7 +273,8 @@
       </div>
       <div class="drawer-menu-list">
         <button class="drawer-item" onclick="toggleModal('account-modal', true); closeDrawer();">👤 アカウント・プロフ設定</button>
-        <button class="drawer-item" onclick="toggleModal('customize-modal', true); closeDrawer();">🎨 デザイン着せ替え</button>
+        <!-- customize.htmlへ移動するリンク -->
+        <a href="customize.html" class="drawer-item">🎨 デザイン着せ替え</a>
         <button class="drawer-item" onclick="alert('通知設定'); closeDrawer();">🔔 通知設定</button>
         <button class="drawer-item" onclick="alert('プライバシー設定'); closeDrawer();">🔒 プライバシー・セキュリティ</button>
         <button class="drawer-item" onclick="alert('ヘルプ'); closeDrawer();">❓ ヘルプ＆サポート</button>
@@ -338,16 +327,16 @@
             <a id="btn-sns-instagram" href="#" target="_blank" class="sns-btn" title="Instagram">📸</a>
             <a id="btn-sns-x" href="#" target="_blank" class="sns-btn" title="X (Twitter)">𝕏</a>
           </div>
-          <button class="icon-btn" onclick="toggleModal('customize-modal', true)"><span>🎨 着せ替え</span></button>
+          <!-- customize.htmlへ移動するリンク -->
+          <a href="customize.html" class="icon-btn"><span>🎨 着せ替え</span></a>
         </div>
       </div>
 
-      <!-- 9マス Grid（右上FREEマスをテキスト入力化） -->
+      <!-- 9マス Grid -->
       <div class="grid-container">
         <script>
           const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
           gridLabels.forEach((lbl, i) => {
-            // 右上（インデックス2）のマスはユーザーがテキスト入力可能にする
             const labelHtml = (i === 2)
               ? `<input type="text" id="custom-free-label" class="grid-label-input" value="FREE" placeholder="タイトル" maxlength="12">`
               : lbl;
@@ -402,34 +391,6 @@
         </div>
       </div>
       <button style="margin-top:16px; width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="saveAccountSettings()">保存する</button>
-    </div>
-  </div>
-
-  <div id="customize-modal" class="modal-overlay">
-    <div class="modal-content">
-      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">CARD CUSTOMIZE</h3>
-      <div class="customize-section">
-        <div class="customize-label">称号選択</div>
-        <div class="customize-options">
-          <button class="customize-btn active" id="title-btn-1" onclick="selectTitle('FOUNDER', 'title-btn-1')">FOUNDER</button>
-          <button class="customize-btn" id="title-btn-2" onclick="selectTitle('パルメル初期ユーザー', 'title-btn-2')">パルメル初期ユーザー</button>
-        </div>
-      </div>
-      <div class="customize-section">
-        <div class="customize-label">アイコン枠</div>
-        <div class="customize-options">
-          <button class="customize-btn active" id="frame-btn-1" onclick="selectFrame('normal', 'frame-btn-1')">ノーマル</button>
-          <button class="customize-btn" id="frame-btn-2" onclick="selectFrame('gold', 'frame-btn-2')">ゴールド</button>
-        </div>
-      </div>
-      <div class="customize-section">
-        <div class="customize-label">名刺の色</div>
-        <div class="customize-options">
-          <button class="customize-btn active" id="color-btn-1" onclick="selectCardColor('dark', 'color-btn-1')">ダークブラック</button>
-          <button class="customize-btn" id="color-btn-2" onclick="selectCardColor('navy', 'color-btn-2')">エレガントネイビー</button>
-        </div>
-      </div>
-      <button style="margin-top:20px; width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="toggleModal('customize-modal', false)">完了</button>
     </div>
   </div>
 
@@ -618,35 +579,6 @@
       alert('アカウント情報を更新しました！');
     }
 
-    /* その他の機能 */
-    function selectTitle(titleText, btnId) {
-      document.getElementById('in-title').value = titleText;
-      document.querySelectorAll('#customize-modal .customize-section:nth-child(1) .customize-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(btnId).classList.add('active');
-    }
-
-    function selectFrame(frameType, btnId) {
-      const wrapper = document.getElementById('main-avatar-wrapper');
-      if (frameType === 'gold') {
-        wrapper.classList.add('frame-gold');
-      } else {
-        wrapper.classList.remove('frame-gold');
-      }
-      document.querySelectorAll('#customize-modal .customize-section:nth-child(2) .customize-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(btnId).classList.add('active');
-    }
-
-    function selectCardColor(colorType, btnId) {
-      const card = document.getElementById('main-palcard');
-      if (colorType === 'navy') {
-        card.classList.add('theme-navy');
-      } else {
-        card.classList.remove('theme-navy');
-      }
-      document.querySelectorAll('#customize-modal .customize-section:nth-child(3) .customize-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(btnId).classList.add('active');
-    }
-
     function generatePalPost() {
       const feed = document.getElementById('feed-container');
       const postId = 'post_' + palCount + '_' + Date.now();
@@ -712,7 +644,6 @@
       gridContainer.innerHTML = '';
       gridLabels.forEach((lbl, i) => {
         const imgSrc = data.gridImgs[i] || 'https://picsum.photos/300';
-        // カスタムタイトルの反映（インデックス2の場合）
         const displayLabel = (i === 2 && data.customFreeTitle) ? data.customFreeTitle : lbl;
 
         gridContainer.innerHTML += `
@@ -802,7 +733,6 @@
       const postId = 'post_my_' + Date.now();
       const myGridImgs = getMyGridImages();
 
-      // 入力された自由タイトルを取得（空なら「FREE」）
       const freeLabelInput = document.getElementById('custom-free-label');
       const customFreeTitle = freeLabelInput ? (freeLabelInput.value.trim() || 'FREE') : 'FREE';
 
