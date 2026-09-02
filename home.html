@@ -46,30 +46,17 @@
     .page { display: none; flex-direction: column; gap: 16px; width: 100%; }
     .page.active { display: flex; }
 
-    /* 9マス下の操作ボタンエリア */
-    .bottom-grid-action-bar { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      width: 100%; 
-      gap: 6px; 
-      margin-top: 4px;
-    }
-    .action-btn-sub {
-      flex: 1; background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 20px; padding: 10px 0; font-size: 0.7rem; cursor: pointer; font-weight: bold; text-align: center;
-    }
     .action-btn-main {
-      flex: 1; background: linear-gradient(135deg, var(--gold), #d4a359);
+      width: 100%; background: linear-gradient(135deg, var(--gold), #d4a359);
       color: #000; font-weight: bold; border: none; border-radius: 20px;
-      padding: 10px 0; font-size: 0.75rem; cursor: pointer; box-shadow: 0 4px 12px rgba(229,192,123,0.3); text-align: center;
+      padding: 12px 0; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 12px rgba(229,192,123,0.3); text-align: center;
     }
 
     /* 名刺カードデザイン */
     .palcard {
       background: var(--card-bg);
       border-radius: var(--radius-card);
-      padding: 12px 14px 44px;
+      padding: 12px 14px 40px;
       box-shadow: var(--card-shadow);
       border: 1px solid var(--card-border);
       position: relative;
@@ -86,15 +73,14 @@
       background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
     }
 
-    /* カスタマイズ用テーマ拡張定義 */
     .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%) !important; }
     .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%) !important; }
     .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%) !important; border-color: rgba(229, 192, 123, 0.5) !important; }
 
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
-    .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
+    .palcard-body { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex: 1; }
     
-    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
+    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: flex-start; padding-top: 0px; margin-top: -4px; }
     .title-input { font-size: 0.68rem; color: var(--gold); background: transparent; border: none; outline: none; font-weight: 500; margin-bottom: 1px; line-height: 1.2; }
     .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; border: none; background: transparent; outline: none; }
     
@@ -103,7 +89,15 @@
     .field-label { font-size: 0.58rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
     .field-input { background: transparent; border: none; color: var(--text-main); font-size: 0.65rem; outline: none; width: 100%; font-weight: 500; }
 
-    .right-avatar-container { position: relative; width: 140px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .right-avatar-container { 
+      position: relative; 
+      width: 140px; 
+      flex-shrink: 0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-top: 10px;
+    }
     .avatar-wrapper { width: 138px; height: 138px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); cursor: pointer; display: block; transition: all 0.3s ease; }
     
     .avatar-wrapper.frame-gold {
@@ -111,7 +105,6 @@
       box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
     }
 
-    /* カスタマイズ用フレーム拡張定義 */
     .avatar-wrapper.frame-silver {
       background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%) !important;
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.3) !important;
@@ -156,13 +149,8 @@
       letter-spacing: 0.05em;
       font-weight: bold;
     }
-    .grid-label-input::placeholder {
-      color: rgba(229, 192, 123, 0.4);
-    }
-    .grid-label-input:focus {
-      border-bottom-color: var(--gold);
-      background: rgba(0, 0, 0, 0.3);
-    }
+    .grid-label-input::placeholder { color: rgba(229, 192, 123, 0.4); }
+    .grid-label-input:focus { border-bottom-color: var(--gold); background: rgba(0, 0, 0, 0.3); }
 
     .grid-image-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .grid-image-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -191,9 +179,8 @@
     /* モーダル共通 */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.95); backdrop-filter: blur(12px); z-index: 9999; justify-content: center; align-items: center; }
     .modal-overlay.active { display: flex; }
-    .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+    .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; max-height: 85vh; overflow-y: auto; }
 
-    /* 入力フォームモーダル用 */
     .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
     .form-label { font-size: 0.7rem; color: var(--text-sub); }
     .form-input { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; color: #fff; font-size: 0.8rem; outline: none; }
@@ -215,14 +202,27 @@
       width: 100%; max-width: 414px; height: 60px;
       background: rgba(15, 17, 20, 0.95); backdrop-filter: blur(16px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex; justify-around: space-around; align-items: center; z-index: 9000;
+      display: flex; justify-content: space-around; align-items: center; z-index: 9000;
     }
-    .nav-btn { background: none; border: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; width: 33%; }
+    .nav-btn { background: none; border: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; width: 25%; }
     .nav-btn.active { color: var(--gold); }
 
     .loading-tag { text-align: center; color: var(--text-sub); font-size: 0.8rem; padding: 20px; }
-    .album-history-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-    .album-date { font-size: 0.75rem; color: var(--gold); margin-bottom: 8px; }
+    
+    /* アルバムモーダル専用スタイル */
+    .album-current-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(229, 192, 123, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+      margin-bottom: 20px;
+    }
+    .album-section-title {
+      font-size: 0.75rem; color: var(--gold); font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .album-history-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px; }
+    .album-date { font-size: 0.72rem; color: var(--text-sub); margin-bottom: 8px; }
 
     /* 名刺プレビューモーダル */
     .card-present-overlay {
@@ -267,12 +267,6 @@
       cursor: pointer; text-align: left; transition: background 0.2s ease; text-decoration: none;
     }
     .drawer-item:active { background: rgba(229,192,123,0.15); border-color: var(--gold); }
-
-    .header-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 4px; }
-    .menu-trigger-btn {
-      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-main); font-size: 0.7rem; padding: 5px 12px; border-radius: 12px; cursor: pointer; font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -288,7 +282,6 @@
       </div>
       <div class="drawer-menu-list">
         <button class="drawer-item" onclick="toggleModal('account-modal', true); closeDrawer();">👤 アカウント・プロフ設定</button>
-        <!-- customize.htmlへ移動するリンク -->
         <a href="customize.html" class="drawer-item">🎨 デザイン着せ替え</a>
         <button class="drawer-item" onclick="alert('通知設定'); closeDrawer();">🔔 通知設定</button>
         <button class="drawer-item" onclick="alert('プライバシー設定'); closeDrawer();">🔒 プライバシー・セキュリティ</button>
@@ -302,11 +295,6 @@
     
     <!-- マイパル ページ -->
     <div id="page-mypal" class="page active">
-
-      <div class="header-bar">
-        <button class="menu-trigger-btn" onclick="openDrawer()">≡ 設定</button>
-        <span style="font-family:'Cinzel'; font-size:0.65rem; color:var(--text-sub); letter-spacing:0.2em;">SWIPE FOR MENU</span>
-      </div>
 
       <!-- 名刺カード -->
       <div class="palcard" id="main-palcard">
@@ -337,17 +325,14 @@
               <input type="file" accept="image/*" capture="environment" onchange="alert('名刺を受け取りました！')">
             </label>
           </div>
-          <!-- SNS リンクアイコン表示部分 -->
           <div class="sns-links-container">
             <a id="btn-sns-instagram" href="#" target="_blank" class="sns-btn" title="Instagram">📸</a>
             <a id="btn-sns-x" href="#" target="_blank" class="sns-btn" title="X (Twitter)">𝕏</a>
           </div>
-          <!-- customize.htmlへ移動するリンク -->
-          <a href="customize.html" class="icon-btn"><span>🎨 着せ替え</span></a>
         </div>
       </div>
 
-      <!-- 9マス Grid -->
+      <!-- 9マス Grid (ボタンを削除しスッキリ整理) -->
       <div class="grid-container">
         <script>
           const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
@@ -368,12 +353,6 @@
         </script>
       </div>
 
-      <div class="bottom-grid-action-bar">
-        <button class="action-btn-main" onclick="postToPublicFeed()">投稿する</button>
-        <button class="action-btn-sub" onclick="toggleModal('history-modal', true)">過去の9マス</button>
-        <button class="action-btn-sub" onclick="saveCurrentGridOnly()">現在の9マスを保存</button>
-      </div>
-
       <div class="nav-spacer"></div>
 
     </div>
@@ -381,6 +360,9 @@
     <!-- みんなのパル ページ -->
     <div id="page-feed" class="page">
       <h2 style="font-family:'Cinzel'; color:var(--gold); font-size:1.1rem; text-align:center;">EVERYONE'S PAL</h2>
+      
+      <button class="action-btn-main" onclick="postToPublicFeed()">投稿する</button>
+
       <div id="feed-container" style="display:flex; flex-direction:column; gap:16px;"></div>
       <div id="scroll-marker" class="loading-tag">パルを読み込み中...</div>
       
@@ -390,6 +372,33 @@
   </div>
 
   <!-- モーダル類 -->
+
+  <!-- アルバム モーダル (現在のマス自動反映＆保存ボタン＋過去ログ) -->
+  <div id="history-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">ALBUM</h3>
+      
+      <!-- 現在の9マス自動反映エリア -->
+      <div class="album-current-section">
+        <div class="album-section-title">
+          <span>📸 現在のマイパル 9マス</span>
+          <span style="font-size:0.6rem; color:var(--text-sub); font-weight:normal;">自動更新中</span>
+        </div>
+        <div class="mini-grid-container" id="current-grid-preview"></div>
+        <button class="action-btn-main" style="margin-top:10px;" onclick="saveCurrentGridOnly()">現在の9マスを保存</button>
+      </div>
+
+      <div class="album-section-title" style="margin-bottom:10px;">
+        <span>📅 保存された過去の9マス</span>
+      </div>
+
+      <div id="album-list">
+        <p style="font-size:0.75rem; color:var(--text-sub);">保存された過去の9マスはありません。</p>
+      </div>
+      
+      <button style="margin-top:16px; background:none; border:none; color:var(--gold); cursor:pointer; width:100%; text-align:center;" onclick="toggleModal('history-modal', false)">閉じる</button>
+    </div>
+  </div>
 
   <!-- アカウント・プロフ設定モーダル -->
   <div id="account-modal" class="modal-overlay">
@@ -445,8 +454,10 @@
     <div class="card-present-tip">タップして閉じる</div>
   </div>
 
+  <!-- ボトムナビゲーション -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="btn-mypal" onclick="switchTab('mypal')">🏠 マイパル</button>
+    <button class="nav-btn" onclick="openAlbumModal()">📖 アルバム</button>
     <button class="nav-btn" onclick="toggleModal('exchanged-modal', true)">🎴 名刺/9マス</button>
     <button class="nav-btn" id="btn-feed" onclick="switchTab('feed')">🐾 みんなのパル</button>
   </nav>
@@ -459,16 +470,6 @@
     </div>
   </div>
 
-  <div id="history-modal" class="modal-overlay">
-    <div class="modal-content">
-      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px;">PAST 9-GRIDS</h3>
-      <div id="album-list" style="margin-top:12px;">
-        <p style="font-size:0.75rem; color:var(--text-sub);">保存された過去の9マスはありません。</p>
-      </div>
-      <button style="margin-top:16px; background:none; border:none; color:var(--gold); cursor:pointer;" onclick="toggleModal('history-modal', false)">閉じる</button>
-    </div>
-  </div>
-
   <script>
     let palCount = 1;
     const names = ['COCO', 'LUNA', 'ROKI', 'TORA', 'LEO', 'MUKU', 'CHIP', 'BELL'];
@@ -476,7 +477,7 @@
     const myHistoryAlbum = [];
     const postDataStore = {};
 
-    /* ─── 保存されたカスタマイズ設定の自動反映 ─── */
+    /* カスタマイズ設定の自動反映 */
     function applySavedCustomization() {
       const saved = localStorage.getItem('parmel_custom_config');
       if (!saved) return;
@@ -507,7 +508,7 @@
 
     window.addEventListener('DOMContentLoaded', applySavedCustomization);
 
-    /* ─── スワイプ処理 ─── */
+    /* スワイプ処理 */
     const drawer = document.getElementById('side-drawer');
     const drawerOverlay = document.getElementById('drawer-overlay');
     const DRAWER_WIDTH = 280;
@@ -597,7 +598,6 @@
       }
     }, { passive: true });
 
-    /* アカウント設定の保存処理 */
     function saveAccountSettings() {
       const instaId = document.getElementById('acc-instagram').value.trim();
       const xId = document.getElementById('acc-x').value.trim();
@@ -767,9 +767,25 @@
     function getMyGridImages() {
       const imgs = [];
       for (let i = 0; i < 9; i++) {
-        imgs.push(document.getElementById(`g${i}`).src || 'https://picsum.photos/300?random=empty');
+        const imgEl = document.getElementById(`g${i}`);
+        imgs.push((imgEl && imgEl.src) ? imgEl.src : '');
       }
       return imgs;
+    }
+
+    /* アルバムモーダルを開く＆現在のマスをプレビュー生成 */
+    function openAlbumModal() {
+      const currentImgs = getMyGridImages();
+      const previewContainer = document.getElementById('current-grid-preview');
+      previewContainer.innerHTML = '';
+
+      for (let i = 0; i < 9; i++) {
+        const src = currentImgs[i];
+        const imgHtml = src ? `<img src="${src}">` : `<div style="width:100%; height:100%; background:#202428;"></div>`;
+        previewContainer.innerHTML += `<div class="mini-grid-item">${imgHtml}</div>`;
+      }
+
+      toggleModal('history-modal', true);
     }
 
     function postToPublicFeed() {
@@ -800,7 +816,8 @@
       
       let mediaHtml = `<div class="mini-grid-container">`;
       for (let i = 0; i < 9; i++) {
-        mediaHtml += `<div class="mini-grid-item"><img src="${myGridImgs[i]}"></div>`;
+        const src = myGridImgs[i] || 'https://picsum.photos/300?random=empty';
+        mediaHtml += `<div class="mini-grid-item"><img src="${src}"></div>`;
       }
       mediaHtml += `</div>`;
 
@@ -816,8 +833,10 @@
       `;
       feed.prepend(card);
       switchTab('feed');
+      alert('「みんなのパル」に投稿しました！');
     }
 
+    /* アルバム内で「現在の9マスを保存」を押したときの処理 */
     function saveCurrentGridOnly() {
       const myGridImgs = getMyGridImages();
       saveToAlbum(myGridImgs, '保存');
@@ -838,7 +857,8 @@
       
       let gridInner = `<div class="album-date">📅 ${dateStr} (${typeStr})</div><div class="mini-grid-container">`;
       for (let i = 0; i < 9; i++) {
-        gridInner += `<div class="mini-grid-item"><img src="${imgs[i]}"></div>`;
+        const src = imgs[i] || 'https://picsum.photos/300?random=empty';
+        gridInner += `<div class="mini-grid-item"><img src="${src}"></div>`;
       }
       gridInner += `</div>`;
       itemHtml.innerHTML = gridInner;
