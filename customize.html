@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PARMEL - 着せ替え・カスタマイズ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0d0e;
@@ -22,28 +22,40 @@
     
     html, body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background: var(--bg-main);
       color: var(--text-main);
       font-family: 'Noto Sans JP', sans-serif;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     body {
       display: flex;
       justify-content: center;
-      padding: 12px 12px 40px;
+      padding: 12px 12px 0;
     }
 
     .app-viewport {
       width: 100%;
       max-width: 414px;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 20px;
     }
 
-    /* ヘッダー */
+    /* ----------------------------------
+       1. 固定エリア（ヘッダー ＋ プレビュー）
+    ---------------------------------- */
+    .fixed-top-area {
+      flex-shrink: 0;
+      background: var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 12px;
+      z-index: 10;
+    }
+
     .header-bar {
       display: flex;
       justify-content: space-between;
@@ -69,13 +81,12 @@
       font-weight: bold;
     }
 
-    /* 名刺カード プレビュー */
     .preview-label {
       font-size: 0.65rem;
       color: var(--text-sub);
       letter-spacing: 0.1em;
       text-align: center;
-      margin-bottom: -10px;
+      margin-bottom: -4px;
     }
 
     .palcard {
@@ -100,12 +111,18 @@
     .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%); }
     .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%); }
     .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%); border-color: rgba(229, 192, 123, 0.3); }
+    /* プレミアムテーマ：黒青の炎 */
+    .palcard.theme-flame { 
+      background: radial-gradient(circle at 80% 20%, #00d2ff 0%, #001122 40%, #05050a 100%); 
+      border-color: #00f2fe;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 210, 255, 0.2);
+    }
 
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
     .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
     
     .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
-    .title-input { font-size: 0.68rem; color: var(--gold); margin-bottom: 1px; line-height: 1.2; font-weight: 500; }
+    .title-input { font-size: 0.68rem; color: var(--gold); margin-bottom: 1px; line-height: 1.2; font-weight: 500; letter-spacing: 0.05em; }
     .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; }
     
     .profile-fields { display: flex; flex-direction: column; gap: 4px; }
@@ -114,27 +131,77 @@
     .field-value { color: var(--text-main); font-size: 0.65rem; font-weight: 500; }
 
     .right-avatar-container { position: relative; width: 130px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .avatar-wrapper { width: 125px; height: 125px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); transition: all 0.3s ease; }
+    .avatar-wrapper { width: 125px; height: 125px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); transition: all 0.3s ease; position: relative; }
     
     /* アイコンフレーム */
-    .avatar-wrapper.frame-none { background: var(--avatar-bg); box-shadow: none; }
+    .avatar-wrapper.frame-none { background: var(--avatar-bg); box-shadow: none; border-radius: 50%; }
     .avatar-wrapper.frame-gold {
       background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
       box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
+      border-radius: 50%;
     }
     .avatar-wrapper.frame-silver {
       background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%);
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
     }
     .avatar-wrapper.frame-neon {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       box-shadow: 0 0 16px rgba(79, 172, 254, 0.7);
+      border-radius: 50%;
+    }
+    
+    /* プレミアムフレーム：丸型アイコン ＋ 立ち上る黒青の炎 */
+    .avatar-wrapper.frame-flame {
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00f2fe, #0044ff, #000);
+      padding: 3px;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.8), 0 -8px 25px rgba(0, 210, 255, 0.6);
+      filter: drop-shadow(0 -5px 12px rgba(0, 242, 254, 0.9));
+    }
+    .avatar-wrapper.frame-flame::before {
+      content: '';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110%;
+      height: 70%;
+      background: radial-gradient(ellipse at bottom, rgba(0, 242, 254, 0.9) 0%, rgba(0, 102, 255, 0.6) 40%, transparent 80%);
+      clip-path: polygon(50% 0%, 20% 100%, 35% 60%, 50% 100%, 65% 55%, 80% 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .avatar-wrapper.frame-flame::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      height: 50%;
+      background: radial-gradient(circle, #ffffff 0%, #00f2fe 60%, transparent 100%);
+      clip-path: polygon(50% 0%, 30% 100%, 50% 70%, 70% 100%);
+      pointer-events: none;
+      z-index: 2;
     }
 
-    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
-    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; position: relative; z-index: 3; }
+    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-    /* カスタマイズコントロール群 */
+    /* ----------------------------------
+       2. スクロールエリア（コントロール群）
+    ---------------------------------- */
+    .scrollable-controls {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 24px;
+      -webkit-overflow-scrolling: touch;
+    }
+
     .customize-section {
       background: #16181b;
       border: 1px solid var(--card-border);
@@ -167,9 +234,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
+      min-height: 52px;
+      position: relative;
     }
     .option-card.active {
       border-color: var(--gold);
@@ -177,12 +247,50 @@
     }
     .option-card:active { transform: scale(0.96); }
 
+    /* プレミアム課金アイテム用のカード装飾 */
+    .option-card.premium {
+      border-color: rgba(0, 242, 254, 0.4);
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .option-card.premium.active {
+      border-color: #00f2fe;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+    }
+    .price-tag {
+      font-size: 0.55rem;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #000;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-top: 2px;
+    }
+
     .color-preview {
       width: 28px;
       height: 28px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
+    
+    /* 課金フレームのプレビュー用円形グラフィック */
+    .flame-frame-preview {
+      position: relative;
+      background: linear-gradient(135deg, #00f2fe, #001122);
+      box-shadow: 0 0 8px #00f2fe;
+    }
+    .flame-frame-preview::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, transparent, #00f2fe);
+      clip-path: polygon(50% 0%, 20% 100%, 80% 100%);
+    }
+
     .option-label {
       font-size: 0.65rem;
       color: var(--text-main);
@@ -203,7 +311,7 @@
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(229,192,123,0.3);
       text-align: center;
-      margin-top: 8px;
+      margin-top: 4px;
       transition: transform 0.1s ease;
     }
     .save-btn:active { transform: scale(0.98); }
@@ -213,124 +321,184 @@
 
   <div class="app-viewport">
     
-    <!-- ヘッダー -->
-    <div class="header-bar">
-      <a href="home.html" class="back-btn">‹ 戻る</a>
-      <span class="page-title">CUSTOMIZE</span>
-      <div style="width: 50px;"></div>
-    </div>
+    <!-- 固定部分：ヘッダー ＋ PREVIEW名刺 -->
+    <div class="fixed-top-area">
+      <div class="header-bar">
+        <a href="home.html" class="back-btn">‹ 戻る</a>
+        <span class="page-title">CUSTOMIZE</span>
+        <div style="width: 50px;"></div>
+      </div>
 
-    <div class="preview-label">PREVIEW</div>
+      <div class="preview-label">PREVIEW</div>
 
-    <!-- プレビュー用名刺カード -->
-    <div class="palcard theme-dark" id="preview-card">
-      <div class="palcard-brand">PALFILE</div>
-      <div class="palcard-body">
-        <div class="profile-info">
-          <div class="title-input">FOUNDER</div>
-          <div class="pet-name" id="preview-name">MEL</div>
-          <div class="profile-fields">
-            <div class="field-row"><span class="field-label">生年月日</span><span class="field-value">2026.02.10</span></div>
-            <div class="field-row"><span class="field-label">好物</span><span class="field-value">ささみ / まぐろ</span></div>
-            <div class="field-row"><span class="field-label">特技</span><span class="field-value">どこでも寝れる</span></div>
-            <div class="field-row"><span class="field-label">ニックネーム</span><span class="field-value">メルちゃん</span></div>
+      <!-- プレビュー用名刺カード -->
+      <div class="palcard theme-dark" id="preview-card">
+        <div class="palcard-brand">PALFILE</div>
+        <div class="palcard-body">
+          <div class="profile-info">
+            <div class="title-input" id="preview-title">FOUNDER</div>
+            <div class="pet-name" id="preview-name">MEL</div>
+            <div class="profile-fields">
+              <div class="field-row"><span class="field-label">生年月日</span><span class="field-value">2026.02.10</span></div>
+              <div class="field-row"><span class="field-label">好物</span><span class="field-value">ささみ / まぐろ</span></div>
+              <div class="field-row"><span class="field-label">特技</span><span class="field-value">どこでも寝れる</span></div>
+              <div class="field-row"><span class="field-label">ニックネーム</span><span class="field-value">メルちゃん</span></div>
+            </div>
           </div>
-        </div>
-        <div class="right-avatar-container">
-          <div class="avatar-wrapper frame-none" id="preview-avatar-wrapper">
-            <div class="avatar-inner">
-              <img src="https://picsum.photos/id/1025/300/300" alt="Pet Avatar">
+          <div class="right-avatar-container">
+            <div class="avatar-wrapper frame-none" id="preview-avatar-wrapper">
+              <div class="avatar-inner">
+                <img src="https://picsum.photos/id/1025/300/300" alt="Pet Avatar">
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 1. テーマカラー選択 -->
-    <div class="customize-section" id="theme-section">
-      <div class="section-title">🎨 カードテーマ</div>
-      <div class="options-grid">
-        <div class="option-card" data-val="theme-dark" onclick="selectTheme('theme-dark', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #24292e, #16181b);"></div>
-          <span class="option-label">ダーク</span>
-        </div>
-        <div class="option-card" data-val="theme-navy" onclick="selectTheme('theme-navy', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);"></div>
-          <span class="option-label">ネイビー</span>
-        </div>
-        <div class="option-card" data-val="theme-emerald" onclick="selectTheme('theme-emerald', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #0d3b2e, #051a14);"></div>
-          <span class="option-label">エメラルド</span>
-        </div>
-        <div class="option-card" data-val="theme-wine" onclick="selectTheme('theme-wine', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #3b1b26, #1a050d);"></div>
-          <span class="option-label">ワイン</span>
-        </div>
-        <div class="option-card" data-val="theme-gold" onclick="selectTheme('theme-gold', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #3d321d, #1c160b);"></div>
-          <span class="option-label">ゴールド</span>
+    <!-- スクロール部分：カスタマイズ操作群 -->
+    <div class="scrollable-controls">
+
+      <!-- 1. 称号選択 -->
+      <div class="customize-section" id="title-section">
+        <div class="section-title">👑 称号を選択</div>
+        <div class="options-grid">
+          <div class="option-card" data-val="FOUNDER" onclick="selectTitle('FOUNDER', false, this)">
+            <span class="option-label" style="font-weight: bold; color: var(--gold);">FOUNDER</span>
+          </div>
+          <div class="option-card" data-val="甘えん坊将軍" onclick="selectTitle('甘えん坊将軍', false, this)">
+            <span class="option-label">甘えん坊将軍</span>
+          </div>
+          <div class="option-card" data-val="食いしん坊" onclick="selectTitle('食いしん坊', false, this)">
+            <span class="option-label">食いしん坊</span>
+          </div>
+          <div class="option-card" data-val="夜の支配者" onclick="selectTitle('夜の支配者', false, this)">
+            <span class="option-label">夜の支配者</span>
+          </div>
+          <div class="option-card" data-val="VIP" onclick="selectTitle('VIP', false, this)">
+            <span class="option-label" style="font-weight: bold; color: var(--gold);">VIP</span>
+          </div>
+          <!-- 課金限定称号 -->
+          <div class="option-card premium" data-val="DARK HERO" onclick="selectTitle('DARK HERO', true, this)">
+            <span class="option-label" style="font-weight: bold; background: linear-gradient(135deg, #fff, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">👑 DARK HERO</span>
+            <span class="price-tag">¥180</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 2. アバターフレーム選択 -->
-    <div class="customize-section" id="frame-section">
-      <div class="section-title">🖼️ アイコンフレーム</div>
-      <div class="options-grid">
-        <div class="option-card" data-val="frame-none" onclick="selectFrame('frame-none', this)">
-          <div class="color-preview" style="background: rgba(255,255,255,0.1);"></div>
-          <span class="option-label">なし</span>
-        </div>
-        <div class="option-card" data-val="frame-gold" onclick="selectFrame('frame-gold', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div>
-          <span class="option-label">ゴールド</span>
-        </div>
-        <div class="option-card" data-val="frame-silver" onclick="selectFrame('frame-silver', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #6c757d);"></div>
-          <span class="option-label">シルバー</span>
-        </div>
-        <div class="option-card" data-val="frame-neon" onclick="selectFrame('frame-neon', this)">
-          <div class="color-preview" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></div>
-          <span class="option-label">サイバー</span>
+      <!-- 2. テーマカラー選択 -->
+      <div class="customize-section" id="theme-section">
+        <div class="section-title">🎨 カードテーマ</div>
+        <div class="options-grid">
+          <div class="option-card" data-val="theme-dark" onclick="selectTheme('theme-dark', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #24292e, #16181b);"></div>
+            <span class="option-label">ダーク</span>
+          </div>
+          <div class="option-card" data-val="theme-navy" onclick="selectTheme('theme-navy', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);"></div>
+            <span class="option-label">ネイビー</span>
+          </div>
+          <div class="option-card" data-val="theme-emerald" onclick="selectTheme('theme-emerald', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #0d3b2e, #051a14);"></div>
+            <span class="option-label">エメラルド</span>
+          </div>
+          <div class="option-card" data-val="theme-wine" onclick="selectTheme('theme-wine', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #3b1b26, #1a050d);"></div>
+            <span class="option-label">ワイン</span>
+          </div>
+          <div class="option-card" data-val="theme-gold" onclick="selectTheme('theme-gold', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #3d321d, #1c160b);"></div>
+            <span class="option-label">ゴールド</span>
+          </div>
+          <!-- 課金限定テーマ -->
+          <div class="option-card premium" data-val="theme-flame" onclick="selectTheme('theme-flame', true, this)">
+            <div class="color-preview" style="background: radial-gradient(circle, #00f2fe, #001122);"></div>
+            <span class="option-label">黒青の炎</span>
+            <span class="price-tag">¥180</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 3. フォントスタイル選択 -->
-    <div class="customize-section" id="font-section">
-      <div class="section-title">✍️ 名前のフォント</div>
-      <div class="options-grid">
-        <div class="option-card" data-val="Cinzel" onclick="selectFont('Cinzel', this)">
-          <span style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #fff;">Aa</span>
-          <span class="option-label">クラシック</span>
-        </div>
-        <div class="option-card" data-val="Shippori Mincho" onclick="selectFont('Shippori Mincho', this)">
-          <span style="font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: #fff;">明朝</span>
-          <span class="option-label">エレガント</span>
-        </div>
-        <div class="option-card" data-val="M PLUS Rounded 1c" onclick="selectFont('M PLUS Rounded 1c', sans-serif, this)">
-          <span style="font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1rem; color: #fff;">まる</span>
-          <span class="option-label">ポップ</span>
+      <!-- 3. アバターフレーム選択 -->
+      <div class="customize-section" id="frame-section">
+        <div class="section-title">🖼️ アイコンフレーム</div>
+        <div class="options-grid">
+          <div class="option-card" data-val="frame-none" onclick="selectFrame('frame-none', false, this)">
+            <div class="color-preview" style="background: rgba(255,255,255,0.1);"></div>
+            <span class="option-label">なし</span>
+          </div>
+          <div class="option-card" data-val="frame-gold" onclick="selectFrame('frame-gold', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div>
+            <span class="option-label">ゴールド</span>
+          </div>
+          <div class="option-card" data-val="frame-silver" onclick="selectFrame('frame-silver', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #6c757d);"></div>
+            <span class="option-label">シルバー</span>
+          </div>
+          <div class="option-card" data-val="frame-neon" onclick="selectFrame('frame-neon', false, this)">
+            <div class="color-preview" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></div>
+            <span class="option-label">サイバー</span>
+          </div>
+          <!-- 課金限定フレーム -->
+          <div class="option-card premium" data-val="frame-flame" onclick="selectFrame('frame-flame', true, this)">
+            <div class="color-preview flame-frame-preview"></div>
+            <span class="option-label">黒青の炎</span>
+            <span class="price-tag">¥180</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 保存ボタン -->
-    <button class="save-btn" onclick="saveCustomization()">変更を保存して適用</button>
+      <!-- 4. フォントスタイル選択 -->
+      <div class="customize-section" id="font-section">
+        <div class="section-title">✍️ 名前のフォント</div>
+        <div class="options-grid">
+          <div class="option-card" data-val="Cinzel" onclick="selectFont('Cinzel', false, this)">
+            <span style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #fff;">Aa</span>
+            <span class="option-label">クラシック</span>
+          </div>
+          <div class="option-card" data-val="Shippori Mincho" onclick="selectFont('Shippori Mincho', false, this)">
+            <span style="font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: #fff;">明朝</span>
+            <span class="option-label">エレガント</span>
+          </div>
+          <div class="option-card" data-val="M PLUS Rounded 1c" onclick="selectFont('M PLUS Rounded 1c', false, this)">
+            <span style="font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1rem; color: #fff;">まる</span>
+            <span class="option-label">ポップ</span>
+          </div>
+          <!-- 課金限定フォント -->
+          <div class="option-card premium" data-val="Noto Sans JP" onclick="selectFont('Noto Sans JP', true, this)">
+            <span style="font-family: 'Noto Sans JP', sans-serif; font-weight: 900; font-size: 1.1rem; color: #00f2fe;">極太</span>
+            <span class="option-label">ゴシック</span>
+            <span class="price-tag">¥180</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 保存ボタン -->
+      <button class="save-btn" onclick="saveCustomization()">変更を保存して適用</button>
+
+    </div>
 
   </div>
 
   <script>
     // デフォルトの設定
     let currentConfig = {
+      title: 'FOUNDER',
       theme: 'theme-dark',
       frame: 'frame-none',
       font: 'Cinzel'
     };
 
+    // 各項目が課金アイテムかどうかを追跡するフラグ
+    let isPremiumSelected = {
+      title: false,
+      theme: false,
+      frame: false,
+      font: false
+    };
+
     // 画面を開いたときの処理
     window.addEventListener('DOMContentLoaded', () => {
-      // 以前保存したデータがあれば読み込む
       const saved = localStorage.getItem('parmel_custom_config');
       if (saved) {
         try {
@@ -338,28 +506,38 @@
         } catch(e) {}
       }
       
-      // 画面上のプレビューと選択ボタンの見た目を適用
       applyConfigToPreview();
       updateActiveUI();
     });
 
+    // 称号選択処理
+    function selectTitle(titleText, isPremium, el) {
+      currentConfig.title = titleText;
+      isPremiumSelected.title = isPremium;
+      updateGroupActive(el);
+      applyConfigToPreview();
+    }
+
     // テーマ選択処理
-    function selectTheme(themeClass, el) {
+    function selectTheme(themeClass, isPremium, el) {
       currentConfig.theme = themeClass;
+      isPremiumSelected.theme = isPremium;
       updateGroupActive(el);
       applyConfigToPreview();
     }
 
     // フレーム選択処理
-    function selectFrame(frameClass, el) {
+    function selectFrame(frameClass, isPremium, el) {
       currentConfig.frame = frameClass;
+      isPremiumSelected.frame = isPremium;
       updateGroupActive(el);
       applyConfigToPreview();
     }
 
     // フォント選択処理
-    function selectFont(fontFamily, el) {
+    function selectFont(fontFamily, isPremium, el) {
       currentConfig.font = fontFamily;
+      isPremiumSelected.font = isPremium;
       updateGroupActive(el);
       applyConfigToPreview();
     }
@@ -376,43 +554,56 @@
       const card = document.getElementById('preview-card');
       const avatarWrapper = document.getElementById('preview-avatar-wrapper');
       const petName = document.getElementById('preview-name');
+      const petTitle = document.getElementById('preview-title');
 
-      // 背景テーマを変更
+      if (petTitle) petTitle.textContent = currentConfig.title || 'FOUNDER';
       card.className = `palcard ${currentConfig.theme}`;
-
-      // アイコンフレームを変更
       avatarWrapper.className = `avatar-wrapper ${currentConfig.frame}`;
-
-      // 名前のフォントを変更
-      petName.style.fontFamily = `'${currentConfig.font}', serif, sans-serif`;
+      
+      if (currentConfig.font === 'Noto Sans JP') {
+        petName.style.fontFamily = `'Noto Sans JP', sans-serif`;
+        petName.style.fontWeight = '900';
+      } else {
+        petName.style.fontFamily = `'${currentConfig.font}', serif, sans-serif`;
+        petName.style.fontWeight = '700';
+      }
     }
 
-    // 現在の設定値に合わせて選択中状態（金色の枠線）を復元する
+    // UI状態の同期
     function updateActiveUI() {
-      // テーマボタンのハイライト
+      document.querySelectorAll('#title-section .option-card').forEach(card => {
+        if(card.getAttribute('data-val') === currentConfig.title) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
       document.querySelectorAll('#theme-section .option-card').forEach(card => {
         if(card.getAttribute('data-val') === currentConfig.theme) card.classList.add('active');
         else card.classList.remove('active');
       });
 
-      // フレームボタンのハイライト
       document.querySelectorAll('#frame-section .option-card').forEach(card => {
         if(card.getAttribute('data-val') === currentConfig.frame) card.classList.add('active');
         else card.classList.remove('active');
       });
 
-      // フォントボタンのハイライト
       document.querySelectorAll('#font-section .option-card').forEach(card => {
         if(card.getAttribute('data-val') === currentConfig.font) card.classList.add('active');
         else card.classList.remove('active');
       });
     }
 
-    // 保存してホーム画面へ移動する処理
+    // 保存・適用処理
     function saveCustomization() {
-      // ブラウザに保存
+      // 課金アイテムが選択されているかチェック
+      const hasPremium = Object.values(isPremiumSelected).some(val => val === true);
+
+      if (hasPremium) {
+        alert('こちらのカスタム機能は ¥180 で解放されます');
+        return; // 保存せず処理を中断
+      }
+
+      // 通常アイテムのみの場合は保存して移動
       localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig));
-      // ホーム画面 (home.html) へリダイレクト
       window.location.href = 'home.html';
     }
   </script>
