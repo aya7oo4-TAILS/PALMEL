@@ -86,6 +86,11 @@
       background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
     }
 
+    /* カスタマイズ用テーマ拡張定義 */
+    .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%) !important; }
+    .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%) !important; }
+    .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%) !important; border-color: rgba(229, 192, 123, 0.5) !important; }
+
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
     .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
     
@@ -104,6 +109,16 @@
     .avatar-wrapper.frame-gold {
       background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
       box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
+    }
+
+    /* カスタマイズ用フレーム拡張定義 */
+    .avatar-wrapper.frame-silver {
+      background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%) !important;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3) !important;
+    }
+    .avatar-wrapper.frame-neon {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
+      box-shadow: 0 0 16px rgba(79, 172, 254, 0.7) !important;
     }
 
     .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
@@ -460,6 +475,37 @@
     const titles = ['★ おやつハンター', '★ 爆走隊長', '★ 日向ぼっこプロ', '★ いたずら妖精'];
     const myHistoryAlbum = [];
     const postDataStore = {};
+
+    /* ─── 保存されたカスタマイズ設定の自動反映 ─── */
+    function applySavedCustomization() {
+      const saved = localStorage.getItem('parmel_custom_config');
+      if (!saved) return;
+
+      try {
+        const config = JSON.parse(saved);
+        const card = document.getElementById('main-palcard');
+        const avatarWrapper = document.getElementById('main-avatar-wrapper');
+        const petName = document.getElementById('in-name');
+
+        if (card && config.theme) {
+          card.className = card.className.replace(/theme-\w+/g, '');
+          card.classList.add(config.theme);
+        }
+
+        if (avatarWrapper && config.frame) {
+          avatarWrapper.className = avatarWrapper.className.replace(/frame-\w+/g, '');
+          avatarWrapper.classList.add(config.frame);
+        }
+
+        if (petName && config.font) {
+          petName.style.fontFamily = `'${config.font}', serif, sans-serif`;
+        }
+      } catch (e) {
+        console.error('カスタマイズ設定の読み込みに失敗しました:', e);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', applySavedCustomization);
 
     /* ─── スワイプ処理 ─── */
     const drawer = document.getElementById('side-drawer');
