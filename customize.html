@@ -215,9 +215,9 @@
     
     <!-- ヘッダー -->
     <div class="header-bar">
-      <a href="javascript:history.back()" class="back-btn">‹ 戻る</a>
+      <a href="home.html" class="back-btn">‹ 戻る</a>
       <span class="page-title">CUSTOMIZE</span>
-      <div style="width: 50px;"></div> <!-- レイアウト調整用スペース -->
+      <div style="width: 50px;"></div>
     </div>
 
     <div class="preview-label">PREVIEW</div>
@@ -247,26 +247,26 @@
     </div>
 
     <!-- 1. テーマカラー選択 -->
-    <div class="customize-section">
+    <div class="customize-section" id="theme-section">
       <div class="section-title">🎨 カードテーマ</div>
       <div class="options-grid">
-        <div class="option-card active" onclick="selectTheme('theme-dark', this)">
+        <div class="option-card" data-val="theme-dark" onclick="selectTheme('theme-dark', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #24292e, #16181b);"></div>
           <span class="option-label">ダーク</span>
         </div>
-        <div class="option-card" onclick="selectTheme('theme-navy', this)">
+        <div class="option-card" data-val="theme-navy" onclick="selectTheme('theme-navy', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);"></div>
           <span class="option-label">ネイビー</span>
         </div>
-        <div class="option-card" onclick="selectTheme('theme-emerald', this)">
+        <div class="option-card" data-val="theme-emerald" onclick="selectTheme('theme-emerald', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #0d3b2e, #051a14);"></div>
           <span class="option-label">エメラルド</span>
         </div>
-        <div class="option-card" onclick="selectTheme('theme-wine', this)">
+        <div class="option-card" data-val="theme-wine" onclick="selectTheme('theme-wine', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #3b1b26, #1a050d);"></div>
           <span class="option-label">ワイン</span>
         </div>
-        <div class="option-card" onclick="selectTheme('theme-gold', this)">
+        <div class="option-card" data-val="theme-gold" onclick="selectTheme('theme-gold', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #3d321d, #1c160b);"></div>
           <span class="option-label">ゴールド</span>
         </div>
@@ -274,22 +274,22 @@
     </div>
 
     <!-- 2. アバターフレーム選択 -->
-    <div class="customize-section">
+    <div class="customize-section" id="frame-section">
       <div class="section-title">🖼️ アイコンフレーム</div>
       <div class="options-grid">
-        <div class="option-card active" onclick="selectFrame('frame-none', this)">
+        <div class="option-card" data-val="frame-none" onclick="selectFrame('frame-none', this)">
           <div class="color-preview" style="background: rgba(255,255,255,0.1);"></div>
           <span class="option-label">なし</span>
         </div>
-        <div class="option-card" onclick="selectFrame('frame-gold', this)">
+        <div class="option-card" data-val="frame-gold" onclick="selectFrame('frame-gold', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div>
           <span class="option-label">ゴールド</span>
         </div>
-        <div class="option-card" onclick="selectFrame('frame-silver', this)">
+        <div class="option-card" data-val="frame-silver" onclick="selectFrame('frame-silver', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #6c757d);"></div>
           <span class="option-label">シルバー</span>
         </div>
-        <div class="option-card" onclick="selectFrame('frame-neon', this)">
+        <div class="option-card" data-val="frame-neon" onclick="selectFrame('frame-neon', this)">
           <div class="color-preview" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></div>
           <span class="option-label">サイバー</span>
         </div>
@@ -297,18 +297,18 @@
     </div>
 
     <!-- 3. フォントスタイル選択 -->
-    <div class="customize-section">
+    <div class="customize-section" id="font-section">
       <div class="section-title">✍️ 名前のフォント</div>
       <div class="options-grid">
-        <div class="option-card active" onclick="selectFont('Cinzel', this)">
+        <div class="option-card" data-val="Cinzel" onclick="selectFont('Cinzel', this)">
           <span style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #fff;">Aa</span>
           <span class="option-label">クラシック</span>
         </div>
-        <div class="option-card" onclick="selectFont('Shippori Mincho', this)">
+        <div class="option-card" data-val="Shippori Mincho" onclick="selectFont('Shippori Mincho', this)">
           <span style="font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: #fff;">明朝</span>
           <span class="option-label">エレガント</span>
         </div>
-        <div class="option-card" onclick="selectFont('M PLUS Rounded 1c', this)">
+        <div class="option-card" data-val="M PLUS Rounded 1c" onclick="selectFont('M PLUS Rounded 1c', sans-serif, this)">
           <span style="font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1rem; color: #fff;">まる</span>
           <span class="option-label">ポップ</span>
         </div>
@@ -321,73 +321,99 @@
   </div>
 
   <script>
-    // 現在の選択設定
+    // デフォルトの設定
     let currentConfig = {
       theme: 'theme-dark',
       frame: 'frame-none',
       font: 'Cinzel'
     };
 
-    // 読み込み時に保存済み設定を適用
+    // 画面を開いたときの処理
     window.addEventListener('DOMContentLoaded', () => {
+      // 以前保存したデータがあれば読み込む
       const saved = localStorage.getItem('parmel_custom_config');
       if (saved) {
         try {
           currentConfig = JSON.parse(saved);
-          applyConfigToPreview();
-          updateActiveUI();
         } catch(e) {}
       }
+      
+      // 画面上のプレビューと選択ボタンの見た目を適用
+      applyConfigToPreview();
+      updateActiveUI();
     });
 
+    // テーマ選択処理
     function selectTheme(themeClass, el) {
       currentConfig.theme = themeClass;
       updateGroupActive(el);
       applyConfigToPreview();
     }
 
+    // フレーム選択処理
     function selectFrame(frameClass, el) {
       currentConfig.frame = frameClass;
       updateGroupActive(el);
       applyConfigToPreview();
     }
 
+    // フォント選択処理
     function selectFont(fontFamily, el) {
       currentConfig.font = fontFamily;
       updateGroupActive(el);
       applyConfigToPreview();
     }
 
+    // 選択されたボタンの枠線を更新
     function updateGroupActive(targetEl) {
       const parent = targetEl.parentElement;
       parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
       targetEl.classList.add('active');
     }
 
+    // カードのプレビュー領域を書き換える
     function applyConfigToPreview() {
       const card = document.getElementById('preview-card');
       const avatarWrapper = document.getElementById('preview-avatar-wrapper');
       const petName = document.getElementById('preview-name');
 
-      // テーマクラス更新
+      // 背景テーマを変更
       card.className = `palcard ${currentConfig.theme}`;
 
-      // フレームクラス更新
+      // アイコンフレームを変更
       avatarWrapper.className = `avatar-wrapper ${currentConfig.frame}`;
 
-      // フォント更新
+      // 名前のフォントを変更
       petName.style.fontFamily = `'${currentConfig.font}', serif, sans-serif`;
     }
 
+    // 現在の設定値に合わせて選択中状態（金色の枠線）を復元する
     function updateActiveUI() {
-      // 復元された設定に合わせてUIのactive状態を更新する処理
-      // (簡略化のため、選択時のイベントで維持)
+      // テーマボタンのハイライト
+      document.querySelectorAll('#theme-section .option-card').forEach(card => {
+        if(card.getAttribute('data-val') === currentConfig.theme) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      // フレームボタンのハイライト
+      document.querySelectorAll('#frame-section .option-card').forEach(card => {
+        if(card.getAttribute('data-val') === currentConfig.frame) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+
+      // フォントボタンのハイライト
+      document.querySelectorAll('#font-section .option-card').forEach(card => {
+        if(card.getAttribute('data-val') === currentConfig.font) card.classList.add('active');
+        else card.classList.remove('active');
+      });
     }
 
+    // 保存してホーム画面へ移動する処理
     function saveCustomization() {
+      // ブラウザに保存
       localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig));
-      alert('デザイン設定を保存しました！');
-      history.back();
+      // ホーム画面 (home.html) へリダイレクト
+      window.location.href = 'home.html';
     }
   </script>
 </body>
