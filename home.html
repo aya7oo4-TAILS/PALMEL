@@ -26,6 +26,7 @@
       background: var(--bg-main);
       color: var(--text-main);
       font-family: 'Noto Sans JP', sans-serif;
+      overflow-x: hidden;
     }
 
     body {
@@ -68,7 +69,7 @@
     .palcard {
       background: var(--card-bg);
       border-radius: var(--radius-card);
-      padding: 12px 14px 44px; /* 下部にボタン配置領域(44px)を確保 */
+      padding: 12px 14px 44px;
       box-shadow: var(--card-shadow);
       border: 1px solid var(--card-border);
       position: relative;
@@ -81,7 +82,6 @@
       transition: background 0.3s ease;
     }
 
-    /* 名刺テーマバリエーション */
     .palcard.theme-navy {
       background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
     }
@@ -89,21 +89,18 @@
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
     .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
     
-    /* プロフィール情報：少しだけ下げて配置＆行間にゆとり持たせ */
     .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
     .title-input { font-size: 0.68rem; color: var(--gold); background: transparent; border: none; outline: none; font-weight: 500; margin-bottom: 1px; line-height: 1.2; }
     .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; border: none; background: transparent; outline: none; }
     
-    .profile-fields { display: flex; flex-direction: column; gap: 4px; } /* 縦の間隔を広げた */
+    .profile-fields { display: flex; flex-direction: column; gap: 4px; }
     .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2px; }
     .field-label { font-size: 0.58rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
     .field-input { background: transparent; border: none; color: var(--text-main); font-size: 0.65rem; outline: none; width: 100%; font-weight: 500; }
 
-    /* 名刺の丸アイコン（大きく名刺の半分近くを占めるサイズ） */
     .right-avatar-container { position: relative; width: 140px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .avatar-wrapper { width: 138px; height: 138px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); cursor: pointer; display: block; transition: all 0.3s ease; }
     
-    /* アイコン枠バリエーション */
     .avatar-wrapper.frame-gold {
       background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
       box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
@@ -112,7 +109,6 @@
     .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
     .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* 名刺下部ボタンの位置調整 */
     .palcard-footer { position: absolute; left: 14px; right: 14px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
     .footer-left-group { display: flex; gap: 6px; }
     .icon-btn {
@@ -120,7 +116,6 @@
       border-radius: 8px; color: var(--text-main); font-size: 0.55rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 500;
     }
 
-    /* 着せ替えモーダル専用スタイル */
     .customize-section { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
     .customize-label { font-size: 0.7rem; color: var(--gold); font-weight: bold; }
     .customize-options { display: flex; gap: 8px; }
@@ -140,7 +135,7 @@
     .grid-image-box img { width: 100%; height: 100%; object-fit: cover; }
     input[type="file"] { display: none; }
 
-    /* ─── みんなのパル：投稿カード ─── */
+    /* フィード投稿カード */
     .feed-post-card {
       background: #16181b; border-radius: var(--radius-card); border: 1px solid var(--card-border);
       padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.1s ease;
@@ -165,7 +160,6 @@
     .modal-overlay.active { display: flex; }
     .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; padding: 20px; max-height: 80vh; overflow-y: auto; }
 
-    /* プロフィールモーダル */
     .user-profile-modal { display: none; position: fixed; inset: 0; background: #0b0d0e; z-index: 10000; overflow-y: auto; padding: 16px 12px 100px; }
     .user-profile-modal.active { display: flex; flex-direction: column; align-items: center; }
     .profile-modal-container { width: 100%; max-width: 414px; display: flex; flex-direction: column; gap: 16px; position: relative; }
@@ -174,29 +168,15 @@
       color: #fff; border-radius: 50%; width: 32px; height: 32px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;
     }
 
-    /* ナビゲーションバーで隠れないための空白スペーサー */
-    .nav-spacer {
-      width: 100%;
-      height: 90px;
-      flex-shrink: 0;
-    }
+    .nav-spacer { width: 100%; height: 90px; flex-shrink: 0; }
 
     /* 固定ボトムナビ */
     .bottom-nav {
-      position: fixed; 
-      bottom: 0; 
-      left: 50%; 
-      transform: translateX(-50%);
-      width: 100%; 
-      max-width: 414px; 
-      height: 60px;
-      background: rgba(15, 17, 20, 0.95); 
-      backdrop-filter: blur(16px); 
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 414px; height: 60px;
+      background: rgba(15, 17, 20, 0.95); backdrop-filter: blur(16px);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex; 
-      justify-content: space-around; 
-      align-items: center; 
-      z-index: 9000;
+      display: flex; justify-content: space-around; align-items: center; z-index: 9000;
     }
     .nav-btn { background: none; border: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; width: 33%; }
     .nav-btn.active { color: var(--gold); }
@@ -205,45 +185,88 @@
     .album-history-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
     .album-date { font-size: 0.75rem; color: var(--gold); margin-bottom: 8px; }
 
-    /* 名刺を渡す（90度回転＆拡大モーダル） */
+    /* 名刺プレビューモーダル */
     .card-present-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 6, 7, 0.92);
-      backdrop-filter: blur(16px);
-      z-index: 20000;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
+      display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.92);
+      backdrop-filter: blur(16px); z-index: 20000; justify-content: center; align-items: center; cursor: pointer;
     }
     .card-present-overlay.active { display: flex; }
     .card-present-wrapper {
-      width: 360px;
-      transition: transform 0.4s cubic-bezier(0.25, 1.3, 0.5, 1);
-      transform: rotate(0deg) scale(0.7);
-      opacity: 0;
+      width: 360px; transition: transform 0.4s cubic-bezier(0.25, 1.3, 0.5, 1);
+      transform: rotate(0deg) scale(0.7); opacity: 0;
     }
-    .card-present-overlay.active .card-present-wrapper {
-      transform: rotate(90deg) scale(1.45);
-      opacity: 1;
+    .card-present-overlay.active .card-present-wrapper { transform: rotate(90deg) scale(1.45); opacity: 1; }
+    .card-present-tip { position: absolute; bottom: 40px; color: var(--text-sub); font-size: 0.75rem; letter-spacing: 0.1em; pointer-events: none; }
+
+    /* ─── 改良型ドロワーメニュー ─── */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px); z-index: 25000; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
     }
-    .card-present-tip {
-      position: absolute;
-      bottom: 40px;
-      color: var(--text-sub);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      pointer-events: none;
+    .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .side-drawer {
+      position: fixed; top: 0; left: 0; width: 280px; height: 100%;
+      background: #14171a; border-right: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 26000; transform: translateX(-100%);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 20px 16px;
+      box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+      will-change: transform;
+    }
+    .side-drawer.animated { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    .side-drawer.open { transform: translateX(0); }
+
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+    .drawer-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 0.9rem; font-weight: bold; letter-spacing: 0.1em; }
+    .drawer-close-btn { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
+
+    .drawer-menu-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .drawer-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: var(--text-main); font-size: 0.8rem;
+      cursor: pointer; text-align: left; transition: background 0.2s ease;
+    }
+    .drawer-item:active { background: rgba(229,192,123,0.15); border-color: var(--gold); }
+
+    .header-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 4px; }
+    .menu-trigger-btn {
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main); font-size: 0.7rem; padding: 5px 12px; border-radius: 12px; cursor: pointer; font-weight: bold;
     }
   </style>
 </head>
 <body>
 
+  <!-- ドロワーメニュー -->
+  <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+  
+  <aside id="side-drawer" class="side-drawer">
+    <div>
+      <div class="drawer-header">
+        <span class="drawer-title">SETTINGS</span>
+        <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
+      </div>
+      <div class="drawer-menu-list">
+        <button class="drawer-item" onclick="alert('アカウント設定を開きます'); closeDrawer();">👤 アカウント・プロフ設定</button>
+        <button class="drawer-item" onclick="toggleModal('customize-modal', true); closeDrawer();">🎨 デザイン着せ替え</button>
+        <button class="drawer-item" onclick="alert('通知設定'); closeDrawer();">🔔 通知設定</button>
+        <button class="drawer-item" onclick="alert('プライバシー設定'); closeDrawer();">🔒 プライバシー・セキュリティ</button>
+        <button class="drawer-item" onclick="alert('ヘルプ'); closeDrawer();">❓ ヘルプ＆サポート</button>
+      </div>
+    </div>
+    <button class="drawer-item" style="color: #ff6b6b; border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05);" onclick="alert('ログアウトしました'); closeDrawer();">🚪 ログアウト</button>
+  </aside>
+
   <div class="app-viewport">
     
-    <!-- 1. マイパル ページ -->
+    <!-- マイパル ページ -->
     <div id="page-mypal" class="page active">
+
+      <div class="header-bar">
+        <button class="menu-trigger-btn" onclick="openDrawer()">≡ 設定</button>
+        <span style="font-family:'Cinzel'; font-size:0.65rem; color:var(--text-sub); letter-spacing:0.2em;">SWIPE FOR MENU</span>
+      </div>
 
       <!-- 名刺カード -->
       <div class="palcard" id="main-palcard">
@@ -253,7 +276,7 @@
             <input type="text" id="in-title" class="title-input" value="FOUNDER" readonly>
             <input type="text" id="in-name" class="pet-name" value="MEL">
             <div class="profile-fields">
-              <div class="field-row"><span class="field-label">生年月目には</span><input type="text" id="in-birth" class="field-input" value="2026.02.10"></div>
+              <div class="field-row"><span class="field-label">生年月日</span><input type="text" id="in-birth" class="field-input" value="2026.02.10"></div>
               <div class="field-row"><span class="field-label">好物</span><input type="text" id="in-food" class="field-input" value="ささみ / まぐろ"></div>
               <div class="field-row"><span class="field-label">特技</span><input type="text" id="in-skill" class="field-input" value="どこでも寝れる"></div>
               <div class="field-row"><span class="field-label">ニックネーム</span><input type="text" id="in-nickname" class="field-input" value="メルちゃん"></div>
@@ -295,7 +318,6 @@
         </script>
       </div>
 
-      <!-- 9マスの下のコントロールバー -->
       <div class="bottom-grid-action-bar">
         <button class="action-btn-main" onclick="postToPublicFeed()">投稿する</button>
         <button class="action-btn-sub" onclick="toggleModal('history-modal', true)">過去の9マス</button>
@@ -306,7 +328,7 @@
 
     </div>
 
-    <!-- 2. みんなのパル ページ -->
+    <!-- みんなのパル ページ -->
     <div id="page-feed" class="page">
       <h2 style="font-family:'Cinzel'; color:var(--gold); font-size:1.1rem; text-align:center;">EVERYONE'S PAL</h2>
       <div id="feed-container" style="display:flex; flex-direction:column; gap:16px;"></div>
@@ -317,11 +339,10 @@
 
   </div>
 
-  <!-- 着せ替え設定 モーダル -->
+  <!-- モーダル類 -->
   <div id="customize-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">CARD CUSTOMIZE</h3>
-      
       <div class="customize-section">
         <div class="customize-label">称号選択</div>
         <div class="customize-options">
@@ -329,7 +350,6 @@
           <button class="customize-btn" id="title-btn-2" onclick="selectTitle('パルメル初期ユーザー', 'title-btn-2')">パルメル初期ユーザー</button>
         </div>
       </div>
-
       <div class="customize-section">
         <div class="customize-label">アイコン枠</div>
         <div class="customize-options">
@@ -337,7 +357,6 @@
           <button class="customize-btn" id="frame-btn-2" onclick="selectFrame('gold', 'frame-btn-2')">ゴールド</button>
         </div>
       </div>
-
       <div class="customize-section">
         <div class="customize-label">名刺の色</div>
         <div class="customize-options">
@@ -345,16 +364,13 @@
           <button class="customize-btn" id="color-btn-2" onclick="selectCardColor('navy', 'color-btn-2')">エレガントネイビー</button>
         </div>
       </div>
-
       <button style="margin-top:20px; width:100%; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="toggleModal('customize-modal', false)">完了</button>
     </div>
   </div>
 
-  <!-- 他ユーザーのプロフ モーダル -->
   <div id="user-profile-modal" class="user-profile-modal">
     <div class="profile-modal-container">
       <button class="close-modal-btn" onclick="closeUserProfile()">✕</button>
-      
       <div class="palcard">
         <div class="palcard-brand">PALFILE</div>
         <div class="palcard-body">
@@ -378,19 +394,16 @@
           <button class="icon-btn" onclick="alert('名刺を交換しました！')"><span>名刺交換</span></button>
         </div>
       </div>
-
       <div class="grid-container" id="target-grid-container"></div>
       <div class="nav-spacer"></div>
     </div>
   </div>
 
-  <!-- 名刺全画面回転プレビューモーダル -->
   <div id="card-present-modal" class="card-present-overlay" onclick="closePresentCard()">
     <div class="card-present-wrapper" id="present-card-container"></div>
     <div class="card-present-tip">タップして閉じる</div>
   </div>
 
-  <!-- ボトムナビ -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="btn-mypal" onclick="switchTab('mypal')">🏠 マイパル</button>
     <button class="nav-btn" onclick="toggleModal('exchanged-modal', true)">🎴 名刺/9マス</button>
@@ -405,7 +418,6 @@
     </div>
   </div>
 
-  <!-- 過去の9マス（アルバム）モーダル -->
   <div id="history-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px;">PAST 9-GRIDS</h3>
@@ -423,7 +435,108 @@
     const myHistoryAlbum = [];
     const postDataStore = {};
 
-    /* 着せ替え切り替え処理 */
+    /* ─── 完全リアルタイム連動スワイプ処理 ─── */
+    const drawer = document.getElementById('side-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const DRAWER_WIDTH = 280;
+
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let isTracking = false;
+    let isOpen = false;
+
+    function openDrawer() {
+      isOpen = true;
+      drawer.classList.add('animated');
+      drawer.style.transform = `translateX(0px)`;
+      drawerOverlay.classList.add('active');
+    }
+
+    function closeDrawer() {
+      isOpen = false;
+      drawer.classList.add('animated');
+      drawer.style.transform = `translateX(-100%)`;
+      drawerOverlay.classList.remove('active');
+    }
+
+    // タッチ開始
+    window.addEventListener('touchstart', (e) => {
+      // 入力エリアやボタンを触っている時はスワイプ動作を邪魔しない
+      if (['INPUT', 'BUTTON', 'LABEL', 'TEXTAREA'].includes(e.target.tagName)) return;
+      
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isTracking = true;
+
+      // アニメーション用classを外し、指の動きと完全同期させる
+      drawer.classList.remove('animated');
+    }, { passive: true });
+
+    // タッチ移動（指の動きに合わせて追従）
+    window.addEventListener('touchmove', (e) => {
+      if (!isTracking) return;
+
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
+      const diffX = touchX - startX;
+      const diffY = Math.abs(touchY - startY);
+
+      // 縦スクロール判定の場合はスワイプを中断
+      if (diffY > Math.abs(diffX) && diffY > 10) {
+        isTracking = false;
+        return;
+      }
+
+      if (!isOpen) {
+        // 閉じた状態から右スワイプで引き出す
+        if (diffX > 0) {
+          let translateX = -DRAWER_WIDTH + diffX;
+          if (translateX > 0) translateX = 0;
+          drawer.style.transform = `translateX(${translateX}px)`;
+          drawerOverlay.style.opacity = Math.min(diffX / DRAWER_WIDTH, 1);
+          drawerOverlay.style.pointerEvents = 'auto';
+        }
+      } else {
+        // 開いた状態から左スワイプで押し戻す
+        if (diffX < 0) {
+          let translateX = diffX;
+          if (translateX < -DRAWER_WIDTH) translateX = -DRAWER_WIDTH;
+          drawer.style.transform = `translateX(${translateX}px)`;
+          drawerOverlay.style.opacity = Math.max(1 + (diffX / DRAWER_WIDTH), 0);
+        }
+      }
+    }, { passive: true });
+
+    // タッチ終了（判定して開くか閉じるかを確定）
+    window.addEventListener('touchend', (e) => {
+      if (!isTracking) return;
+      isTracking = false;
+
+      const endX = e.changedTouches[0].clientX;
+      const diffX = endX - startX;
+
+      drawerOverlay.style.opacity = '';
+      drawerOverlay.style.pointerEvents = '';
+
+      if (!isOpen) {
+        // 50px以上右に引っ張ったら開く
+        if (diffX > 50) {
+          openDrawer();
+        } else {
+          closeDrawer();
+        }
+      } else {
+        // 50px以上左に戻したら閉じる
+        if (diffX < -50) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      }
+    }, { passive: true });
+
+    /* その他の機能 */
     function selectTitle(titleText, btnId) {
       document.getElementById('in-title').value = titleText;
       document.querySelectorAll('#customize-modal .customize-section:nth-child(1) .customize-btn').forEach(b => b.classList.remove('active'));
@@ -666,20 +779,17 @@
       albumList.prepend(itemHtml);
     }
 
-    /* 名刺を渡す（90度回転＆拡大モーダル）処理 */
     function presentCard() {
       const cardSrc = document.getElementById('main-palcard');
       const clone = cardSrc.cloneNode(true);
       clone.removeAttribute('id');
       
-      // コピーした入力欄の値を引き継ぐ
       const origInputs = cardSrc.querySelectorAll('input');
       const cloneInputs = clone.querySelectorAll('input');
       origInputs.forEach((inp, idx) => {
         cloneInputs[idx].value = inp.value;
       });
 
-      // ボタンエリア非表示
       const footer = clone.querySelector('.palcard-footer');
       if (footer) footer.style.display = 'none';
 
