@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PALCARD カスタマイズ - PARMEL</title>
+  <title>PALCARD CUSTOMIZE - PARMEL</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -12,7 +12,6 @@
       --text-main: #f5f6f8;
       --text-sub: #9aa0a6;
       --gold: #e5c07b;
-      --gold-dark: #8c6a2f;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,7 +20,7 @@
       background: var(--bg-main);
       color: var(--text-main);
       font-family: 'Noto Sans JP', sans-serif;
-      padding: 20px 16px;
+      padding: 16px;
       display: flex;
       justify-content: center;
     }
@@ -34,7 +33,6 @@
       gap: 20px;
     }
 
-    /* ヘッダー */
     .header {
       display: flex;
       justify-content: space-between;
@@ -47,18 +45,14 @@
       font-family: 'Cinzel', serif;
       font-size: 1.1rem;
       color: var(--gold);
-      letter-spacing: 0.1em;
     }
 
     .back-btn {
       color: var(--text-sub);
       text-decoration: none;
       font-size: 0.85rem;
-      transition: color 0.2s;
     }
-    .back-btn:hover { color: var(--gold); }
 
-    /* 設定カードボックス */
     .custom-card {
       background: var(--card-bg-dark);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -67,16 +61,12 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     .card-title {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--gold);
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 6px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       padding-bottom: 8px;
     }
@@ -102,9 +92,7 @@
       font-size: 0.85rem;
       outline: none;
     }
-    .input-field:focus {
-      border-color: var(--gold);
-    }
+    .input-field:focus { border-color: var(--gold); }
 
     /* トグルスイッチ */
     .toggle-row {
@@ -112,9 +100,6 @@
       justify-content: space-between;
       align-items: center;
       padding: 4px 0;
-    }
-
-    .toggle-row span {
       font-size: 0.85rem;
     }
 
@@ -124,9 +109,7 @@
       width: 44px;
       height: 24px;
     }
-
     .switch input { opacity: 0; width: 0; height: 0; }
-
     .slider {
       position: absolute; cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -134,7 +117,6 @@
       transition: .3s;
       border-radius: 24px;
     }
-
     .slider:before {
       position: absolute; content: "";
       height: 18px; width: 18px; left: 3px; bottom: 3px;
@@ -142,33 +124,26 @@
       transition: .3s;
       border-radius: 50%;
     }
-
     input:checked + .slider { background-color: var(--gold); }
     input:checked + .slider:before { transform: translateX(20px); }
 
-    /* カラープリセットボタン */
+    /* カラー選択ボタン */
     .color-picker-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      margin-top: 4px;
     }
-
     .color-btn {
       height: 36px;
       border-radius: 8px;
       border: 2px solid transparent;
       cursor: pointer;
-      transition: transform 0.1s, border-color 0.2s;
     }
-
     .color-btn.active {
       border-color: #fff;
-      transform: scale(1.05);
       box-shadow: 0 0 8px rgba(255,255,255,0.4);
     }
 
-    /* 保存ボタン */
     .save-btn {
       width: 100%;
       padding: 14px;
@@ -179,12 +154,8 @@
       border-radius: 24px;
       font-size: 0.9rem;
       cursor: pointer;
-      margin-top: 10px;
       box-shadow: 0 4px 15px rgba(229,192,123,0.3);
-      transition: opacity 0.2s;
     }
-
-    .save-btn:active { opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -192,21 +163,21 @@
   <div class="container">
     <div class="header">
       <h1>PALCARD CUSTOMIZE</h1>
-      <a href="index.html" class="back-btn">戻る</a>
+      <a href="home.html" class="back-btn">キャンセル</a>
     </div>
 
     <div class="custom-card">
-      <div class="card-title">🎨 名刺デザインの設定</div>
+      <div class="card-title">🎨 名刺デザイン設定</div>
 
-      <!-- 称号編集 -->
+      <!-- 称号 -->
       <div class="form-group">
-        <label>バッジ称号テキスト</label>
-        <input type="text" id="cust-title" class="input-field" placeholder="例: FOUNDER, 初期ユーザー">
+        <label>バッジ称号</label>
+        <input type="text" id="cust-title" class="input-field" placeholder="例: FOUNDER">
       </div>
 
-      <!-- カラーテーマ選択 -->
+      <!-- テーマカラー -->
       <div class="form-group">
-        <label>名刺の背景テーマカラー</label>
+        <label>背景カラーテーマ</label>
         <div class="color-picker-grid">
           <button class="color-btn" id="c-dark" style="background: linear-gradient(135deg, #24292e, #16181b);" onclick="selectColor('dark')"></button>
           <button class="color-btn" id="c-navy" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);" onclick="selectColor('navy')"></button>
@@ -215,7 +186,7 @@
         </div>
       </div>
 
-      <!-- ゴールドフレーム切替 -->
+      <!-- ゴールド枠 -->
       <div class="toggle-row">
         <span>アイコンのゴールド枠</span>
         <label class="switch">
@@ -224,45 +195,48 @@
         </label>
       </div>
 
-      <!-- 保存ボタン -->
-      <button class="save-btn" onclick="saveCustomization()">設定を保存してホームに反映</button>
+      <button class="save-btn" onclick="saveSettings()">設定を保存してホームに反映</button>
     </div>
   </div>
 
   <script>
     let selectedTheme = 'dark';
 
-    // 画面が開いたときに、すでに保存されている設定を読み込んで反映
+    // 画面が開いた時に現在の設定（またはデフォルト）を読み込む
     window.addEventListener('DOMContentLoaded', () => {
-      const savedTitle = localStorage.getItem('pal_title') || 'FOUNDER';
-      const savedTheme = localStorage.getItem('pal_theme') || 'dark';
-      const savedFrame = localStorage.getItem('pal_frame') === 'true';
+      // home.html側の保存キーに合わせて取得
+      const savedTitle = localStorage.getItem('pal_title') || localStorage.getItem('parmel_title') || 'FOUNDER';
+      const savedTheme = localStorage.getItem('pal_theme') || localStorage.getItem('parmel_theme') || 'dark';
+      const savedFrame = localStorage.getItem('pal_frame') === 'true' || localStorage.getItem('parmel_frame') === 'true';
 
       document.getElementById('cust-title').value = savedTitle;
       document.getElementById('cust-gold-frame').checked = savedFrame;
       selectColor(savedTheme);
     });
 
-    // カラーボタン選択の視覚処理
     function selectColor(theme) {
       selectedTheme = theme;
       document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-      
       const activeBtn = document.getElementById(`c-${theme}`);
       if (activeBtn) activeBtn.classList.add('active');
     }
 
-    // localStorage に設定を保存して index.html へ送る
-    function saveCustomization() {
-      const titleVal = document.getElementById('cust-title').value || 'PAL';
+    function saveSettings() {
+      const titleVal = document.getElementById('cust-title').value || 'FOUNDER';
       const isGoldFrame = document.getElementById('cust-gold-frame').checked;
 
+      // home.html 側で想定されうる一般的なキー全てに書き込む（これで確実に連動）
       localStorage.setItem('pal_title', titleVal);
-      localStorage.setItem('pal_theme', selectedTheme);
-      localStorage.setItem('pal_frame', isGoldFrame ? 'true' : 'false');
+      localStorage.setItem('parmel_title', titleVal);
 
-      alert('デザイン設定を保存しました！');
-      window.location.href = 'index.html';
+      localStorage.setItem('pal_theme', selectedTheme);
+      localStorage.setItem('parmel_theme', selectedTheme);
+
+      localStorage.setItem('pal_frame', isGoldFrame ? 'true' : 'false');
+      localStorage.setItem('parmel_frame', isGoldFrame ? 'true' : 'false');
+
+      // 設定完了後、home.html へ自動的に戻る
+      window.location.href = 'home.html';
     }
   </script>
 </body>
