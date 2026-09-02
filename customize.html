@@ -3,29 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PALCARD CUSTOMIZE - PARMEL</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>PARMEL - 着せ替え・カスタマイズ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0d0e;
-      --card-bg-dark: #16181b;
+      --card-bg: linear-gradient(135deg, #24292e 0%, #16181b 100%);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      --avatar-bg: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
       --text-main: #f5f6f8;
       --text-sub: #9aa0a6;
       --gold: #e5c07b;
+      --radius-card: 18px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+    
+    html, body {
+      width: 100%;
+      min-height: 100%;
       background: var(--bg-main);
       color: var(--text-main);
       font-family: 'Noto Sans JP', sans-serif;
-      padding: 16px;
-      display: flex;
-      justify-content: center;
+      overflow-x: hidden;
     }
 
-    .container {
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 12px 12px 40px;
+    }
+
+    .app-viewport {
       width: 100%;
       max-width: 414px;
       display: flex;
@@ -33,210 +43,351 @@
       gap: 20px;
     }
 
-    .header {
+    /* ヘッダー */
+    .header-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(229, 192, 123, 0.2);
-      padding-bottom: 12px;
+      width: 100%;
     }
-
-    .header h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-      color: var(--gold);
-    }
-
     .back-btn {
-      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
       text-decoration: none;
-      font-size: 0.85rem;
+    }
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      font-weight: bold;
     }
 
-    .custom-card {
-      background: var(--card-bg-dark);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 18px;
+    /* 名刺カード プレビュー */
+    .preview-label {
+      font-size: 0.65rem;
+      color: var(--text-sub);
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: -10px;
+    }
+
+    .palcard {
+      background: var(--card-bg);
+      border-radius: var(--radius-card);
+      padding: 12px 14px 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--card-border);
+      position: relative;
+      aspect-ratio: 1.655 / 1;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      justify-content: flex-start;
+      overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
 
-    .card-title {
-      font-size: 0.85rem;
+    /* カラーテーマ定義 */
+    .palcard.theme-dark { background: linear-gradient(135deg, #24292e 0%, #16181b 100%); }
+    .palcard.theme-navy { background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%); }
+    .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%); }
+    .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%); }
+    .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%); border-color: rgba(229, 192, 123, 0.3); }
+
+    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
+    
+    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
+    .title-input { font-size: 0.68rem; color: var(--gold); margin-bottom: 1px; line-height: 1.2; font-weight: 500; }
+    .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; }
+    
+    .profile-fields { display: flex; flex-direction: column; gap: 4px; }
+    .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2px; }
+    .field-label { font-size: 0.58rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
+    .field-value { color: var(--text-main); font-size: 0.65rem; font-weight: 500; }
+
+    .right-avatar-container { position: relative; width: 130px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .avatar-wrapper { width: 125px; height: 125px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); transition: all 0.3s ease; }
+    
+    /* アイコンフレーム */
+    .avatar-wrapper.frame-none { background: var(--avatar-bg); box-shadow: none; }
+    .avatar-wrapper.frame-gold {
+      background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
+      box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
+    }
+    .avatar-wrapper.frame-silver {
+      background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+    }
+    .avatar-wrapper.frame-neon {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      box-shadow: 0 0 16px rgba(79, 172, 254, 0.7);
+    }
+
+    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
+    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* カスタマイズコントロール群 */
+    .customize-section {
+      background: #16181b;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .section-title {
+      font-size: 0.75rem;
       color: var(--gold);
       font-weight: bold;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 8px;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 6px;
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-    }
-
-    .input-field {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text-main);
-      font-size: 0.85rem;
-      outline: none;
-    }
-    .input-field:focus { border-color: var(--gold); }
-
-    /* トグルスイッチ */
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
-      font-size: 0.85rem;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #333;
-      transition: .3s;
-      border-radius: 24px;
-    }
-    .slider:before {
-      position: absolute; content: "";
-      height: 18px; width: 18px; left: 3px; bottom: 3px;
-      background-color: white;
-      transition: .3s;
-      border-radius: 50%;
-    }
-    input:checked + .slider { background-color: var(--gold); }
-    input:checked + .slider:before { transform: translateX(20px); }
-
-    /* カラー選択ボタン */
-    .color-picker-grid {
+    .options-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
-    .color-btn {
-      height: 36px;
-      border-radius: 8px;
-      border: 2px solid transparent;
+
+    .option-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .color-btn.active {
-      border-color: #fff;
-      box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    .option-card.active {
+      border-color: var(--gold);
+      background: rgba(229, 192, 123, 0.12);
+    }
+    .option-card:active { transform: scale(0.96); }
+
+    .color-preview {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .option-label {
+      font-size: 0.65rem;
+      color: var(--text-main);
+      font-weight: 500;
+      text-align: center;
     }
 
+    /* 保存ボタン */
     .save-btn {
       width: 100%;
-      padding: 14px;
       background: linear-gradient(135deg, var(--gold), #d4a359);
-      color: #0b0d0e;
+      color: #000;
       font-weight: bold;
       border: none;
-      border-radius: 24px;
-      font-size: 0.9rem;
+      border-radius: 20px;
+      padding: 14px 0;
+      font-size: 0.85rem;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(229,192,123,0.3);
+      box-shadow: 0 4px 16px rgba(229,192,123,0.3);
+      text-align: center;
+      margin-top: 8px;
+      transition: transform 0.1s ease;
     }
+    .save-btn:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h1>PALCARD CUSTOMIZE</h1>
-      <a href="home.html" class="back-btn">キャンセル</a>
+  <div class="app-viewport">
+    
+    <!-- ヘッダー -->
+    <div class="header-bar">
+      <a href="javascript:history.back()" class="back-btn">‹ 戻る</a>
+      <span class="page-title">CUSTOMIZE</span>
+      <div style="width: 50px;"></div> <!-- レイアウト調整用スペース -->
     </div>
 
-    <div class="custom-card">
-      <div class="card-title">🎨 名刺デザイン設定</div>
+    <div class="preview-label">PREVIEW</div>
 
-      <!-- 称号 -->
-      <div class="form-group">
-        <label>バッジ称号</label>
-        <input type="text" id="cust-title" class="input-field" placeholder="例: FOUNDER">
-      </div>
-
-      <!-- テーマカラー -->
-      <div class="form-group">
-        <label>背景カラーテーマ</label>
-        <div class="color-picker-grid">
-          <button class="color-btn" id="c-dark" style="background: linear-gradient(135deg, #24292e, #16181b);" onclick="selectColor('dark')"></button>
-          <button class="color-btn" id="c-navy" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);" onclick="selectColor('navy')"></button>
-          <button class="color-btn" id="c-wine" style="background: linear-gradient(135deg, #3d0c11, #1f0508);" onclick="selectColor('wine')"></button>
-          <button class="color-btn" id="c-emerald" style="background: linear-gradient(135deg, #0d3b2e, #051b14);" onclick="selectColor('emerald')"></button>
+    <!-- プレビュー用名刺カード -->
+    <div class="palcard theme-dark" id="preview-card">
+      <div class="palcard-brand">PALFILE</div>
+      <div class="palcard-body">
+        <div class="profile-info">
+          <div class="title-input">FOUNDER</div>
+          <div class="pet-name" id="preview-name">MEL</div>
+          <div class="profile-fields">
+            <div class="field-row"><span class="field-label">生年月日</span><span class="field-value">2026.02.10</span></div>
+            <div class="field-row"><span class="field-label">好物</span><span class="field-value">ささみ / まぐろ</span></div>
+            <div class="field-row"><span class="field-label">特技</span><span class="field-value">どこでも寝れる</span></div>
+            <div class="field-row"><span class="field-label">ニックネーム</span><span class="field-value">メルちゃん</span></div>
+          </div>
+        </div>
+        <div class="right-avatar-container">
+          <div class="avatar-wrapper frame-none" id="preview-avatar-wrapper">
+            <div class="avatar-inner">
+              <img src="https://picsum.photos/id/1025/300/300" alt="Pet Avatar">
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- ゴールド枠 -->
-      <div class="toggle-row">
-        <span>アイコンのゴールド枠</span>
-        <label class="switch">
-          <input type="checkbox" id="cust-gold-frame">
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <button class="save-btn" onclick="saveSettings()">設定を保存してホームに反映</button>
     </div>
+
+    <!-- 1. テーマカラー選択 -->
+    <div class="customize-section">
+      <div class="section-title">🎨 カードテーマ</div>
+      <div class="options-grid">
+        <div class="option-card active" onclick="selectTheme('theme-dark', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #24292e, #16181b);"></div>
+          <span class="option-label">ダーク</span>
+        </div>
+        <div class="option-card" onclick="selectTheme('theme-navy', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);"></div>
+          <span class="option-label">ネイビー</span>
+        </div>
+        <div class="option-card" onclick="selectTheme('theme-emerald', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #0d3b2e, #051a14);"></div>
+          <span class="option-label">エメラルド</span>
+        </div>
+        <div class="option-card" onclick="selectTheme('theme-wine', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #3b1b26, #1a050d);"></div>
+          <span class="option-label">ワイン</span>
+        </div>
+        <div class="option-card" onclick="selectTheme('theme-gold', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #3d321d, #1c160b);"></div>
+          <span class="option-label">ゴールド</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. アバターフレーム選択 -->
+    <div class="customize-section">
+      <div class="section-title">🖼️ アイコンフレーム</div>
+      <div class="options-grid">
+        <div class="option-card active" onclick="selectFrame('frame-none', this)">
+          <div class="color-preview" style="background: rgba(255,255,255,0.1);"></div>
+          <span class="option-label">なし</span>
+        </div>
+        <div class="option-card" onclick="selectFrame('frame-gold', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div>
+          <span class="option-label">ゴールド</span>
+        </div>
+        <div class="option-card" onclick="selectFrame('frame-silver', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #6c757d);"></div>
+          <span class="option-label">シルバー</span>
+        </div>
+        <div class="option-card" onclick="selectFrame('frame-neon', this)">
+          <div class="color-preview" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></div>
+          <span class="option-label">サイバー</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. フォントスタイル選択 -->
+    <div class="customize-section">
+      <div class="section-title">✍️ 名前のフォント</div>
+      <div class="options-grid">
+        <div class="option-card active" onclick="selectFont('Cinzel', this)">
+          <span style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #fff;">Aa</span>
+          <span class="option-label">クラシック</span>
+        </div>
+        <div class="option-card" onclick="selectFont('Shippori Mincho', this)">
+          <span style="font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: #fff;">明朝</span>
+          <span class="option-label">エレガント</span>
+        </div>
+        <div class="option-card" onclick="selectFont('M PLUS Rounded 1c', this)">
+          <span style="font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1rem; color: #fff;">まる</span>
+          <span class="option-label">ポップ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 保存ボタン -->
+    <button class="save-btn" onclick="saveCustomization()">変更を保存して適用</button>
+
   </div>
 
   <script>
-    let selectedTheme = 'dark';
+    // 現在の選択設定
+    let currentConfig = {
+      theme: 'theme-dark',
+      frame: 'frame-none',
+      font: 'Cinzel'
+    };
 
-    // 画面が開いた時に現在の設定（またはデフォルト）を読み込む
+    // 読み込み時に保存済み設定を適用
     window.addEventListener('DOMContentLoaded', () => {
-      // home.html側の保存キーに合わせて取得
-      const savedTitle = localStorage.getItem('pal_title') || localStorage.getItem('parmel_title') || 'FOUNDER';
-      const savedTheme = localStorage.getItem('pal_theme') || localStorage.getItem('parmel_theme') || 'dark';
-      const savedFrame = localStorage.getItem('pal_frame') === 'true' || localStorage.getItem('parmel_frame') === 'true';
-
-      document.getElementById('cust-title').value = savedTitle;
-      document.getElementById('cust-gold-frame').checked = savedFrame;
-      selectColor(savedTheme);
+      const saved = localStorage.getItem('parmel_custom_config');
+      if (saved) {
+        try {
+          currentConfig = JSON.parse(saved);
+          applyConfigToPreview();
+          updateActiveUI();
+        } catch(e) {}
+      }
     });
 
-    function selectColor(theme) {
-      selectedTheme = theme;
-      document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`c-${theme}`);
-      if (activeBtn) activeBtn.classList.add('active');
+    function selectTheme(themeClass, el) {
+      currentConfig.theme = themeClass;
+      updateGroupActive(el);
+      applyConfigToPreview();
     }
 
-    function saveSettings() {
-      const titleVal = document.getElementById('cust-title').value || 'FOUNDER';
-      const isGoldFrame = document.getElementById('cust-gold-frame').checked;
+    function selectFrame(frameClass, el) {
+      currentConfig.frame = frameClass;
+      updateGroupActive(el);
+      applyConfigToPreview();
+    }
 
-      // home.html 側で想定されうる一般的なキー全てに書き込む（これで確実に連動）
-      localStorage.setItem('pal_title', titleVal);
-      localStorage.setItem('parmel_title', titleVal);
+    function selectFont(fontFamily, el) {
+      currentConfig.font = fontFamily;
+      updateGroupActive(el);
+      applyConfigToPreview();
+    }
 
-      localStorage.setItem('pal_theme', selectedTheme);
-      localStorage.setItem('parmel_theme', selectedTheme);
+    function updateGroupActive(targetEl) {
+      const parent = targetEl.parentElement;
+      parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+      targetEl.classList.add('active');
+    }
 
-      localStorage.setItem('pal_frame', isGoldFrame ? 'true' : 'false');
-      localStorage.setItem('parmel_frame', isGoldFrame ? 'true' : 'false');
+    function applyConfigToPreview() {
+      const card = document.getElementById('preview-card');
+      const avatarWrapper = document.getElementById('preview-avatar-wrapper');
+      const petName = document.getElementById('preview-name');
 
-      // 設定完了後、home.html へ自動的に戻る
-      window.location.href = 'home.html';
+      // テーマクラス更新
+      card.className = `palcard ${currentConfig.theme}`;
+
+      // フレームクラス更新
+      avatarWrapper.className = `avatar-wrapper ${currentConfig.frame}`;
+
+      // フォント更新
+      petName.style.fontFamily = `'${currentConfig.font}', serif, sans-serif`;
+    }
+
+    function updateActiveUI() {
+      // 復元された設定に合わせてUIのactive状態を更新する処理
+      // (簡略化のため、選択時のイベントで維持)
+    }
+
+    function saveCustomization() {
+      localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig));
+      alert('デザイン設定を保存しました！');
+      history.back();
     }
   </script>
 </body>
