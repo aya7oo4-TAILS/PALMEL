@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PARMEL</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0d0e;
@@ -68,6 +68,8 @@
     /* 名刺カードデザイン */
     .palcard {
       background: var(--card-bg);
+      background-size: cover;
+      background-position: center;
       border-radius: var(--radius-card);
       padding: 12px 14px 40px;
       box-shadow: var(--card-shadow);
@@ -83,10 +85,8 @@
       flex-shrink: 0;
     }
 
-    .palcard.theme-navy {
-      background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
-    }
-
+    /* テーマスタイル */
+    .palcard.theme-navy { background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%) !important; }
     .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%) !important; }
     .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%) !important; }
     .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%) !important; border-color: rgba(229, 192, 123, 0.5) !important; }
@@ -114,11 +114,11 @@
     }
     .avatar-wrapper { width: 138px; height: 138px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); cursor: pointer; display: block; transition: all 0.3s ease; }
     
+    /* アバターフレームスタイル */
     .avatar-wrapper.frame-gold {
-      background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
-      box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
+      background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%) !important;
+      box-shadow: 0 0 12px rgba(229, 192, 123, 0.5) !important;
     }
-
     .avatar-wrapper.frame-silver {
       background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%) !important;
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.3) !important;
@@ -346,7 +346,7 @@
         </div>
       </div>
 
-      <!-- 9マス Grid (ボタンを削除しスッキリ整理) -->
+      <!-- 9マス Grid -->
       <div class="grid-container">
         <script>
           const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
@@ -385,12 +385,11 @@
 
   <!-- モーダル類 -->
 
-  <!-- アルバム モーダル (現在のマス自動反映＆保存ボタン＋過去ログ) -->
+  <!-- アルバム モーダル -->
   <div id="history-modal" class="modal-overlay">
     <div class="modal-content">
       <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold);">ALBUM</h3>
       
-      <!-- 現在の9マス自動反映エリア -->
       <div class="album-current-section">
         <div class="album-section-title">
           <span>📸 現在のマイパル 9マス</span>
@@ -489,7 +488,7 @@
     const myHistoryAlbum = [];
     const postDataStore = {};
 
-    /* カスタマイズ設定の自動反映 */
+    /* カスタマイズ設定の自動反映（テーマ・フレーム・フォント・サイズ・背景画像） */
     function applySavedCustomization() {
       const saved = localStorage.getItem('parmel_custom_config');
       if (!saved) return;
@@ -500,25 +499,45 @@
         const avatarWrapper = document.getElementById('main-avatar-wrapper');
         const petName = document.getElementById('in-name');
 
-        if (card && config.theme) {
-          card.className = card.className.replace(/theme-\w+/g, '');
-          card.classList.add(config.theme);
+        // 1. テーマクラスの更新（背景画像がある場合はクリア）
+        if (card) {
+          card.className = 'palcard';
+          if (config.theme) {
+            card.classList.add(config.theme);
+          }
+          if (config.bgImage) {
+            card.style.backgroundImage = `url('${config.bgImage}')`;
+          } else {
+            card.style.backgroundImage = '';
+          }
         }
 
-        if (avatarWrapper && config.frame) {
-          avatarWrapper.className = avatarWrapper.className.replace(/frame-\w+/g, '');
-          avatarWrapper.classList.add(config.frame);
+        // 2. アイコンフレームクラスの更新
+        if (avatarWrapper) {
+          avatarWrapper.className = 'avatar-wrapper';
+          if (config.frame) {
+            avatarWrapper.classList.add(config.frame);
+          }
         }
 
-        if (petName && config.font) {
-          petName.style.fontFamily = `'${config.font}', serif, sans-serif`;
+        // 3. ペット名のフォントとサイズの適用
+        if (petName) {
+          if (config.font) {
+            petName.style.fontFamily = `'${config.font}', serif, sans-serif`;
+          }
+          if (config.fontSize) {
+            petName.style.fontSize = config.fontSize;
+          }
         }
       } catch (e) {
         console.error('カスタマイズ設定の読み込みに失敗しました:', e);
       }
     }
 
+    // 初期化および着せ替え画面からの戻り・変更検知時の自動反映
     window.addEventListener('DOMContentLoaded', applySavedCustomization);
+    window.addEventListener('pageshow', applySavedCustomization);
+    window.addEventListener('storage', applySavedCustomization);
 
     /* スワイプ処理 */
     const drawer = document.getElementById('side-drawer');
