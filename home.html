@@ -22,11 +22,17 @@
     
     html, body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background: var(--bg-main);
       color: var(--text-main);
       font-family: 'Noto Sans JP', sans-serif;
       overflow-x: hidden;
+    }
+
+    /* マイパル表示時はスクロールを固定する設定 */
+    body.mypal-mode {
+      overflow: hidden;
+      touch-action: none;
     }
 
     body {
@@ -38,6 +44,7 @@
     .app-viewport {
       width: 100%;
       max-width: 414px;
+      height: 100%;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -45,6 +52,12 @@
 
     .page { display: none; flex-direction: column; gap: 16px; width: 100%; }
     .page.active { display: flex; }
+
+    /* マイパル画面自体の表示設定 */
+    #page-mypal {
+      height: calc(100vh - 80px);
+      justify-content: flex-start;
+    }
 
     .action-btn-main {
       width: 100%; background: linear-gradient(135deg, var(--gold), #d4a359);
@@ -67,6 +80,7 @@
       justify-content: flex-start;
       overflow: hidden;
       transition: background 0.3s ease;
+      flex-shrink: 0;
     }
 
     .palcard.theme-navy {
@@ -269,7 +283,7 @@
     .drawer-item:active { background: rgba(229,192,123,0.15); border-color: var(--gold); }
   </style>
 </head>
-<body>
+<body class="mypal-mode">
 
   <!-- ドロワーメニュー -->
   <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
@@ -352,8 +366,6 @@
           });
         </script>
       </div>
-
-      <div class="nav-spacer"></div>
 
     </div>
 
@@ -715,10 +727,12 @@
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
       if(tabName === 'mypal') {
+        document.body.classList.add('mypal-mode');
         document.getElementById('page-mypal').classList.add('active');
         document.getElementById('btn-mypal').classList.add('active');
         window.scrollTo({top: 0, behavior: 'smooth'});
       } else if(tabName === 'feed') {
+        document.body.classList.remove('mypal-mode');
         document.getElementById('page-feed').classList.add('active');
         document.getElementById('btn-feed').classList.add('active');
         
