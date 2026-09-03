@@ -1,31 +1,35 @@
 let palCount = 1;
 const names = ['COCO', 'LUNA', 'ROKI', 'TORA', 'LEO', 'MUKU', 'CHIP', 'BELL'];
 const titles = ['★ おやつハンター', '★ 爆走隊長', '★ 日向ぼっこプロ', '★ いたずら妖精'];
+const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
 const myHistoryAlbum = [];
 const postDataStore = {};
-const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'QR'];
 
-/* 9マスGridの動的生成 */
-function renderGrid() {
+/* 初期化処理（9マスの自動レンダリングとカスタム設定反映） */
+document.addEventListener('DOMContentLoaded', () => {
+  renderMainGrid();
+  applySavedCustomization();
+});
+
+function renderMainGrid() {
   const container = document.getElementById('main-grid-container');
   if (!container) return;
 
-  container.innerHTML = '';
   gridLabels.forEach((lbl, i) => {
     const labelHtml = (i === 2)
       ? `<input type="text" id="custom-free-label" class="grid-label-input" value="FREE" placeholder="タイトル" maxlength="12">`
       : lbl;
 
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.innerHTML = `
+    const gridItem = document.createElement('div');
+    gridItem.className = 'grid-item';
+    gridItem.innerHTML = `
       <div class="grid-label">${labelHtml}</div>
       <label class="grid-image-box">
         <img id="g${i}">
         <input type="file" accept="image/*" onchange="previewGrid(this, 'g${i}')">
       </label>
     `;
-    container.appendChild(item);
+    container.appendChild(gridItem);
   });
 }
 
@@ -58,21 +62,6 @@ function applySavedCustomization() {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  renderGrid();
-  applySavedCustomization();
-
-  const scrollMarker = document.getElementById('scroll-marker');
-  if (scrollMarker) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && document.getElementById('page-feed').classList.contains('active')) {
-        generatePalPost();
-      }
-    }, { rootMargin: '200px' });
-    observer.observe(scrollMarker);
-  }
-});
-
 /* スワイプ処理 */
 const drawer = document.getElementById('side-drawer');
 const drawerOverlay = document.getElementById('drawer-overlay');
@@ -85,20 +74,16 @@ let isOpen = false;
 
 function openDrawer() {
   isOpen = true;
-  if (drawer) {
-    drawer.classList.add('animated');
-    drawer.style.transform = `translateX(0px)`;
-  }
-  if (drawerOverlay) drawerOverlay.classList.add('active');
+  drawer.classList.add('animated');
+  drawer.style.transform = `translateX(0px)`;
+  drawerOverlay.classList.add('active');
 }
 
 function closeDrawer() {
   isOpen = false;
-  if (drawer) {
-    drawer.classList.add('animated');
-    drawer.style.transform = `translateX(-100%)`;
-  }
-  if (drawerOverlay) drawerOverlay.classList.remove('active');
+  drawer.classList.add('animated');
+  drawer.style.transform = `translateX(-100%)`;
+  drawerOverlay.classList.remove('active');
 }
 
 window.addEventListener('touchstart', (e) => {
@@ -108,11 +93,11 @@ window.addEventListener('touchstart', (e) => {
   startY = e.touches[0].clientY;
   isTracking = true;
 
-  if (drawer) drawer.classList.remove('animated');
+  drawer.classList.remove('animated');
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
-  if (!isTracking || !drawer || !drawerOverlay) return;
+  if (!isTracking) return;
 
   const touchX = e.touches[0].clientX;
   const touchY = e.touches[0].clientY;
@@ -143,7 +128,7 @@ window.addEventListener('touchmove', (e) => {
 }, { passive: true });
 
 window.addEventListener('touchend', (e) => {
-  if (!isTracking || !drawerOverlay) return;
+  if (!isTracking) return;
   isTracking = false;
 
   const endX = e.changedTouches[0].clientX;
@@ -196,8 +181,6 @@ function saveAccountSettings() {
 
 function generatePalPost() {
   const feed = document.getElementById('feed-container');
-  if (!feed) return;
-
   const postId = 'post_' + palCount + '_' + Date.now();
   const rName = names[Math.floor(Math.random() * names.length)];
   const rTitle = titles[Math.floor(Math.random() * titles.length)];
@@ -296,7 +279,7 @@ function switchTab(tabName) {
     document.getElementById('btn-feed').classList.add('active');
     
     const feed = document.getElementById('feed-container');
-    if (feed && feed.children.length === 0) {
+    if (feed.children.length === 0) {
       generatePalPost();
       generatePalPost();
     }
@@ -305,7 +288,6 @@ function switchTab(tabName) {
 
 function toggleModal(id, show) {
   const el = document.getElementById(id);
-  if (!el) return;
   if (show) { el.style.display = 'flex'; setTimeout(() => el.classList.add('active'), 10); }
   else { el.classList.remove('active'); setTimeout(() => el.style.display = 'none', 200); }
 }
@@ -328,6 +310,17 @@ function previewGrid(input, imgId) {
     };
     r.readAsDataURL(input.files[0]);
   }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && document.getElementById('page-feed').classList.contains('active')) {
+    generatePalPost();
+  }
+}, { rootMargin: '200px' });
+
+const scrollMarker = document.getElementById('scroll-marker');
+if (scrollMarker) {
+  observer.observe(scrollMarker);
 }
 
 function getMyGridImages() {
@@ -458,4 +451,3 @@ function closePresentCard() {
   const modal = document.getElementById('card-present-modal');
   modal.classList.remove('active');
 }
-
