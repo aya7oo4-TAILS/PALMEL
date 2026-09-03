@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PARMEL - 着せ替え・カスタマイズ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0d0e;
       --card-bg: linear-gradient(135deg, #24292e 0%, #16181b 100%);
       --card-border: rgba(255, 255, 255, 0.08);
-      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
       --avatar-bg: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
       --text-main: #f5f6f8;
       --text-sub: #9aa0a6;
@@ -21,307 +21,192 @@
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
     
     html, body {
-      width: 100%;
-      height: 100%;
-      background: var(--bg-main);
-      color: var(--text-main);
-      font-family: 'Noto Sans JP', sans-serif;
-      overflow: hidden;
+      width: 100%; height: 100%; background: var(--bg-main); color: var(--text-main);
+      font-family: 'Noto Sans JP', sans-serif; overflow: hidden;
     }
+    body { display: flex; justify-content: center; padding: 12px 12px 0; }
 
-    body {
-      display: flex;
-      justify-content: center;
-      padding: 12px 12px 0;
-    }
+    .app-viewport { width: 100%; max-width: 414px; height: 100%; display: flex; flex-direction: column; }
 
-    .app-viewport {
-      width: 100%;
-      max-width: 414px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+    .fixed-top-area {
+      flex-shrink: 0; background: var(--bg-main); display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; z-index: 10;
     }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .back-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-main); font-size: 0.75rem; padding: 6px 14px; border-radius: 12px; cursor: pointer; font-weight: bold; text-decoration: none; }
+    .page-title { font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--gold); letter-spacing: 0.15em; font-weight: bold; }
+
+    .mode-tab-container { display: flex; background: #16181b; border: 1px solid var(--card-border); border-radius: 14px; padding: 3px; gap: 4px; }
+    .mode-tab { flex: 1; text-align: center; padding: 8px 0; font-size: 0.75rem; font-weight: bold; color: var(--text-sub); border-radius: 11px; cursor: pointer; transition: all 0.25s ease; }
+    .mode-tab.active { background: linear-gradient(135deg, rgba(229, 192, 123, 0.2), rgba(229, 192, 123, 0.05)); color: var(--gold); border: 1px solid rgba(229, 192, 123, 0.4); }
+
+    .preview-label { font-size: 0.6rem; color: var(--text-sub); letter-spacing: 0.1em; text-align: center; margin-bottom: -2px; }
 
     /* ----------------------------------
-       1. 固定エリア（ヘッダー ＋ プレビュー）
+       1. 名刺プレビュー & 松（¥360）エフェクト
     ---------------------------------- */
-    .fixed-top-area {
-      flex-shrink: 0;
-      background: var(--bg-main);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding-bottom: 12px;
-      z-index: 10;
-    }
-
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-    }
-    .back-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-main);
-      font-size: 0.75rem;
-      padding: 6px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .page-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.9rem;
-      color: var(--gold);
-      letter-spacing: 0.15em;
-      font-weight: bold;
-    }
-
-    .preview-label {
-      font-size: 0.65rem;
-      color: var(--text-sub);
-      letter-spacing: 0.1em;
-      text-align: center;
-      margin-bottom: -4px;
-    }
-
     .palcard {
-      background: var(--card-bg);
-      border-radius: var(--radius-card);
-      padding: 12px 14px 16px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--card-border);
-      position: relative;
-      aspect-ratio: 1.655 / 1;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      overflow: hidden;
-      transition: background 0.4s ease, border-color 0.4s ease;
+      background: var(--card-bg); border-radius: var(--radius-card); padding: 12px 14px 16px;
+      box-shadow: var(--card-shadow); border: 1px solid var(--card-border); position: relative;
+      aspect-ratio: 1.655 / 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; transition: all 0.3s ease;
     }
 
-    /* カラーテーマ定義 */
-    .palcard.theme-dark { background: linear-gradient(135deg, #24292e 0%, #16181b 100%); }
-    .palcard.theme-navy { background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%); }
-    .palcard.theme-emerald { background: linear-gradient(135deg, #0d3b2e 0%, #051a14 100%); }
-    .palcard.theme-wine { background: linear-gradient(135deg, #3b1b26 0%, #1a050d 100%); }
-    .palcard.theme-gold { background: linear-gradient(135deg, #3d321d 0%, #1c160b 100%); border-color: rgba(229, 192, 123, 0.3); }
-    /* プレミアムテーマ：黒青の炎 */
-    .palcard.theme-flame { 
-      background: radial-gradient(circle at 80% 20%, #00d2ff 0%, #001122 40%, #05050a 100%); 
-      border-color: #00f2fe;
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.3), inset 0 0 15px rgba(0, 210, 255, 0.2);
+    /* テーマ（梅：単色/標準） */
+    .palcard.theme-dark { background: #1a1d20; }
+    .palcard.theme-navy { background: #0f172a; }
+    .palcard.theme-wine { background: #2a0f1b; }
+    .palcard.theme-forest { background: #0f2a1b; }
+    .palcard.theme-slate { background: #262930; }
+
+    /* テーマ（竹：光沢） */
+    .palcard.theme-cyber { background: linear-gradient(135deg, #0d2b45, #000); border-color: #00f2fe; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+    .palcard.theme-gold { background: linear-gradient(135deg, #3a2e10, #000); border-color: #e5c07b; box-shadow: 0 0 15px rgba(229, 192, 123, 0.3); }
+    .palcard.theme-purple { background: linear-gradient(135deg, #2a0845, #000); border-color: #b000ff; box-shadow: 0 0 15px rgba(176, 0, 255, 0.3); }
+
+    /* テーマ（松：豪華アニメーションエフェクト） */
+    .palcard.theme-flame-bg {
+      background: linear-gradient(0deg, #fd1d1d 0%, #fcb045 50%, #000 100%);
+      background-size: 100% 200%;
+      animation: flameGlow 3s infinite alternate ease-in-out;
+      border-color: #ff4500;
+      box-shadow: 0 0 25px rgba(255, 69, 0, 0.8), inset 0 0 15px rgba(255, 215, 0, 0.5);
     }
+    .palcard.theme-star-bg {
+      background: radial-gradient(circle at 50% 50%, #7928ca 0%, #00f2fe 50%, #000000 100%);
+      background-size: 200% 200%;
+      animation: cosmicShift 4s infinite alternate;
+      border-color: #ff007f;
+      box-shadow: 0 0 30px rgba(255, 0, 127, 0.8), inset 0 0 20px rgba(0, 242, 254, 0.5);
+    }
+
+    @keyframes flameGlow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 100%; } }
+    @keyframes cosmicShift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+
+    /* 名刺外枠（松：ギラギラアニメ） */
+    .palcard.cardframe-none { border: 1px solid var(--card-border); }
+    .palcard.cardframe-gold { border: 2px solid #e5c07b !important; }
+    .palcard.cardframe-cyber { border: 2px solid #00f2fe !important; }
+    .palcard.cardframe-fire {
+      border: 3px solid #ff4500 !important;
+      animation: firePulse 1.5s infinite alternate;
+    }
+    .palcard.cardframe-rainbow {
+      border: 3px solid transparent !important;
+      background-image: linear-gradient(#16181b, #16181b), linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #ff00ff);
+      background-origin: border-box !important; background-clip: padding-box, border-box !important;
+      animation: rotateGradient 3s linear infinite;
+    }
+
+    @keyframes firePulse { 0% { box-shadow: 0 0 10px #ff4500; } 100% { box-shadow: 0 0 25px #ff8c00, inset 0 0 10px #ff4500; } }
 
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 6px; }
     .palcard-body { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex: 1; }
+    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; }
+    .title-input { font-size: 0.68rem; color: var(--gold); margin-bottom: 1px; font-weight: bold; letter-spacing: 0.05em; }
     
-    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; padding-top: 2px; }
-    .title-input { font-size: 0.68rem; color: var(--gold); margin-bottom: 1px; line-height: 1.2; font-weight: 500; letter-spacing: 0.05em; }
-    .pet-name { font-family: 'Cinzel', serif; font-size: 1.7rem; line-height: 1.1; margin-bottom: 6px; font-weight: 700; color: #fff; }
-    
-    .profile-fields { display: flex; flex-direction: column; gap: 4px; }
-    .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2px; }
-    .field-label { font-size: 0.58rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
-    .field-value { color: var(--text-main); font-size: 0.65rem; font-weight: 500; }
+    /* 松タイトル（アニメーション文字） */
+    .title-input.sparkle-text {
+      background: linear-gradient(90deg, #ff007f, #ffff00, #00f2fe, #ff007f);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shineText 2s linear infinite;
+      font-weight: 900;
+    }
+    @keyframes shineText { to { background-position: 200% center; } }
 
-    .right-avatar-container { position: relative; width: 130px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .avatar-wrapper { width: 125px; height: 125px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); transition: all 0.3s ease; position: relative; }
+    .pet-name { font-family: 'Cinzel', serif; font-size: 1.6rem; line-height: 1.1; margin-bottom: 4px; font-weight: 700; color: #fff; }
+    .profile-fields { display: flex; flex-direction: column; gap: 3px; }
+    .field-row { display: flex; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 2px; }
+    .field-label { font-size: 0.55rem; color: var(--text-sub); width: 55px; flex-shrink: 0; }
+    .field-value { color: var(--text-main); font-size: 0.62rem; font-weight: 500; }
+
+    .right-avatar-container { position: relative; width: 120px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .avatar-wrapper { width: 115px; height: 115px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); transition: all 0.3s ease; position: relative; }
     
-    /* アイコンフレーム */
-    .avatar-wrapper.frame-none { background: var(--avatar-bg); box-shadow: none; border-radius: 50%; }
-    .avatar-wrapper.frame-gold {
-      background: linear-gradient(135deg, #ffe066 0%, #e5c07b 50%, #b38600 100%);
-      box-shadow: 0 0 12px rgba(229, 192, 123, 0.5);
-      border-radius: 50%;
+    /* アバター枠（松：オーラ・キラキラ） */
+    .avatar-wrapper.frame-none { background: var(--avatar-bg); }
+    .avatar-wrapper.frame-gold { background: linear-gradient(135deg, #ffe066, #b38600); box-shadow: 0 0 10px rgba(229, 192, 123, 0.5); }
+    .avatar-wrapper.frame-fire {
+      background: linear-gradient(135deg, #ff4500, #ff8c00, #ff0000);
+      box-shadow: 0 0 20px #ff4500;
+      animation: flamePulse 1s infinite alternate;
     }
-    .avatar-wrapper.frame-silver {
-      background: linear-gradient(135deg, #ffffff 0%, #a8b2c1 50%, #6c757d 100%);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
+    .avatar-wrapper.frame-galaxy {
+      background: linear-gradient(135deg, #ff007f, #7928ca, #00f2fe);
+      box-shadow: 0 0 25px rgba(255, 0, 127, 0.9);
+      animation: rotateGalaxy 2s linear infinite;
     }
-    .avatar-wrapper.frame-neon {
-      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      box-shadow: 0 0 16px rgba(79, 172, 254, 0.7);
-      border-radius: 50%;
-    }
-    
-    /* プレミアムフレーム：丸型アイコン ＋ 立ち上る黒青の炎 */
-    .avatar-wrapper.frame-flame {
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00f2fe, #0044ff, #000);
-      padding: 3px;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.8), 0 -8px 25px rgba(0, 210, 255, 0.6);
-      filter: drop-shadow(0 -5px 12px rgba(0, 242, 254, 0.9));
-    }
-    .avatar-wrapper.frame-flame::before {
-      content: '';
-      position: absolute;
-      top: -18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 110%;
-      height: 70%;
-      background: radial-gradient(ellipse at bottom, rgba(0, 242, 254, 0.9) 0%, rgba(0, 102, 255, 0.6) 40%, transparent 80%);
-      clip-path: polygon(50% 0%, 20% 100%, 35% 60%, 50% 100%, 65% 55%, 80% 100%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    .avatar-wrapper.frame-flame::after {
-      content: '';
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      height: 50%;
-      background: radial-gradient(circle, #ffffff 0%, #00f2fe 60%, transparent 100%);
-      clip-path: polygon(50% 0%, 30% 100%, 50% 70%, 70% 100%);
-      pointer-events: none;
-      z-index: 2;
-    }
+    @keyframes flamePulse { 0% { transform: scale(1); box-shadow: 0 0 15px #ff4500; } 100% { transform: scale(1.03); box-shadow: 0 0 25px #ff8c00; } }
 
     .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; position: relative; z-index: 3; }
     .avatar-inner img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
     /* ----------------------------------
-       2. スクロールエリア（コントロール群）
+       2. 9マス外囲いプレビュー
     ---------------------------------- */
-    .scrollable-controls {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      padding-bottom: 24px;
-      -webkit-overflow-scrolling: touch;
+    .grid-wrapper-preview { width: 100%; aspect-ratio: 1 / 1; padding: 10px; border-radius: var(--radius-card); position: relative; display: none; background: #121417; transition: all 0.3s ease; }
+    .grid-fixed-9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; height: 100%; }
+    .grid-fixed-9 .cell { background: #24292e; border-radius: 8px; overflow: hidden; }
+    .grid-fixed-9 .cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* 9マス松枠 */
+    .grid-wrapper-preview.gframe-none { border: 1px solid var(--card-border); }
+    .grid-wrapper-preview.gframe-fire {
+      border: 4px solid #ff4500;
+      box-shadow: 0 0 30px #ff4500;
+      animation: firePulse 1.2s infinite alternate;
+    }
+    .grid-wrapper-preview.gframe-god {
+      border: 4px solid transparent;
+      background-image: linear-gradient(#121417, #121417), linear-gradient(135deg, #ff007f, #ffff00, #00f2fe);
+      background-origin: border-box; background-clip: padding-box, border-box;
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.8);
     }
 
-    .customize-section {
-      background: #16181b;
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-card);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .section-title {
-      font-size: 0.75rem;
-      color: var(--gold);
-      font-weight: bold;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 6px;
-    }
+    /* ----------------------------------
+       コントロールエリア & スクロール
+    ---------------------------------- */
+    .scrollable-controls { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-bottom: 24px; -webkit-overflow-scrolling: touch; }
+    .control-panel { display: none; flex-direction: column; gap: 14px; }
+    .control-panel.active { display: flex; }
 
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
+    .customize-section { background: #16181b; border: 1px solid var(--card-border); border-radius: var(--radius-card); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .section-title { font-size: 0.75rem; color: var(--gold); font-weight: bold; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 4px; display: flex; justify-content: space-between; }
+    .section-desc { font-size: 0.55rem; color: var(--text-sub); font-weight: normal; }
+
+    /* グリッドレイアウト（スマホで見やすく） */
+    .options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
     .option-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 10px 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 52px;
-      position: relative;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; min-height: 52px; position: relative;
     }
-    .option-card.active {
-      border-color: var(--gold);
-      background: rgba(229, 192, 123, 0.12);
-    }
-    .option-card:active { transform: scale(0.96); }
+    .option-card.active { border-color: var(--gold); background: rgba(229, 192, 123, 0.12); }
 
-    /* プレミアム課金アイテム用のカード装飾 */
-    .option-card.premium {
-      border-color: rgba(0, 242, 254, 0.4);
-      background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(0, 0, 0, 0.4) 100%);
-    }
-    .option-card.premium.active {
-      border-color: #00f2fe;
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
-    }
-    .price-tag {
-      font-size: 0.55rem;
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
-      color: #000;
-      font-weight: 900;
-      padding: 1px 6px;
-      border-radius: 8px;
-      margin-top: 2px;
-    }
+    /* 梅（無料） */
+    .price-tag-ume { font-size: 0.5rem; background: rgba(255,255,255,0.1); color: var(--text-sub); padding: 1px 4px; border-radius: 6px; }
 
-    .color-preview {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    /* 課金フレームのプレビュー用円形グラフィック */
-    .flame-frame-preview {
-      position: relative;
-      background: linear-gradient(135deg, #00f2fe, #001122);
-      box-shadow: 0 0 8px #00f2fe;
-    }
-    .flame-frame-preview::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      height: 60%;
-      background: linear-gradient(to top, transparent, #00f2fe);
-      clip-path: polygon(50% 0%, 20% 100%, 80% 100%);
-    }
+    /* 竹（¥180） */
+    .option-card.take { border-color: rgba(0, 242, 254, 0.3); background: linear-gradient(135deg, rgba(0, 242, 254, 0.05), transparent); }
+    .option-card.take.active { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0, 242, 254, 0.4); }
+    .price-tag-take { font-size: 0.5rem; background: #00f2fe; color: #000; font-weight: 900; padding: 1px 5px; border-radius: 6px; }
 
-    .option-label {
-      font-size: 0.65rem;
-      color: var(--text-main);
-      font-weight: 500;
-      text-align: center;
-    }
+    /* 松（¥360：アニメーション強調） */
+    .option-card.matsu { border-color: rgba(255, 0, 127, 0.5); background: linear-gradient(135deg, rgba(255, 0, 127, 0.15), rgba(255, 215, 0, 0.1)); }
+    .option-card.matsu.active { border-color: #ff007f; box-shadow: 0 0 12px rgba(255, 0, 127, 0.7); }
+    .price-tag-matsu { font-size: 0.5rem; background: linear-gradient(135deg, #ff007f, #ff8c00); color: #fff; font-weight: 900; padding: 1px 5px; border-radius: 6px; animation: pulseTag 1s infinite alternate; }
+    @keyframes pulseTag { 0% { transform: scale(1); } 100% { transform: scale(1.08); } }
 
-    /* 保存ボタン */
-    .save-btn {
-      width: 100%;
-      background: linear-gradient(135deg, var(--gold), #d4a359);
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 20px;
-      padding: 14px 0;
-      font-size: 0.85rem;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(229,192,123,0.3);
-      text-align: center;
-      margin-top: 4px;
-      transition: transform 0.1s ease;
-    }
-    .save-btn:active { transform: scale(0.98); }
+    .color-preview { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .option-label { font-size: 0.58rem; color: var(--text-main); font-weight: 500; text-align: center; white-space: nowrap; }
+
+    .save-btn { width: 100%; background: linear-gradient(135deg, var(--gold), #d4a359); color: #000; font-weight: bold; border: none; border-radius: 20px; padding: 14px 0; font-size: 0.85rem; cursor: pointer; box-shadow: 0 4px 16px rgba(229,192,123,0.3); text-align: center; margin-top: 4px; }
   </style>
 </head>
 <body>
 
   <div class="app-viewport">
     
-    <!-- 固定部分：ヘッダー ＋ PREVIEW名刺 -->
     <div class="fixed-top-area">
       <div class="header-bar">
         <a href="home.html" class="back-btn">‹ 戻る</a>
@@ -329,10 +214,15 @@
         <div style="width: 50px;"></div>
       </div>
 
+      <div class="mode-tab-container">
+        <div class="mode-tab active" id="tab-card" onclick="switchMode('card')">🎴 名刺の編集</div>
+        <div class="mode-tab" id="tab-grid" onclick="switchMode('grid')">🖼️ 9マス外枠の編集</div>
+      </div>
+
       <div class="preview-label">PREVIEW</div>
 
-      <!-- プレビュー用名刺カード -->
-      <div class="palcard theme-dark" id="preview-card">
+      <!-- 1. 名刺プレビュー -->
+      <div class="palcard theme-dark cardframe-none" id="preview-card">
         <div class="palcard-brand">PALFILE</div>
         <div class="palcard-body">
           <div class="profile-info">
@@ -342,7 +232,6 @@
               <div class="field-row"><span class="field-label">生年月日</span><span class="field-value">2026.02.10</span></div>
               <div class="field-row"><span class="field-label">好物</span><span class="field-value">ささみ / まぐろ</span></div>
               <div class="field-row"><span class="field-label">特技</span><span class="field-value">どこでも寝れる</span></div>
-              <div class="field-row"><span class="field-label">ニックネーム</span><span class="field-value">メルちゃん</span></div>
             </div>
           </div>
           <div class="right-avatar-container">
@@ -354,121 +243,139 @@
           </div>
         </div>
       </div>
+
+      <!-- 2. 9マス外囲いプレビュー -->
+      <div class="grid-wrapper-preview gframe-none" id="preview-grid">
+        <div class="grid-fixed-9">
+          <div class="cell"><img src="https://picsum.photos/id/1025/150/150" alt="1"></div>
+          <div class="cell"><img src="https://picsum.photos/id/237/150/150" alt="2"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1062/150/150" alt="3"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1074/150/150" alt="4"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1084/150/150" alt="5"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1069/150/150" alt="6"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1020/150/150" alt="7"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1012/150/150" alt="8"></div>
+          <div class="cell"><img src="https://picsum.photos/id/1024/150/150" alt="9"></div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- スクロール部分：カスタマイズ操作群 -->
     <div class="scrollable-controls">
 
-      <!-- 1. 称号選択 -->
-      <div class="customize-section" id="title-section">
-        <div class="section-title">👑 称号を選択</div>
-        <div class="options-grid">
-          <div class="option-card" data-val="FOUNDER" onclick="selectTitle('FOUNDER', false, this)">
-            <span class="option-label" style="font-weight: bold; color: var(--gold);">FOUNDER</span>
-          </div>
-          <div class="option-card" data-val="甘えん坊将軍" onclick="selectTitle('甘えん坊将軍', false, this)">
-            <span class="option-label">甘えん坊将軍</span>
-          </div>
-          <div class="option-card" data-val="食いしん坊" onclick="selectTitle('食いしん坊', false, this)">
-            <span class="option-label">食いしん坊</span>
-          </div>
-          <div class="option-card" data-val="夜の支配者" onclick="selectTitle('夜の支配者', false, this)">
-            <span class="option-label">夜の支配者</span>
-          </div>
-          <div class="option-card" data-val="VIP" onclick="selectTitle('VIP', false, this)">
-            <span class="option-label" style="font-weight: bold; color: var(--gold);">VIP</span>
-          </div>
-          <!-- 課金限定称号 -->
-          <div class="option-card premium" data-val="DARK HERO" onclick="selectTitle('DARK HERO', true, this)">
-            <span class="option-label" style="font-weight: bold; background: linear-gradient(135deg, #fff, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">👑 DARK HERO</span>
-            <span class="price-tag">¥180</span>
+      <!-- 名刺編集パネル -->
+      <div class="control-panel active" id="panel-card">
+        
+        <!-- 称号 (梅5 / 竹3 / 松2) -->
+        <div class="customize-section" id="title-section">
+          <div class="section-title">👑 称号を選択 <span class="section-desc">全10種（梅5 / 竹3 / 松2）</span></div>
+          <div class="options-grid">
+            <!-- 梅 (無料×5) -->
+            <div class="option-card" data-val="FOUNDER" data-price="0" onclick="selectTitle('FOUNDER', 0, this)"><span class="option-label">FOUNDER</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="MEMBER" data-price="0" onclick="selectTitle('MEMBER', 0, this)"><span class="option-label">MEMBER</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="BABY" data-price="0" onclick="selectTitle('BABY', 0, this)"><span class="option-label">BABY</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="GUARDIAN" data-price="0" onclick="selectTitle('GUARDIAN', 0, this)"><span class="option-label">GUARDIAN</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="PARTNER" data-price="0" onclick="selectTitle('PARTNER', 0, this)"><span class="option-label">PARTNER</span><span class="price-tag-ume">無料</span></div>
+            
+            <!-- 竹 (¥180×3) -->
+            <div class="option-card take" data-val="HERO" data-price="180" onclick="selectTitle('HERO', 180, this)"><span class="option-label" style="color:#00f2fe;">HERO</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="PRINCESS" data-price="180" onclick="selectTitle('PRINCESS', 180, this)"><span class="option-label" style="color:#ff7300;">PRINCESS</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="KING" data-price="180" onclick="selectTitle('KING', 180, this)"><span class="option-label" style="color:#e5c07b;">KING</span><span class="price-tag-take">¥180</span></div>
+
+            <!-- 松 (¥360×2 アニメーション) -->
+            <div class="option-card matsu" data-val="GOD" data-price="360" onclick="selectTitle('GOD', 360, this)"><span class="option-label" style="color:#ff007f;">🔥 GOD</span><span class="price-tag-matsu">¥360</span></div>
+            <div class="option-card matsu" data-val="OVERLORD" data-price="360" onclick="selectTitle('OVERLORD', 360, this)"><span class="option-label" style="color:#ffff00;">✨ OVERLORD</span><span class="price-tag-matsu">¥360</span></div>
           </div>
         </div>
-      </div>
 
-      <!-- 2. テーマカラー選択 -->
-      <div class="customize-section" id="theme-section">
-        <div class="section-title">🎨 カードテーマ</div>
-        <div class="options-grid">
-          <div class="option-card" data-val="theme-dark" onclick="selectTheme('theme-dark', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #24292e, #16181b);"></div>
-            <span class="option-label">ダーク</span>
-          </div>
-          <div class="option-card" data-val="theme-navy" onclick="selectTheme('theme-navy', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #1b263b, #0d1b2a);"></div>
-            <span class="option-label">ネイビー</span>
-          </div>
-          <div class="option-card" data-val="theme-emerald" onclick="selectTheme('theme-emerald', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #0d3b2e, #051a14);"></div>
-            <span class="option-label">エメラルド</span>
-          </div>
-          <div class="option-card" data-val="theme-wine" onclick="selectTheme('theme-wine', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #3b1b26, #1a050d);"></div>
-            <span class="option-label">ワイン</span>
-          </div>
-          <div class="option-card" data-val="theme-gold" onclick="selectTheme('theme-gold', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #3d321d, #1c160b);"></div>
-            <span class="option-label">ゴールド</span>
-          </div>
-          <!-- 課金限定テーマ -->
-          <div class="option-card premium" data-val="theme-flame" onclick="selectTheme('theme-flame', true, this)">
-            <div class="color-preview" style="background: radial-gradient(circle, #00f2fe, #001122);"></div>
-            <span class="option-label">黒青の炎</span>
-            <span class="price-tag">¥180</span>
+        <!-- カード背景テーマ (梅5 / 竹3 / 松2) -->
+        <div class="customize-section" id="theme-section">
+          <div class="section-title">🎨 カードテーマ <span class="section-desc">全10種</span></div>
+          <div class="options-grid">
+            <!-- 梅 -->
+            <div class="option-card" data-val="theme-dark" data-price="0" onclick="selectTheme('theme-dark', 0, this)"><div class="color-preview" style="background: #1a1d20;"></div><span class="option-label">ブラック</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="theme-navy" data-price="0" onclick="selectTheme('theme-navy', 0, this)"><div class="color-preview" style="background: #0f172a;"></div><span class="option-label">ネイビー</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="theme-wine" data-price="0" onclick="selectTheme('theme-wine', 0, this)"><div class="color-preview" style="background: #2a0f1b;"></div><span class="option-label">ワイン</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="theme-forest" data-price="0" onclick="selectTheme('theme-forest', 0, this)"><div class="color-preview" style="background: #0f2a1b;"></div><span class="option-label">フォレスト</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="theme-slate" data-price="0" onclick="selectTheme('theme-slate', 0, this)"><div class="color-preview" style="background: #262930;"></div><span class="option-label">スレート</span><span class="price-tag-ume">無料</span></div>
+
+            <!-- 竹 -->
+            <div class="option-card take" data-val="theme-cyber" data-price="180" onclick="selectTheme('theme-cyber', 180, this)"><div class="color-preview" style="background: linear-gradient(135deg, #0d2b45, #00f2fe);"></div><span class="option-label">サイバー</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="theme-gold" data-price="180" onclick="selectTheme('theme-gold', 180, this)"><div class="color-preview" style="background: linear-gradient(135deg, #3a2e10, #e5c07b);"></div><span class="option-label">ゴールド</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="theme-purple" data-price="180" onclick="selectTheme('theme-purple', 180, this)"><div class="color-preview" style="background: linear-gradient(135deg, #2a0845, #b000ff);"></div><span class="option-label">ネオン紫</span><span class="price-tag-take">¥180</span></div>
+
+            <!-- 松（メラメラ・コズミック演出） -->
+            <div class="option-card matsu" data-val="theme-flame-bg" data-price="360" onclick="selectTheme('theme-flame-bg', 360, this)"><div class="color-preview" style="background: linear-gradient(0deg, #fd1d1d, #fcb045);"></div><span class="option-label">🔥 業火エフェクト</span><span class="price-tag-matsu">¥360</span></div>
+            <div class="option-card matsu" data-val="theme-star-bg" data-price="360" onclick="selectTheme('theme-star-bg', 360, this)"><div class="color-preview" style="background: radial-gradient(circle, #7928ca, #00f2fe);"></div><span class="option-label">✨ 銀河コズミック</span><span class="price-tag-matsu">¥360</span></div>
           </div>
         </div>
-      </div>
 
-      <!-- 3. アバターフレーム選択 -->
-      <div class="customize-section" id="frame-section">
-        <div class="section-title">🖼️ アイコンフレーム</div>
-        <div class="options-grid">
-          <div class="option-card" data-val="frame-none" onclick="selectFrame('frame-none', false, this)">
-            <div class="color-preview" style="background: rgba(255,255,255,0.1);"></div>
-            <span class="option-label">なし</span>
-          </div>
-          <div class="option-card" data-val="frame-gold" onclick="selectFrame('frame-gold', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div>
-            <span class="option-label">ゴールド</span>
-          </div>
-          <div class="option-card" data-val="frame-silver" onclick="selectFrame('frame-silver', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #ffffff, #6c757d);"></div>
-            <span class="option-label">シルバー</span>
-          </div>
-          <div class="option-card" data-val="frame-neon" onclick="selectFrame('frame-neon', false, this)">
-            <div class="color-preview" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></div>
-            <span class="option-label">サイバー</span>
-          </div>
-          <!-- 課金限定フレーム -->
-          <div class="option-card premium" data-val="frame-flame" onclick="selectFrame('frame-flame', true, this)">
-            <div class="color-preview flame-frame-preview"></div>
-            <span class="option-label">黒青の炎</span>
-            <span class="price-tag">¥180</span>
+        <!-- アバター枠 (梅5 / 竹3 / 松2) -->
+        <div class="customize-section" id="frame-section">
+          <div class="section-title">🖼️ アイコン枠 <span class="section-desc">全10種</span></div>
+          <div class="options-grid">
+            <!-- 梅 -->
+            <div class="option-card" data-val="frame-none" data-price="0" onclick="selectFrame('frame-none', 0, this)"><div class="color-preview" style="background: #333;"></div><span class="option-label">標準</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="frame-circle-white" data-price="0" onclick="selectFrame('frame-circle-white', 0, this)"><div class="color-preview" style="border: 2px solid #fff;"></div><span class="option-label">白枠</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="frame-circle-gray" data-price="0" onclick="selectFrame('frame-circle-gray', 0, this)"><div class="color-preview" style="border: 2px solid #666;"></div><span class="option-label">グレー</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="frame-circle-dot" data-price="0" onclick="selectFrame('frame-circle-dot', 0, this)"><div class="color-preview" style="border: 2px dashed #aaa;"></div><span class="option-label">点線</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="frame-circle-thin" data-price="0" onclick="selectFrame('frame-circle-thin', 0, this)"><div class="color-preview" style="border: 1px solid #e5c07b;"></div><span class="option-label">細ゴールド</span><span class="price-tag-ume">無料</span></div>
+
+            <!-- 竹 -->
+            <div class="option-card take" data-val="frame-gold" data-price="180" onclick="selectFrame('frame-gold', 180, this)"><div class="color-preview" style="background: linear-gradient(135deg, #ffe066, #b38600);"></div><span class="option-label">金輝枠</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="frame-cyber" data-price="180" onclick="selectFrame('frame-cyber', 180, this)"><div class="color-preview" style="border: 2px solid #00f2fe; box-shadow: 0 0 8px #00f2fe;"></div><span class="option-label">サイバー枠</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="frame-purple" data-price="180" onclick="selectFrame('frame-purple', 180, this)"><div class="color-preview" style="border: 2px solid #b000ff; box-shadow: 0 0 8px #b000ff;"></div><span class="option-label">紫光枠</span><span class="price-tag-take">¥180</span></div>
+
+            <!-- 松 -->
+            <div class="option-card matsu" data-val="frame-fire" data-price="360" onclick="selectFrame('frame-fire', 360, this)"><div class="color-preview" style="background: #ff4500; box-shadow: 0 0 10px #ff4500;"></div><span class="option-label">🔥 メラメラオーラ</span><span class="price-tag-matsu">¥360</span></div>
+            <div class="option-card matsu" data-val="frame-galaxy" data-price="360" onclick="selectFrame('frame-galaxy', 360, this)"><div class="color-preview" style="background: linear-gradient(135deg, #ff007f, #00f2fe);"></div><span class="option-label">✨ 銀河回転オーラ</span><span class="price-tag-matsu">¥360</span></div>
           </div>
         </div>
+
+        <!-- 名刺全体外枠 (梅5 / 竹3 / 松2) -->
+        <div class="customize-section" id="cardframe-section">
+          <div class="section-title">✨ 名刺全体のフレーム <span class="section-desc">全10種</span></div>
+          <div class="options-grid">
+            <!-- 梅 -->
+            <div class="option-card" data-val="cardframe-none" data-price="0" onclick="selectCardFrame('cardframe-none', 0, this)"><span class="option-label">なし</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="cardframe-silver" data-price="0" onclick="selectCardFrame('cardframe-silver', 0, this)"><span class="option-label">シンプル白</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="cardframe-gray" data-price="0" onclick="selectCardFrame('cardframe-gray', 0, this)"><span class="option-label">ダークグレー</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="cardframe-corner" data-price="0" onclick="selectCardFrame('cardframe-corner', 0, this)"><span class="option-label">四角強調</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="cardframe-dotted" data-price="0" onclick="selectCardFrame('cardframe-dotted', 0, this)"><span class="option-label">ドット枠</span><span class="price-tag-ume">無料</span></div>
+
+            <!-- 竹 -->
+            <div class="option-card take" data-val="cardframe-gold" data-price="180" onclick="selectCardFrame('cardframe-gold', 180, this)"><span class="option-label" style="color:#e5c07b;">金ライン</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="cardframe-cyber" data-price="180" onclick="selectCardFrame('cardframe-cyber', 180, this)"><span class="option-label" style="color:#00f2fe;">青発光ライン</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="cardframe-neon" data-price="180" onclick="selectCardFrame('cardframe-neon', 180, this)"><span class="option-label" style="color:#ff007f;">ネオンピンク</span><span class="price-tag-take">¥180</span></div>
+
+            <!-- 松 -->
+            <div class="option-card matsu" data-val="cardframe-fire" data-price="360" onclick="selectCardFrame('cardframe-fire', 360, this)"><span class="option-label" style="color:#ff4500;">🔥 炎パルス枠</span><span class="price-tag-matsu">¥360</span></div>
+            <div class="option-card matsu" data-val="cardframe-rainbow" data-price="360" onclick="selectCardFrame('cardframe-rainbow', 360, this)"><span class="option-label" style="color:#ffff00;">🌈 虹色グラデ枠</span><span class="price-tag-matsu">¥360</span></div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- 4. フォントスタイル選択 -->
-      <div class="customize-section" id="font-section">
-        <div class="section-title">✍️ 名前のフォント</div>
-        <div class="options-grid">
-          <div class="option-card" data-val="Cinzel" onclick="selectFont('Cinzel', false, this)">
-            <span style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #fff;">Aa</span>
-            <span class="option-label">クラシック</span>
-          </div>
-          <div class="option-card" data-val="Shippori Mincho" onclick="selectFont('Shippori Mincho', false, this)">
-            <span style="font-family: 'Shippori Mincho', serif; font-size: 1.1rem; color: #fff;">明朝</span>
-            <span class="option-label">エレガント</span>
-          </div>
-          <div class="option-card" data-val="M PLUS Rounded 1c" onclick="selectFont('M PLUS Rounded 1c', false, this)">
-            <span style="font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1rem; color: #fff;">まる</span>
-            <span class="option-label">ポップ</span>
-          </div>
-          <!-- 課金限定フォント -->
-          <div class="option-card premium" data-val="Noto Sans JP" onclick="selectFont('Noto Sans JP', true, this)">
-            <span style="font-family: 'Noto Sans JP', sans-serif; font-weight: 900; font-size: 1.1rem; color: #00f2fe;">極太</span>
-            <span class="option-label">ゴシック</span>
-            <span class="price-tag">¥180</span>
+      <!-- 9マスフレーム編集パネル -->
+      <div class="control-panel" id="panel-grid">
+        <div class="customize-section" id="gridframe-section">
+          <div class="section-title">🖼️ 9マス全体を囲う外枠 <span class="section-desc">全10種</span></div>
+          <div class="options-grid">
+            <!-- 梅 -->
+            <div class="option-card" data-val="gframe-none" data-price="0" onclick="selectGridFrame('gframe-none', 0, this)"><span class="option-label">なし</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="gframe-white" data-price="0" onclick="selectGridFrame('gframe-white', 0, this)"><span class="option-label">シンプル枠</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="gframe-gray" data-price="0" onclick="selectGridFrame('gframe-gray', 0, this)"><span class="option-label">ダーク枠</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="gframe-round" data-price="0" onclick="selectGridFrame('gframe-round', 0, this)"><span class="option-label">角丸枠</span><span class="price-tag-ume">無料</span></div>
+            <div class="option-card" data-val="gframe-thin" data-price="0" onclick="selectGridFrame('gframe-thin', 0, this)"><span class="option-label">極細枠</span><span class="price-tag-ume">無料</span></div>
+
+            <!-- 竹 -->
+            <div class="option-card take" data-val="gframe-gold" data-price="180" onclick="selectGridFrame('gframe-gold', 180, this)"><span class="option-label" style="color:#e5c07b;">黄金枠</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="gframe-cyber" data-price="180" onclick="selectGridFrame('gframe-cyber', 180, this)"><span class="option-label" style="color:#00f2fe;">サイバー青枠</span><span class="price-tag-take">¥180</span></div>
+            <div class="option-card take" data-val="gframe-purple" data-price="180" onclick="selectGridFrame('gframe-purple', 180, this)"><span class="option-label" style="color:#b000ff;">ネオン紫枠</span><span class="price-tag-take">¥180</span></div>
+
+            <!-- 松 -->
+            <div class="option-card matsu" data-val="gframe-fire" data-price="360" onclick="selectGridFrame('gframe-fire', 360, this)"><span class="option-label" style="color:#ff4500;">🔥 炎上外枠</span><span class="price-tag-matsu">¥360</span></div>
+            <div class="option-card matsu" data-val="gframe-god" data-price="360" onclick="selectGridFrame('gframe-god', 360, this)"><span class="option-label" style="color:#ff007f;">✨ 神光のオーラ外枠</span><span class="price-tag-matsu">¥360</span></div>
           </div>
         </div>
       </div>
@@ -481,128 +388,117 @@
   </div>
 
   <script>
-    // デフォルトの設定
     let currentConfig = {
       title: 'FOUNDER',
       theme: 'theme-dark',
       frame: 'frame-none',
-      font: 'Cinzel'
+      cardFrame: 'cardframe-none',
+      gridFrame: 'gframe-none'
     };
 
-    // 各項目が課金アイテムかどうかを追跡するフラグ
-    let isPremiumSelected = {
-      title: false,
-      theme: false,
-      frame: false,
-      font: false
-    };
+    let selectedPrices = { title: 0, theme: 0, frame: 0, cardFrame: 0, gridFrame: 0 };
 
-    // 画面を開いたときの処理
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('parmel_custom_config');
       if (saved) {
-        try {
-          currentConfig = JSON.parse(saved);
-        } catch(e) {}
+        try { currentConfig = Object.assign(currentConfig, JSON.parse(saved)); } catch(e) {}
       }
-      
       applyConfigToPreview();
       updateActiveUI();
     });
 
-    // 称号選択処理
-    function selectTitle(titleText, isPremium, el) {
-      currentConfig.title = titleText;
-      isPremiumSelected.title = isPremium;
-      updateGroupActive(el);
-      applyConfigToPreview();
+    function switchMode(mode) {
+      const tabCard = document.getElementById('tab-card');
+      const tabGrid = document.getElementById('tab-grid');
+      const previewCard = document.getElementById('preview-card');
+      const previewGrid = document.getElementById('preview-grid');
+      const panelCard = document.getElementById('panel-card');
+      const panelGrid = document.getElementById('panel-grid');
+
+      if (mode === 'card') {
+        tabCard.classList.add('active'); tabGrid.classList.remove('active');
+        previewCard.style.display = 'flex'; previewGrid.style.display = 'none';
+        panelCard.classList.add('active'); panelGrid.classList.remove('active');
+      } else {
+        tabGrid.classList.add('active'); tabCard.classList.remove('active');
+        previewGrid.style.display = 'block'; previewCard.style.display = 'none';
+        panelGrid.classList.add('active'); panelCard.classList.remove('active');
+      }
     }
 
-    // テーマ選択処理
-    function selectTheme(themeClass, isPremium, el) {
-      currentConfig.theme = themeClass;
-      isPremiumSelected.theme = isPremium;
-      updateGroupActive(el);
-      applyConfigToPreview();
+    function selectTitle(val, price, el) {
+      currentConfig.title = val; selectedPrices.title = price;
+      updateGroupActive(el); applyConfigToPreview();
+    }
+    function selectTheme(val, price, el) {
+      currentConfig.theme = val; selectedPrices.theme = price;
+      updateGroupActive(el); applyConfigToPreview();
+    }
+    function selectFrame(val, price, el) {
+      currentConfig.frame = val; selectedPrices.frame = price;
+      updateGroupActive(el); applyConfigToPreview();
+    }
+    function selectCardFrame(val, price, el) {
+      currentConfig.cardFrame = val; selectedPrices.cardFrame = price;
+      updateGroupActive(el); applyConfigToPreview();
+    }
+    function selectGridFrame(val, price, el) {
+      currentConfig.gridFrame = val; selectedPrices.gridFrame = price;
+      updateGroupActive(el); applyConfigToPreview();
     }
 
-    // フレーム選択処理
-    function selectFrame(frameClass, isPremium, el) {
-      currentConfig.frame = frameClass;
-      isPremiumSelected.frame = isPremium;
-      updateGroupActive(el);
-      applyConfigToPreview();
-    }
-
-    // フォント選択処理
-    function selectFont(fontFamily, isPremium, el) {
-      currentConfig.font = fontFamily;
-      isPremiumSelected.font = isPremium;
-      updateGroupActive(el);
-      applyConfigToPreview();
-    }
-
-    // 選択されたボタンの枠線を更新
     function updateGroupActive(targetEl) {
       const parent = targetEl.parentElement;
       parent.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
       targetEl.classList.add('active');
     }
 
-    // カードのプレビュー領域を書き換える
     function applyConfigToPreview() {
       const card = document.getElementById('preview-card');
       const avatarWrapper = document.getElementById('preview-avatar-wrapper');
-      const petName = document.getElementById('preview-name');
       const petTitle = document.getElementById('preview-title');
 
-      if (petTitle) petTitle.textContent = currentConfig.title || 'FOUNDER';
-      card.className = `palcard ${currentConfig.theme}`;
+      if (petTitle) {
+        petTitle.textContent = currentConfig.title || 'FOUNDER';
+        if (currentConfig.title === 'GOD' || currentConfig.title === 'OVERLORD') {
+          petTitle.classList.add('sparkle-text');
+        } else {
+          petTitle.classList.remove('sparkle-text');
+        }
+      }
+
+      card.className = `palcard ${currentConfig.theme} ${currentConfig.cardFrame}`;
       avatarWrapper.className = `avatar-wrapper ${currentConfig.frame}`;
-      
-      if (currentConfig.font === 'Noto Sans JP') {
-        petName.style.fontFamily = `'Noto Sans JP', sans-serif`;
-        petName.style.fontWeight = '900';
-      } else {
-        petName.style.fontFamily = `'${currentConfig.font}', serif, sans-serif`;
-        petName.style.fontWeight = '700';
-      }
+
+      const previewGrid = document.getElementById('preview-grid');
+      previewGrid.className = `grid-wrapper-preview ${currentConfig.gridFrame}`;
     }
 
-    // UI状態の同期
     function updateActiveUI() {
-      document.querySelectorAll('#title-section .option-card').forEach(card => {
-        if(card.getAttribute('data-val') === currentConfig.title) card.classList.add('active');
-        else card.classList.remove('active');
-      });
+      const sections = [
+        { id: '#title-section', val: currentConfig.title },
+        { id: '#theme-section', val: currentConfig.theme },
+        { id: '#frame-section', val: currentConfig.frame },
+        { id: '#cardframe-section', val: currentConfig.cardFrame },
+        { id: '#gridframe-section', val: currentConfig.gridFrame }
+      ];
 
-      document.querySelectorAll('#theme-section .option-card').forEach(card => {
-        if(card.getAttribute('data-val') === currentConfig.theme) card.classList.add('active');
-        else card.classList.remove('active');
-      });
-
-      document.querySelectorAll('#frame-section .option-card').forEach(card => {
-        if(card.getAttribute('data-val') === currentConfig.frame) card.classList.add('active');
-        else card.classList.remove('active');
-      });
-
-      document.querySelectorAll('#font-section .option-card').forEach(card => {
-        if(card.getAttribute('data-val') === currentConfig.font) card.classList.add('active');
-        else card.classList.remove('active');
+      sections.forEach(sec => {
+        document.querySelectorAll(`${sec.id} .option-card`).forEach(card => {
+          if(card.getAttribute('data-val') === sec.val) card.classList.add('active');
+          else card.classList.remove('active');
+        });
       });
     }
 
-    // 保存・適用処理
     function saveCustomization() {
-      // 課金アイテムが選択されているかチェック
-      const hasPremium = Object.values(isPremiumSelected).some(val => val === true);
+      const maxPrice = Math.max(...Object.values(selectedPrices));
 
-      if (hasPremium) {
-        alert('こちらのカスタム機能は ¥180 で解放されます');
-        return; // 保存せず処理を中断
+      if (maxPrice > 0) {
+        alert(`こちらのカスタム選択には課金アイテムが含まれています（最高額: ¥${maxPrice} で解放）`);
+        return;
       }
 
-      // 通常アイテムのみの場合は保存して移動
       localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig));
       window.location.href = 'home.html';
     }
