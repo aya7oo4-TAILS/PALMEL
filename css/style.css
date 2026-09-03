@@ -273,4 +273,3 @@ input[type="file"] { display: none; }
   cursor: pointer; text-align: left; transition: background 0.2s ease; text-decoration: none;
 }
 .drawer-item:active { background: rgba(229,192,123,0.15); border-color: var(--gold); }
-
