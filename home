@@ -95,7 +95,7 @@
       flex-direction: column;
       justify-content: flex-start;
       overflow: hidden;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       pointer-events: auto;
@@ -104,6 +104,32 @@
     .palcard-back {
       transform: rotateY(180deg);
       justify-content: space-between;
+    }
+
+    /* PALCARDテーマ バリエーション */
+    .palcard.theme-dark { background: linear-gradient(135deg, #24292e 0%, #16181b 100%); }
+    .palcard.theme-gold { background: linear-gradient(135deg, #3d3422 0%, #1a1710 100%); }
+    .palcard.theme-midnight { background: linear-gradient(135deg, #162235 0%, #0a0e14 100%); }
+    .palcard.theme-rose { background: linear-gradient(135deg, #331d25 0%, #140a0e 100%); }
+
+    /* PALCARD縁（Card Edge） */
+    .palcard.cardedge-none { border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--card-shadow); }
+    .palcard.cardedge-gold { border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(229, 192, 123, 0.35), var(--card-shadow); }
+    .palcard.cardedge-neon { border: 2px solid #00f2fe; box-shadow: 0 0 20px rgba(0, 242, 254, 0.45), var(--card-shadow); }
+    .palcard.cardedge-ruby { border: 2px solid #ff758c; box-shadow: 0 0 20px rgba(255, 117, 140, 0.45), var(--card-shadow); }
+
+    /* アバターフレーム */
+    .avatar-wrapper.frame-none { background: var(--avatar-bg); padding: 3px; box-shadow: none; }
+    .avatar-wrapper.frame-gold { background: linear-gradient(135deg, #e5c07b, #8f6b28); padding: 4px; box-shadow: 0 0 12px rgba(229,192,123,0.5); }
+    .avatar-wrapper.frame-neon { background: linear-gradient(135deg, #00f2fe, #4facfe); padding: 4px; box-shadow: 0 0 12px rgba(0,242,254,0.5); }
+    .avatar-wrapper.frame-ruby { background: linear-gradient(135deg, #ff758c, #ff7eb3); padding: 4px; box-shadow: 0 0 12px rgba(255,117,140,0.5); }
+
+    /* 称号スタイル */
+    .sparkle-text {
+      background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 8px rgba(229, 192, 123, 0.6));
     }
 
     .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 2px; }
@@ -333,7 +359,7 @@
 
     /* 9マス Grid */
     .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
-    .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); }
+    .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); transition: all 0.3s ease; }
     .grid-label { font-family: 'Cinzel', 'Noto Sans JP', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-align: center; padding: 4px 2px; background: rgba(0, 0, 0, 0.4); color: var(--text-sub); display: flex; align-items: center; justify-content: center; z-index: 2; }
     
     .grid-label-input {
@@ -346,6 +372,12 @@
     .grid-image-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; }
     .grid-image-box img { width: 100%; height: 100%; object-fit: cover; }
     
+    /* 9マスのフレーム着せ替え用クラス */
+    .grid-container.gridframe-standard .grid-item { border: 1px solid rgba(255, 255, 255, 0.04); }
+    .grid-container.gridframe-gold .grid-item { border: 1.5px solid var(--gold); }
+    .grid-container.gridframe-neon .grid-item { border: 1.5px solid #00f2fe; }
+    .grid-container.gridframe-dark .grid-item { border: 1px solid rgba(255, 255, 255, 0.15); background: #0d0f11; }
+
     /* 右下「NOSE＋PALMEL」のマス専用の演出レイアウト */
     .grid-item.palmel-item .grid-image-box {
       position: relative;
@@ -428,9 +460,10 @@
       position: fixed; top: 0; left: 0; width: 280px; height: 100%;
       background: #14171a; border-right: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 26000; transform: translateX(-100%);
-      display: flex; flex-direction: column; justify-content: space-between; padding: 20px 16px;
+      display: flex; flex-direction: column; padding: 20px 16px;
       box-shadow: 10px 0 30px rgba(0,0,0,0.8);
       will-change: transform;
+      overflow-y: auto;
     }
     .side-drawer.animated { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     .side-drawer.open { transform: translateX(0); }
@@ -439,7 +472,7 @@
     .drawer-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: 0.9rem; font-weight: bold; letter-spacing: 0.1em; }
     .drawer-close-btn { background: none; border: none; color: var(--text-sub); font-size: 1.2rem; cursor: pointer; }
 
-    .drawer-menu-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .drawer-menu-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; flex: 1; }
     .drawer-item {
       display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: var(--text-main); font-size: 0.8rem;
@@ -464,18 +497,15 @@
   <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
   
   <aside id="side-drawer" class="side-drawer">
-    <div>
-      <div class="drawer-header">
-        <span class="drawer-title">SETTINGS</span>
-        <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
-      </div>
-      <div class="drawer-menu-list">
-        <button class="drawer-item" onclick="toggleModal('palcard-edit-modal', true); closeDrawer();">PALCARD編集</button>
-        <button class="drawer-item" onclick="toggleModal('account-modal', true); closeDrawer();">アカウント・プロフ設定</button>
-        <a href="customize.html" class="drawer-item">デザイン着せ替え</a>
-      </div>
+    <div class="drawer-header">
+      <span class="drawer-title">SETTINGS</span>
+      <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
     </div>
-    <button class="drawer-item" style="color: #ff6b6b; border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05);" onclick="alert('ログアウトしました'); closeDrawer();">ログアウト</button>
+    <div class="drawer-menu-list">
+      <button class="drawer-item" onclick="toggleModal('palcard-edit-modal', true); closeDrawer();">PALCARD編集</button>
+      <button class="drawer-item" onclick="toggleModal('account-modal', true); closeDrawer();">アカウント・プロフ設定</button>
+      <a href="customize.html" class="drawer-item">デザイン着せ替え</a>
+    </div>
   </aside>
 
   <div class="app-viewport">
@@ -485,7 +515,7 @@
       <div class="palcard-container" id="palcard-container" onclick="toggleCardFlip(event)">
         <div class="palcard-flipper">
           
-          <div class="palcard" id="main-palcard">
+          <div class="palcard theme-dark cardedge-none" id="main-palcard">
             <div class="palcard-brand">PALCARD</div>
             <div class="palcard-body">
               <div class="profile-info">
@@ -500,7 +530,7 @@
               </div>
               
               <div class="right-avatar-container">
-                <div class="avatar-wrapper" id="main-avatar-wrapper">
+                <div class="avatar-wrapper frame-none" id="main-avatar-wrapper">
                   <div class="avatar-inner"><img id="avatar-img" src="https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg"></div>
                 </div>
                 <div class="present-pet-name" id="present-pet-name-display" style="display:none;">MEL</div>
@@ -538,7 +568,7 @@
         </div>
       </div>
 
-      <div class="grid-container">
+      <div class="grid-container gridframe-standard" id="main-grid-container">
         <script>
           const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'NOSE＋PALMEL'];
           gridLabels.forEach((lbl, i) => {
@@ -640,7 +670,6 @@
   <script>
     const STORAGE_KEY = 'parmel_grid_data';
 
-    // ペト名の文字数に応じて自動でフォントサイズを調整する関数
     function adjustPetNameFontSize() {
       const nameEl = document.getElementById('in-name');
       if (!nameEl) return;
@@ -708,6 +737,40 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadGridDataFromStorage();
       adjustPetNameFontSize();
+
+      const savedConfig = localStorage.getItem('parmel_custom_config');
+      if (savedConfig) {
+        try {
+          const config = JSON.parse(savedConfig);
+          
+          const card = document.getElementById('main-palcard');
+          if (card) {
+            card.className = `palcard ${config.theme || 'theme-dark'} ${config.cardEdge || 'cardedge-none'}`;
+          }
+
+          const avatar = document.getElementById('main-avatar-wrapper');
+          if (avatar) {
+            avatar.className = `avatar-wrapper ${config.frame || 'frame-none'}`;
+          }
+
+          const titleEl = document.getElementById('in-user-title');
+          if (titleEl) {
+            titleEl.textContent = config.title || 'FIRST PAL';
+            if (config.title === 'GOD') {
+              titleEl.classList.add('sparkle-text');
+            } else {
+              titleEl.classList.remove('sparkle-text');
+            }
+          }
+
+          const gridContainer = document.getElementById('main-grid-container');
+          if (gridContainer) {
+            gridContainer.className = `grid-container ${config.gridFrame || 'gridframe-standard'}`;
+          }
+        } catch (e) {
+          console.error('Failed to load customization', e);
+        }
+      }
 
       const freeInput = document.getElementById('custom-free-label');
       if (freeInput) {
@@ -962,4 +1025,3 @@
   </script>
 </body>
 </html>
-
