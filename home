@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PARMEL - MYPAL</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="palcard.css">
   <style>
     :root {
       --bg-main: #0b0d0e;
@@ -58,11 +59,9 @@
       justify-content: flex-start;
     }
 
-    /* 名刺カード（3Dフリップ用コンテナ） */
+    /* ホーム専用：フリップ用の上書き */
     .palcard-container {
       perspective: 1000px;
-      width: 100%;
-      aspect-ratio: 1.55 / 1;
       flex-shrink: 0;
       cursor: pointer;
     }
@@ -80,22 +79,7 @@
       transform: rotateY(180deg);
     }
 
-    /* 名刺カードデザイン共通 */
     .palcard {
-      position: absolute;
-      inset: 0;
-      background: var(--card-bg);
-      background-size: cover;
-      background-position: center;
-      border-radius: var(--radius-card);
-      padding: 12px 14px 44px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--card-border);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      overflow: hidden;
-      transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       pointer-events: auto;
@@ -104,132 +88,6 @@
     .palcard-back {
       transform: rotateY(180deg);
       justify-content: space-between;
-    }
-
-    /* PALCARDテーマ バリエーション */
-    .palcard.theme-dark { background: linear-gradient(135deg, #24292e 0%, #16181b 100%); }
-    .palcard.theme-gold { background: linear-gradient(135deg, #3d3422 0%, #1a1710 100%); }
-    .palcard.theme-midnight { background: linear-gradient(135deg, #162235 0%, #0a0e14 100%); }
-    .palcard.theme-rose { background: linear-gradient(135deg, #331d25 0%, #140a0e 100%); }
-
-    /* PALCARD縁（Card Edge） */
-    .palcard.cardedge-none { border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--card-shadow); }
-    .palcard.cardedge-gold { border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(229, 192, 123, 0.35), var(--card-shadow); }
-    .palcard.cardedge-neon { border: 2px solid #00f2fe; box-shadow: 0 0 20px rgba(0, 242, 254, 0.45), var(--card-shadow); }
-    .palcard.cardedge-ruby { border: 2px solid #ff758c; box-shadow: 0 0 20px rgba(255, 117, 140, 0.45), var(--card-shadow); }
-
-    /* アバターフレーム */
-    .avatar-wrapper.frame-none { background: var(--avatar-bg); padding: 3px; box-shadow: none; }
-    .avatar-wrapper.frame-gold { background: linear-gradient(135deg, #e5c07b, #8f6b28); padding: 4px; box-shadow: 0 0 12px rgba(229,192,123,0.5); }
-    .avatar-wrapper.frame-neon { background: linear-gradient(135deg, #00f2fe, #4facfe); padding: 4px; box-shadow: 0 0 12px rgba(0,242,254,0.5); }
-    .avatar-wrapper.frame-ruby { background: linear-gradient(135deg, #ff758c, #ff7eb3); padding: 4px; box-shadow: 0 0 12px rgba(255,117,140,0.5); }
-
-    /* 称号スタイル */
-    .sparkle-text {
-      background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 8px rgba(229, 192, 123, 0.6));
-    }
-
-    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 2px; }
-    .palcard-body { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex: 1; }
-    
-    .profile-info { 
-      flex: 1; 
-      display: flex; 
-      flex-direction: column; 
-      min-width: 0; 
-      justify-content: flex-start; 
-      margin-top: 10px;
-      position: relative;
-    }
-    
-    .user-title-display {
-      font-size: 0.72rem;
-      color: var(--gold);
-      font-weight: 500;
-      margin-top: 4px; 
-      margin-bottom: 3px;
-      letter-spacing: 0.05em;
-      min-height: 0.9rem;
-    }
-
-    .pet-name { 
-      font-family: 'Cinzel', 'Noto Sans JP', sans-serif; 
-      font-size: 2.15rem; 
-      line-height: 1.3; 
-      padding-top: 4px;  
-      margin-top: 0;   
-      margin-bottom: 4px;  
-      font-weight: 700; 
-      color: #fff; 
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    
-    .profile-fields { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 1px; 
-      margin-top: auto; 
-    }
-    
-    .field-row {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding-bottom: 2px;
-      margin-bottom: 2px;
-      padding-right: 8px;
-    }
-    .field-row::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 95%;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .field-label { font-size: 0.52rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
-    .field-value { color: var(--text-main); font-size: 0.6rem; font-weight: 500; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    .right-avatar-container { 
-      position: relative; 
-      width: 168px; 
-      flex-shrink: 0; 
-      display: flex; 
-      align-items: flex-start; 
-      justify-content: center; 
-      margin-top: 18px; 
-    }
-    .avatar-wrapper { width: 164px; height: 164px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); display: block; transition: all 0.3s ease; }
-    
-    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
-    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
-
-    .palcard-footer { position: absolute; left: 14px; right: 14px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
-    .footer-left-group { display: flex; gap: 10px; }
-    
-    .icon-btn {
-      height: 26px; 
-      min-width: 52px; 
-      padding: 0 8px; 
-      background: rgba(255, 255, 255, 0.12); 
-      border: 1px solid rgba(255, 255, 255, 0.22); 
-      border-radius: 8px; 
-      color: var(--text-main); 
-      font-size: 0.52rem; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-weight: 500; 
-      text-decoration: none;
     }
 
     /* 背面カード専用のデザインレイアウト */
@@ -356,9 +214,10 @@
     
     .palcard.is-presented .present-pet-name { display: block !important; font-family: 'Cinzel', serif; font-size: 1.8rem !important; margin: 0 !important; text-align: center !important; line-height: 1.0 !important; color: #fff; font-weight: 700; letter-spacing: 0.05em; }
     .palcard.is-presented .pet-name { display: none !important; }
+    .palcard.is-presented .pet-name-slot { display: none !important; }
 
     /* 9マス Grid */
-    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
+    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; max-width: 390px; margin-inline: auto; }
     .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); transition: all 0.3s ease; }
     .grid-label { font-family: 'Cinzel', 'Noto Sans JP', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-align: center; padding: 4px 2px; background: rgba(0, 0, 0, 0.4); color: var(--text-sub); display: flex; align-items: center; justify-content: center; z-index: 2; }
     
@@ -515,38 +374,7 @@
       <div class="palcard-container" id="palcard-container" onclick="toggleCardFlip(event)">
         <div class="palcard-flipper">
           
-          <div class="palcard theme-dark cardedge-none" id="main-palcard">
-            <div class="palcard-brand">PALCARD</div>
-            <div class="palcard-body">
-              <div class="profile-info">
-                <div id="in-user-title" class="user-title-display">FIRST PAL</div>
-                <div id="in-name" class="pet-name">MEL</div>
-                <div class="profile-fields">
-                  <div class="field-row"><span class="field-label">生年月日</span><div id="in-birth" class="field-value">2026.02.10</div></div>
-                  <div class="field-row"><span class="field-label">nickname</span><div id="in-nickname" class="field-value">メルちゃん</div></div>
-                  <div class="field-row"><span class="field-label">message</span><div id="in-owner" class="field-value">こんにちは</div></div>
-                  <div class="field-row"><span class="field-label">pallike</span><div id="in-pallike" class="field-value" style="color:var(--gold); font-weight:bold;">♡ 0</div></div>
-                </div>
-              </div>
-              
-              <div class="right-avatar-container">
-                <div class="avatar-wrapper frame-none" id="main-avatar-wrapper">
-                  <div class="avatar-inner"><img id="avatar-img" src="https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg"></div>
-                </div>
-                <div class="present-pet-name" id="present-pet-name-display" style="display:none;">MEL</div>
-              </div>
-            </div>
-
-            <div class="palcard-footer" id="main-palcard-footer">
-              <div class="footer-left-group">
-                <button class="icon-btn" onclick="event.stopPropagation(); presentCard();"><span>PALINK</span></button>
-                <label class="icon-btn" onclick="event.stopPropagation()">
-                  <span>GET</span>
-                  <input type="file" accept="image/*" capture="environment" onchange="handleGetCamera(this)">
-                </label>
-              </div>
-            </div>
-          </div>
+          <div class="palcard theme-dark cardedge-none" id="main-palcard"></div>
 
           <div class="palcard palcard-back" id="back-palcard">
             <div class="palcard-brand">PALCARD</div>
@@ -615,15 +443,31 @@
         </div>
         <div class="form-group">
           <label class="form-label">ペットの名前 (例: MEL)</label>
-          <input type="text" id="edit-name" class="form-input" placeholder="名前を入力">
-        </div>
-        <div class="form-group">
-          <label class="form-label">生年月日 (例: 2026.02.10)</label>
-          <input type="text" id="edit-birth" class="form-input" placeholder="生年月日を入力">
+          <input type="text" id="edit-name" class="form-input" placeholder="名前を入力" maxlength="12">
         </div>
         <div class="form-group">
           <label class="form-label">nickname (例: メルちゃん)</label>
           <input type="text" id="edit-nickname" class="form-input" placeholder="ニックネームを入力">
+        </div>
+        <div class="form-group">
+          <label class="form-label">性別</label>
+          <select id="edit-gender" class="form-input">
+            <option value="">未設定</option>
+            <option value="♂">♂</option>
+            <option value="♀">♀</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">動物種</label>
+          <input type="text" id="edit-species" class="form-input" placeholder="猫 / 犬 / うさぎ / 鳥">
+        </div>
+        <div class="form-group">
+          <label class="form-label">種類 / 品種</label>
+          <input type="text" id="edit-breed" class="form-input" placeholder="Scottish Fold / 柴犬">
+        </div>
+        <div class="form-group">
+          <label class="form-label">生年月日 (例: 2026.02.10)</label>
+          <input type="text" id="edit-birth" class="form-input" placeholder="生年月日を入力">
         </div>
         <div class="form-group">
           <label class="form-label">message (例: こんにちは)</label>
@@ -667,23 +511,12 @@
     <a href="pals.html" class="nav-btn" id="btn-feed">PALS</a>
   </nav>
 
+  <script src="palcard.js"></script>
   <script>
     const STORAGE_KEY = 'parmel_grid_data';
 
     function adjustPetNameFontSize() {
-      const nameEl = document.getElementById('in-name');
-      if (!nameEl) return;
-      const textLength = nameEl.innerText.length;
-      
-      if (textLength <= 4) {
-        nameEl.style.fontSize = '2.15rem';
-      } else if (textLength <= 6) {
-        nameEl.style.fontSize = '1.7rem';
-      } else if (textLength <= 8) {
-        nameEl.style.fontSize = '1.35rem';
-      } else {
-        nameEl.style.fontSize = '1.1rem';
-      }
+      adjustPalcardPetNameSize(document.getElementById('pal-name'));
     }
 
     function saveGridDataToStorage() {
@@ -734,43 +567,23 @@
       }
     }
 
+    function applyHomeGridFrame(config) {
+      const gridContainer = document.getElementById('main-grid-container');
+      if (gridContainer) {
+        gridContainer.className = `grid-container ${(config && config.gridFrame) || 'gridframe-standard'}`;
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       loadGridDataFromStorage();
+
+      const config = loadPalcardConfig();
+      const card = document.getElementById('main-palcard');
+      renderPalcardFront(card, { mode: 'view', config: config });
+      applyHomeGridFrame(config);
+      bindHomePalcardFrontActions(card);
+
       adjustPetNameFontSize();
-
-      const savedConfig = localStorage.getItem('parmel_custom_config');
-      if (savedConfig) {
-        try {
-          const config = JSON.parse(savedConfig);
-          
-          const card = document.getElementById('main-palcard');
-          if (card) {
-            card.className = `palcard ${config.theme || 'theme-dark'} ${config.cardEdge || 'cardedge-none'}`;
-          }
-
-          const avatar = document.getElementById('main-avatar-wrapper');
-          if (avatar) {
-            avatar.className = `avatar-wrapper ${config.frame || 'frame-none'}`;
-          }
-
-          const titleEl = document.getElementById('in-user-title');
-          if (titleEl) {
-            titleEl.textContent = config.title || 'FIRST PAL';
-            if (config.title === 'GOD') {
-              titleEl.classList.add('sparkle-text');
-            } else {
-              titleEl.classList.remove('sparkle-text');
-            }
-          }
-
-          const gridContainer = document.getElementById('main-grid-container');
-          if (gridContainer) {
-            gridContainer.className = `grid-container ${config.gridFrame || 'gridframe-standard'}`;
-          }
-        } catch (e) {
-          console.error('Failed to load customization', e);
-        }
-      }
 
       const freeInput = document.getElementById('custom-free-label');
       if (freeInput) {
@@ -780,16 +593,36 @@
       }
     });
 
+    function bindHomePalcardFrontActions(card) {
+      if (!card) return;
+      const palink = card.querySelector('[data-palcard-action="palink"]');
+      const getBtn = card.querySelector('[data-palcard-action="get"]');
+      const getInput = card.querySelector('[data-palcard-action="get-input"]');
+      if (palink) {
+        palink.addEventListener('click', (e) => {
+          e.stopPropagation();
+          presentCard();
+        });
+      }
+      if (getBtn && getInput) {
+        getBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          getInput.click();
+        });
+        getInput.addEventListener('change', () => handleGetCamera(getInput));
+      }
+    }
+
     function toggleCardFlip(event) {
-      if (['INPUT', 'BUTTON', 'A'].includes(event.target.tagName)) return;
+      if (['INPUT', 'BUTTON', 'A', 'LABEL'].includes(event.target.tagName)) return;
       const container = document.getElementById('palcard-container');
-      const footer = document.getElementById('main-palcard-footer');
+      const footer = document.getElementById('pal-footer');
       container.classList.toggle('flipped');
       
       if (container.classList.contains('flipped')) {
-        footer.style.display = 'none';
+        if (footer) footer.style.display = 'none';
       } else {
-        footer.style.display = 'flex';
+        if (footer) footer.style.display = 'flex';
       }
     }
 
@@ -801,7 +634,7 @@
     }
 
     function syncCardName(val) {
-      const displayEl = document.getElementById('present-pet-name-display');
+      const displayEl = document.getElementById('pal-present-name');
       if (displayEl) {
         displayEl.innerText = val;
       }
@@ -881,10 +714,14 @@
       const el = document.getElementById(id);
       if (show) {
         if(id === 'palcard-edit-modal') {
-          document.getElementById('edit-name').value = document.getElementById('in-name').innerText;
-          document.getElementById('edit-birth').value = document.getElementById('in-birth').innerText;
-          document.getElementById('edit-nickname').value = document.getElementById('in-nickname').innerText;
-          document.getElementById('edit-owner').value = document.getElementById('in-owner').innerText;
+          const saved = loadPalcardConfig();
+          document.getElementById('edit-name').value = document.getElementById('pal-name').innerText;
+          document.getElementById('edit-birth').value = document.getElementById('pal-birthday').innerText;
+          document.getElementById('edit-nickname').value = document.getElementById('pal-nickname').innerText;
+          document.getElementById('edit-owner').value = document.getElementById('pal-message').innerText;
+          document.getElementById('edit-gender').value = saved.gender || '';
+          document.getElementById('edit-species').value = saved.species || '';
+          document.getElementById('edit-breed').value = saved.breed || '';
           document.getElementById('edit-ownername').value = document.getElementById('back-owner-display').innerText;
           document.getElementById('edit-avatar-file').value = '';
         }
@@ -902,14 +739,28 @@
       const nicknameVal = document.getElementById('edit-nickname').value;
       const ownerVal = document.getElementById('edit-owner').value;
       const ownernameVal = document.getElementById('edit-ownername').value;
+      const genderVal = document.getElementById('edit-gender').value;
+      const speciesVal = document.getElementById('edit-species').value;
+      const breedVal = document.getElementById('edit-breed').value;
       const avatarInput = document.getElementById('edit-avatar-file');
 
-      document.getElementById('in-name').innerText = nameVal;
-      adjustPetNameFontSize(); 
+      const config = loadPalcardConfig();
+      config.petName = nameVal;
+      config.nickname = nicknameVal;
+      config.message = ownerVal;
+      config.gender = genderVal;
+      config.species = speciesVal;
+      config.breed = breedVal;
+      try {
+        localStorage.setItem('palmel_custom_config', JSON.stringify(config));
+        localStorage.setItem('parmel_custom_config', JSON.stringify(config));
+      } catch (e) {
+        console.error('Failed to save palcard config', e);
+      }
 
-      document.getElementById('in-birth').innerText = birthVal;
-      document.getElementById('in-nickname').innerText = nicknameVal;
-      document.getElementById('in-owner').innerText = ownerVal;
+      applyPalcardConfig(document.getElementById('main-palcard'), config);
+      document.getElementById('pal-birthday').innerText = birthVal;
+      adjustPetNameFontSize();
 
       syncCardName(nameVal);
       syncOwnerName(ownernameVal);
@@ -917,8 +768,8 @@
       if (avatarInput.files && avatarInput.files[0]) {
         const r = new FileReader();
         r.onload = e => {
-          document.getElementById('avatar-img').src = e.target.result;
-          const cloneAvatar = document.querySelector('#present-card-container #avatar-img');
+          document.getElementById('pal-avatar-img').src = e.target.result;
+          const cloneAvatar = document.querySelector('#present-card-container #pal-avatar-img');
           if(cloneAvatar) cloneAvatar.src = e.target.result;
         };
         r.readAsDataURL(avatarInput.files[0]);
@@ -981,19 +832,21 @@
       clone.querySelectorAll('input[type="file"]').forEach(input => input.remove());
       clone.classList.add('is-presented');
 
-      const currentNameValue = document.getElementById('in-name').innerText;
+      const currentNameValue = cardSrc.querySelector('#pal-name').innerText;
       clone.querySelectorAll('.present-pet-name').forEach(el => {
         el.innerText = currentNameValue;
         el.style.display = 'block';
       });
 
-      const cloneAvatar = clone.querySelector('#avatar-img');
-      const mainAvatar = document.getElementById('avatar-img');
+      const cloneAvatar = clone.querySelector('#pal-avatar-img');
+      const mainAvatar = cardSrc.querySelector('#pal-avatar-img');
       if(cloneAvatar && mainAvatar) cloneAvatar.src = mainAvatar.src;
 
       const profileInfoEl = clone.querySelector('.profile-info');
       if (profileInfoEl) {
-        profileInfoEl.innerHTML = `
+        const brandEl = profileInfoEl.querySelector('.palcard-brand');
+        const brandHtml = brandEl ? brandEl.outerHTML : '';
+        profileInfoEl.innerHTML = brandHtml + `
           <div class="qr-frame-box">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://parmel.example.com/palcard" alt="PALCARD QR Code">
           </div>
