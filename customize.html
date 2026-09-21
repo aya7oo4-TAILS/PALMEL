@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PARMEL - CUSTOMIZE</title>
+  <title>PALMEL - CUSTOMIZE</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="palcard.css">
   <style>
     :root {
       --bg-main: #0b0d0e;
@@ -110,152 +111,40 @@
       flex-shrink: 0;
     }
 
-    .palcard-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1.55 / 1;
+    .avatar-wrapper {
+      cursor: pointer;
+      touch-action: manipulation;
     }
-
-    .palcard {
+    .avatar-wrapper::after {
+      content: '✎';
       position: absolute;
-      inset: 0;
-      background: var(--card-bg);
-      background-size: cover;
-      background-position: center;
-      border-radius: var(--radius-card);
-      padding: 12px 14px 44px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--card-border);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      overflow: hidden;
-      transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 2px; }
-    .palcard-body { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex: 1; }
-    
-    .profile-info { 
-      flex: 1; 
-      display: flex; 
-      flex-direction: column; 
-      min-width: 0; 
-      justify-content: flex-start; 
-      margin-top: 10px;
-      position: relative;
-    }
-    
-    .user-title-display {
-      font-size: 0.72rem;
-      color: var(--gold);
-      font-weight: 500;
-      margin-top: 4px; 
-      margin-bottom: 3px;
-      letter-spacing: 0.05em;
-      min-height: 0.9rem;
-    }
-
-    .pet-name { 
-      font-family: 'Cinzel', 'Noto Sans JP', sans-serif; 
-      font-size: 2.15rem; 
-      line-height: 1.3; 
-      padding-top: 4px;  
-      margin-top: 0;   
-      margin-bottom: 4px;  
-      font-weight: 700; 
-      color: #fff; 
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    
-    .profile-fields { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 1px; 
-      margin-top: auto; 
-    }
-    
-    .field-row {
-      position: relative;
+      right: 6px;
+      bottom: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      padding-bottom: 2px;
-      margin-bottom: 2px;
-      padding-right: 8px;
+      justify-content: center;
+      background: rgba(12, 14, 16, 0.86);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+      font-size: 0.8rem;
+      z-index: 12;
+      pointer-events: none;
     }
-    .field-row::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 95%;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    #preview-palcard.theme-dark .avatar-wrapper::after,
+    #preview-palcard.theme-gold .avatar-wrapper::after,
+    #preview-palcard.theme-midnight .avatar-wrapper::after,
+    #preview-palcard.theme-rose .avatar-wrapper::after {
+      content: none;
+      display: none;
     }
-
-    .field-label { font-size: 0.52rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
-    .field-value { color: var(--text-main); font-size: 0.6rem; font-weight: 500; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    .right-avatar-container { 
-      position: relative; 
-      width: 168px; 
-      flex-shrink: 0; 
-      display: flex; 
-      align-items: flex-start; 
-      justify-content: center; 
-      margin-top: 18px; 
-    }
-    .avatar-wrapper { width: 164px; height: 164px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); display: block; transition: all 0.3s ease; }
-    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
-    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
-
-    .palcard-footer { position: absolute; left: 14px; right: 14px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
-    .footer-left-group { display: flex; gap: 10px; }
-    
-    .icon-btn {
-      height: 26px; 
-      min-width: 52px; 
-      padding: 0 8px; 
-      background: rgba(255, 255, 255, 0.12); 
-      border: 1px solid rgba(255, 255, 255, 0.22); 
-      border-radius: 8px; 
-      color: var(--text-main); 
-      font-size: 0.52rem; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-weight: 500; 
-      text-decoration: none;
-    }
-
-    /* PALCARDテーマ バリエーション */
-    .palcard.theme-dark { background: linear-gradient(135deg, #24292e 0%, #16181b 100%); }
-    .palcard.theme-gold { background: linear-gradient(135deg, #3d3422 0%, #1a1710 100%); }
-    .palcard.theme-midnight { background: linear-gradient(135deg, #162235 0%, #0a0e14 100%); }
-    .palcard.theme-rose { background: linear-gradient(135deg, #331d25 0%, #140a0e 100%); }
-
-    /* PALCARD縁（Card Edge） */
-    .palcard.cardedge-none { border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--card-shadow); }
-    .palcard.cardedge-gold { border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(229, 192, 123, 0.35), var(--card-shadow); }
-    .palcard.cardedge-neon { border: 2px solid #00f2fe; box-shadow: 0 0 20px rgba(0, 242, 254, 0.45), var(--card-shadow); }
-    .palcard.cardedge-ruby { border: 2px solid #ff758c; box-shadow: 0 0 20px rgba(255, 117, 140, 0.45), var(--card-shadow); }
-
-    /* アバターフレーム */
-    .avatar-wrapper.frame-none { background: var(--avatar-bg); padding: 3px; box-shadow: none; }
-    .avatar-wrapper.frame-gold { background: linear-gradient(135deg, #e5c07b, #8f6b28); padding: 4px; box-shadow: 0 0 12px rgba(229,192,123,0.5); }
-    .avatar-wrapper.frame-neon { background: linear-gradient(135deg, #00f2fe, #4facfe); padding: 4px; box-shadow: 0 0 12px rgba(0,242,254,0.5); }
-    .avatar-wrapper.frame-ruby { background: linear-gradient(135deg, #ff758c, #ff7eb3); padding: 4px; box-shadow: 0 0 12px rgba(255,117,140,0.5); }
-
-    /* 称号スタイル */
-    .sparkle-text {
-      background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 8px rgba(229, 192, 123, 0.6));
+    .avatar-inner img {
+      display: none;
+      user-select: none;
+      pointer-events: none;
     }
 
     /* スクロールエリア共通 */
@@ -345,6 +234,122 @@
       letter-spacing: 0.1em;
       color: var(--text-sub);
     }
+    .accordion-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-sub);
+      cursor: pointer;
+      text-align: left;
+    }
+    .accordion-icon {
+      font-size: 0.62rem;
+      color: var(--text-sub);
+      line-height: 1;
+    }
+    .accordion-body {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .customize-section.is-open .accordion-body {
+      display: flex;
+    }
+    .title-locked-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: var(--text-sub);
+      opacity: 0.72;
+    }
+    .option-btn.locked-title {
+      position: relative;
+      opacity: 0.42;
+      color: #8b9198;
+      border-color: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.025);
+      cursor: not-allowed;
+      font-weight: 400;
+    }
+    .option-btn.locked-title .lock-mark {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
+      font-size: 0.7em;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .profile-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    .profile-field span {
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      color: var(--text-sub);
+    }
+    .profile-field input,
+    .profile-field select {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 10px 10px;
+      font-size: 0.78rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .profile-field input[type='date'] {
+      color-scheme: dark;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .profile-field-date {
+      overflow: hidden;
+    }
+    #profile-birthday {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    #profile-birthday::-webkit-datetime-edit,
+    #profile-birthday::-webkit-datetime-edit-fields-wrapper,
+    #profile-birthday::-webkit-datetime-edit-text,
+    #profile-birthday::-webkit-datetime-edit-month-field,
+    #profile-birthday::-webkit-datetime-edit-day-field,
+    #profile-birthday::-webkit-datetime-edit-year-field {
+      min-width: 0;
+      max-width: 100%;
+      padding: 0;
+    }
+    #profile-birthday::-webkit-calendar-picker-indicator {
+      margin: 0;
+    }
     .option-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -366,6 +371,113 @@
       border-color: var(--gold);
       color: var(--gold);
       font-weight: bold;
+    }
+
+    /* バンドル選択中の排他設定 */
+    .customize-section.bundle-locked {
+      opacity: 0.34;
+      filter: grayscale(0.75);
+      transition: opacity 0.2s ease, filter 0.2s ease;
+    }
+    .customize-section.bundle-locked .option-btn {
+      cursor: not-allowed;
+    }
+    .option-btn:disabled {
+      pointer-events: none;
+    }
+
+    /* 写真編集シート */
+    .photo-editor-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.16) 52%, rgba(0,0,0,0.56) 100%);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+      pointer-events: none;
+    }
+    .photo-editor-overlay.open { display: flex; }
+    .photo-editor-overlay.open .photo-editor-sheet { pointer-events: auto; }
+    body.photo-editing .avatar-wrapper {
+      touch-action: none;
+      cursor: grab;
+      box-shadow: 0 0 0 2px rgba(229,192,123,0.75), 0 0 22px rgba(229,192,123,0.28);
+    }
+    body.photo-editing .avatar-wrapper:active { cursor: grabbing; }
+    .photo-editor-sheet {
+      width: min(100%, 414px);
+      background: #171a1d;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 -12px 40px rgba(0,0,0,0.45);
+    }
+    .photo-editor-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .photo-editor-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .photo-editor-close {
+      border: 0;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-main);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .photo-control { margin-top: 12px; }
+    .photo-control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-sub);
+      font-size: 0.68rem;
+      margin-bottom: 6px;
+    }
+    .photo-control input[type='range'] {
+      width: 100%;
+      accent-color: var(--gold);
+    }
+    .photo-editor-hint {
+      margin-top: 2px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(229,192,123,0.08);
+      border: 1px solid rgba(229,192,123,0.22);
+      color: #d8c59a;
+      font-size: 0.66rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+    .photo-editor-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .photo-editor-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-main);
+      border-radius: 10px;
+      padding: 11px 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .photo-editor-btn.primary {
+      background: var(--gold);
+      color: #111;
+      border-color: var(--gold);
     }
 
     .save-config-btn {
@@ -404,73 +516,143 @@
     <div id="tab-content-palcard" class="custom-tab-content active">
       <div class="preview-fixed-area">
         <div class="palcard-container">
-          <div class="palcard theme-dark cardedge-none" id="preview-palcard">
-            <div class="palcard-brand">PALCARD</div>
-            <div class="palcard-body">
-              <div class="profile-info">
-                <div id="preview-title" class="user-title-display">FIRST PAL</div>
-                <div class="pet-name">MEL</div>
-                <div class="profile-fields">
-                  <div class="field-row"><span class="field-label">生年月日</span><div class="field-value">2026.02.10</div></div>
-                  <div class="field-row"><span class="field-label">nickname</span><div class="field-value">メルちゃん</div></div>
-                  <div class="field-row"><span class="field-label">message</span><div class="field-value">こんにちは</div></div>
-                  <div class="field-row"><span class="field-label">pallike</span><div class="field-value" style="color:var(--gold); font-weight:bold;">♡ 0</div></div>
-                </div>
-              </div>
-              
-              <div class="right-avatar-container">
-                <div class="avatar-wrapper frame-none" id="preview-avatar">
-                  <div class="avatar-inner"><img src="https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="palcard-footer">
-              <div class="footer-left-group">
-                <button class="icon-btn"><span>PALINK</span></button>
-                <button class="icon-btn"><span>GET</span></button>
-              </div>
-            </div>
-          </div>
+          <div class="palcard theme-dark cardedge-none" id="preview-palcard"></div>
         </div>
       </div>
 
       <div class="scrollable-controls" style="margin-top: 12px;">
         <div class="customize-section">
-          <div class="section-title">PALCARD テーマ</div>
-          <div class="option-grid" id="theme-options">
-            <button class="option-btn active" data-type="theme" data-value="theme-dark">標準</button>
-            <button class="option-btn" data-type="theme" data-value="theme-gold">ゴールド</button>
-            <button class="option-btn" data-type="theme" data-value="theme-midnight">ミッドナイト</button>
-            <button class="option-btn" data-type="theme" data-value="theme-rose">ローズ</button>
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>プロフィール</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <label class="profile-field">
+              <span>名前</span>
+              <input id="profile-pet-name" type="text" autocomplete="off" maxlength="12">
+            </label>
+            <label class="profile-field">
+              <span>ニックネーム</span>
+              <input id="profile-nickname" type="text" autocomplete="off">
+            </label>
+            <label class="profile-field">
+              <span>性別</span>
+              <select id="profile-gender">
+                <option value="">未設定</option>
+                <option value="♂">♂</option>
+                <option value="♀">♀</option>
+              </select>
+            </label>
+            <label class="profile-field">
+              <span>動物種</span>
+              <input id="profile-species" type="text" autocomplete="off" placeholder="猫 / 犬 / うさぎ / 鳥">
+            </label>
+            <label class="profile-field">
+              <span>種類 / 品種</span>
+              <input id="profile-breed" type="text" autocomplete="off" placeholder="Scottish Fold / 柴犬">
+            </label>
+            <label class="profile-field profile-field-date">
+              <span>誕生日</span>
+              <input id="profile-birthday" type="date">
+            </label>
+            <label class="profile-field">
+              <span>メッセージ</span>
+              <input id="profile-message" type="text" autocomplete="off">
+            </label>
+          </div>
+        </div>
+        <div class="customize-section" id="theme-section">
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>テーマ</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="option-grid" id="theme-options">
+              <button class="option-btn active" data-type="theme" data-value="theme-dark">標準</button>
+              <button class="option-btn" data-type="theme" data-value="theme-gold">ゴールド</button>
+              <button class="option-btn" data-type="theme" data-value="theme-midnight">ミッドナイト</button>
+              <button class="option-btn" data-type="theme" data-value="theme-rose">ローズ</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="customize-section" id="cardedge-section">
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>カードエッジ</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="option-grid" id="cardedge-options">
+              <button class="option-btn active" data-type="cardEdge" data-value="cardedge-none">標準</button>
+              <button class="option-btn" data-type="cardEdge" data-value="cardedge-gold">ゴールド</button>
+              <button class="option-btn" data-type="cardEdge" data-value="cardedge-neon">ネオン</button>
+              <button class="option-btn" data-type="cardEdge" data-value="cardedge-ruby">ルビー</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="customize-section" id="frame-section">
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>アバターフレーム</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="option-grid" id="frame-options">
+              <button class="option-btn active" data-type="frame" data-value="frame-none">なし</button>
+              <button class="option-btn" data-type="frame" data-value="frame-gold">ゴールド</button>
+              <button class="option-btn" data-type="frame" data-value="frame-neon">ネオン</button>
+              <button class="option-btn" data-type="frame" data-value="frame-ruby">ルビー</button>
+            </div>
           </div>
         </div>
 
         <div class="customize-section">
-          <div class="section-title">カード縁（エッジ）</div>
-          <div class="option-grid" id="cardedge-options">
-            <button class="option-btn active" data-type="cardEdge" data-value="cardedge-none">標準</button>
-            <button class="option-btn" data-type="cardEdge" data-value="cardedge-gold">ゴールド</button>
-            <button class="option-btn" data-type="cardEdge" data-value="cardedge-neon">ネオン</button>
-            <button class="option-btn" data-type="cardEdge" data-value="cardedge-ruby">ルビー</button>
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>バンドル</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="option-grid" id="bundle-options">
+              <button class="option-btn active" data-type="bundle" data-value="bundle-none">なし</button>
+              <button class="option-btn" data-type="bundle" data-value="bundle-sakura">桜</button>
+              <button class="option-btn" data-type="bundle" data-value="bundle-wave">波</button>
+              <button class="option-btn" data-type="bundle" data-value="bundle-bamboo">竹</button>
+              <button class="option-btn" data-type="bundle" data-value="bundle-ume">梅</button>
+            </div>
           </div>
         </div>
 
         <div class="customize-section">
-          <div class="section-title">アバターフレーム</div>
-          <div class="option-grid" id="frame-options">
-            <button class="option-btn active" data-type="frame" data-value="frame-none">なし</button>
-            <button class="option-btn" data-type="frame" data-value="frame-gold">黄金縁</button>
-            <button class="option-btn" data-type="frame" data-value="frame-neon">ネオン</button>
-            <button class="option-btn" data-type="frame" data-value="frame-ruby">ルビー</button>
-          </div>
-        </div>
-
-        <div class="customize-section">
-          <div class="section-title">称号設定</div>
-          <div class="option-grid" style="grid-template-columns: repeat(2, 1fr);" id="title-options">
-            <button class="option-btn active" data-type="title" data-value="FIRST PAL">FIRST PAL</button>
-            <button class="option-btn sparkle-text" data-type="title" data-value="GOD">🌟 GOD 🌟</button>
+          <button type="button" class="accordion-toggle" aria-expanded="false">
+            <span>称号</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="option-grid" style="grid-template-columns: repeat(2, 1fr);" id="title-options">
+              <button class="option-btn active" data-type="title" data-value="SLEEPY">SLEEPY</button>
+              <button class="option-btn" data-type="title" data-value="COOL">COOL</button>
+              <button class="option-btn" data-type="title" data-value="WILD">WILD</button>
+              <button class="option-btn" data-type="title" data-value="HAPPY">HAPPY</button>
+              <button class="option-btn" data-type="title" data-value="SHY">SHY</button>
+              <button class="option-btn" data-type="title" data-value="SMART">SMART</button>
+              <button class="option-btn" data-type="title" data-value="DESTROYER">DESTROYER</button>
+              <button class="option-btn" data-type="title" data-value="BOSS">BOSS</button>
+              <button class="option-btn" data-type="title" data-value="いたずらっ子">いたずらっ子</button>
+              <button class="option-btn" data-type="title" data-value="あまえんぼ">あまえんぼ</button>
+              <button class="option-btn" data-type="title" data-value="くいしんぼう">くいしんぼう</button>
+              <button class="option-btn" data-type="title" data-value="マイペース">マイペース</button>
+              <button class="option-btn" data-type="title" data-value="こわがり">こわがり</button>
+              <button class="option-btn" data-type="title" data-value="おひるね名人">おひるね名人</button>
+              <button class="option-btn" data-type="title" data-value="元気いっぱい">元気いっぱい</button>
+            </div>
+            <div class="title-locked-label">LOCKED</div>
+            <div class="option-grid" style="grid-template-columns: repeat(2, 1fr);" id="title-locked-options">
+              <button type="button" class="option-btn locked-title" data-type="title" data-value="LEGEND" disabled aria-disabled="true"><span class="lock-mark">🔒</span>LEGEND</button>
+              <button type="button" class="option-btn locked-title" data-type="title" data-value="ASTRO BREAKER" disabled aria-disabled="true"><span class="lock-mark">🔒</span>ASTRO BREAKER</button>
+              <button type="button" class="option-btn locked-title" data-type="title" data-value="GALAXY DESTROYER" disabled aria-disabled="true"><span class="lock-mark">🔒</span>GALAXY DESTROYER</button>
+              <button type="button" class="option-btn locked-title" data-type="title" data-value="夢見るいたずら天使" disabled aria-disabled="true"><span class="lock-mark">🔒</span>夢見るいたずら天使</button>
+              <button type="button" class="option-btn locked-title" data-type="title" data-value="月の使者" disabled aria-disabled="true"><span class="lock-mark">🔒</span>月の使者</button>
+            </div>
           </div>
         </div>
 
@@ -500,8 +682,8 @@
           <div class="section-title">9マス フレームスタイル</div>
           <div class="option-grid" id="gridframe-options" style="grid-template-columns: repeat(2, 1fr);">
             <button class="option-btn active" data-type="gridFrame" data-value="gridframe-standard">スタンダード</button>
-            <button class="option-btn" data-type="gridFrame" data-value="gridframe-gold">ゴールド枠</button>
-            <button class="option-btn" data-type="gridFrame" data-value="gridframe-neon">ネオン枠</button>
+            <button class="option-btn" data-type="gridFrame" data-value="gridframe-gold">ゴールド</button>
+            <button class="option-btn" data-type="gridFrame" data-value="gridframe-neon">ネオン</button>
             <button class="option-btn" data-type="gridFrame" data-value="gridframe-dark">ダークマット</button>
           </div>
         </div>
@@ -512,14 +694,65 @@
 
   </div>
 
+  <div class="photo-editor-overlay" id="photo-editor-overlay" aria-hidden="true">
+    <div class="photo-editor-sheet">
+      <div class="photo-editor-head">
+        <div class="photo-editor-title">写真を調整</div>
+        <button class="photo-editor-close" id="photo-editor-close" aria-label="閉じる">×</button>
+      </div>
+
+      <div class="photo-editor-hint">カード上の写真を指で動かして位置調整。2本指のピンチで拡大・縮小できます。</div>
+
+      <div class="photo-control">
+        <div class="photo-control-row"><span>拡大</span><span id="zoom-value">100%</span></div>
+        <input id="avatar-zoom" type="range" min="100" max="220" value="100">
+      </div>
+      <div class="photo-control">
+        <div class="photo-control-row"><span>左右</span><span id="x-value">0</span></div>
+        <input id="avatar-x" type="range" min="-50" max="50" value="0">
+      </div>
+      <div class="photo-control">
+        <div class="photo-control-row"><span>上下</span><span id="y-value">0</span></div>
+        <input id="avatar-y" type="range" min="-50" max="50" value="0">
+      </div>
+
+      <div class="photo-editor-actions">
+        <button class="photo-editor-btn" id="change-photo-btn">写真を変更</button>
+        <button class="photo-editor-btn primary" id="photo-editor-done">完了</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="palcard.js"></script>
   <script>
     const currentConfig = {
       theme: 'theme-dark',
       cardEdge: 'cardedge-none',
+      bundle: 'bundle-none',
       frame: 'frame-none',
-      title: 'FIRST PAL',
-      gridFrame: 'gridframe-standard'
+      title: 'SLEEPY',
+      gridFrame: 'gridframe-standard',
+      petName: 'MEL',
+      birthday: '2026-02-10',
+      nickname: 'メルちゃん',
+      message: 'こんにちは',
+      avatarScale: 1,
+      avatarX: 0,
+      avatarY: 0,
+      gender: '',
+      species: '',
+      breed: ''
     };
+
+    const AVATAR_IMAGE_KEY = 'palmel_avatar_image';
+    let avatarImageData = '';
+    let photoEditorOpen = false;
+    const activePhotoPointers = new Map();
+    let pinchStartDistance = 0;
+    let pinchStartScale = 1;
+
+    renderPalcardFront(document.getElementById('preview-palcard'), { mode: 'edit', apply: false });
 
     function switchCustomTab(tabName) {
       const btnPalcard = document.getElementById('tab-btn-palcard');
@@ -540,10 +773,27 @@
       }
     }
 
+    function isBundleActive() {
+      return currentConfig.bundle && currentConfig.bundle !== 'bundle-none';
+    }
+
+    function setBundleLockState() {
+      const locked = isBundleActive();
+      ['theme-section', 'cardedge-section', 'frame-section'].forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        section.classList.toggle('bundle-locked', locked);
+        section.querySelectorAll('.option-btn').forEach(btn => {
+          btn.disabled = locked;
+          btn.setAttribute('aria-disabled', locked ? 'true' : 'false');
+        });
+      });
+    }
+
     document.querySelectorAll('.option-grid').forEach(grid => {
       grid.addEventListener('click', (e) => {
         const btn = e.target.closest('.option-btn');
-        if (!btn) return;
+        if (!btn || btn.disabled || btn.classList.contains('locked-title')) return;
 
         const type = btn.dataset.type;
         const value = btn.dataset.value;
@@ -556,53 +806,349 @@
       });
     });
 
-    function updatePreview() {
-      // 1. PALCARDプレビュー更新
-      const card = document.getElementById('preview-palcard');
-      const avatar = document.getElementById('preview-avatar');
-      const titleEl = document.getElementById('preview-title');
+    document.querySelectorAll('.accordion-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const section = toggle.closest('.customize-section');
+        if (!section) return;
+        const open = section.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        const icon = toggle.querySelector('.accordion-icon');
+        if (icon) icon.textContent = open ? '▲' : '▼';
+      });
+    });
 
-      card.className = `palcard ${currentConfig.theme} ${currentConfig.cardEdge}`;
-      avatar.className = `avatar-wrapper ${currentConfig.frame}`;
-      titleEl.textContent = currentConfig.title;
+    function getAvatarPanLimits() {
+      const img = document.getElementById('pal-avatar-img');
+      if (!img) return { maxX: 0, maxY: 0 };
 
-      if (currentConfig.title === 'GOD') {
-        titleEl.classList.add('sparkle-text');
-      } else {
-        titleEl.classList.remove('sparkle-text');
+      const frameWidth = img.clientWidth;
+      const frameHeight = img.clientHeight;
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      if (!frameWidth || !frameHeight || !naturalWidth || !naturalHeight) {
+        return { maxX: 0, maxY: 0 };
       }
 
-      // 2. 9マスプレビュー更新
+      const coverScale = Math.max(frameWidth / naturalWidth, frameHeight / naturalHeight);
+      let displayWidth = naturalWidth * coverScale;
+      let displayHeight = naturalHeight * coverScale;
+      const scale = currentConfig.avatarScale || 1;
+      displayWidth *= scale;
+      displayHeight *= scale;
+
+      return {
+        maxX: Math.max(0, (displayWidth - frameWidth) / 2),
+        maxY: Math.max(0, (displayHeight - frameHeight) / 2)
+      };
+    }
+
+    function clampAvatarPan() {
+      const { maxX, maxY } = getAvatarPanLimits();
+      currentConfig.avatarX = clamp(currentConfig.avatarX || 0, -maxX, maxX);
+      currentConfig.avatarY = clamp(currentConfig.avatarY || 0, -maxY, maxY);
+    }
+
+    function updateAvatarTransform() {
+      const img = document.getElementById('pal-avatar-img');
+      if (!img) return;
+      clampAvatarPan();
+      applyPalcardAvatarTransform(img, currentConfig);
+    }
+
+    function renderAvatarImage() {
+      const img = document.getElementById('pal-avatar-img');
+      const empty = document.getElementById('pal-avatar-empty');
+      if (!img || !empty) return;
+
+      if (avatarImageData) {
+        img.src = avatarImageData;
+        img.style.display = 'block';
+        empty.style.display = 'none';
+      } else {
+        img.removeAttribute('src');
+        img.style.display = 'none';
+        empty.style.display = 'flex';
+      }
+      updateAvatarTransform();
+    }
+
+    function syncProfileInputs() {
+      const petNameInput = document.getElementById('profile-pet-name');
+      const birthdayInput = document.getElementById('profile-birthday');
+      const nicknameInput = document.getElementById('profile-nickname');
+      const messageInput = document.getElementById('profile-message');
+      const genderInput = document.getElementById('profile-gender');
+      const speciesInput = document.getElementById('profile-species');
+      const breedInput = document.getElementById('profile-breed');
+      if (petNameInput) petNameInput.value = currentConfig.petName || '';
+      if (birthdayInput) birthdayInput.value = currentConfig.birthday || '';
+      if (nicknameInput) nicknameInput.value = currentConfig.nickname || '';
+      if (genderInput) genderInput.value = currentConfig.gender || '';
+      if (speciesInput) speciesInput.value = currentConfig.species || '';
+      if (breedInput) breedInput.value = currentConfig.breed || '';
+      if (messageInput) messageInput.value = currentConfig.message || '';
+    }
+
+    function updatePreview() {
+      const card = document.getElementById('preview-palcard');
+      applyPalcardConfig(card, currentConfig, { avatarImage: avatarImageData });
+
       const gridPreviewContainer = document.getElementById('preview-grid-container');
       if (gridPreviewContainer) {
         gridPreviewContainer.className = `grid-container-preview ${currentConfig.gridFrame || 'gridframe-standard'}`;
       }
+
+      setBundleLockState();
+      renderAvatarImage();
+    }
+
+    function syncPanSliderBounds() {
+      const x = document.getElementById('avatar-x');
+      const y = document.getElementById('avatar-y');
+      if (!x || !y) return;
+      const { maxX, maxY } = getAvatarPanLimits();
+      x.min = String(-maxX);
+      x.max = String(maxX);
+      y.min = String(-maxY);
+      y.max = String(maxY);
+    }
+
+    function syncEditorControls() {
+      const zoom = document.getElementById('avatar-zoom');
+      const x = document.getElementById('avatar-x');
+      const y = document.getElementById('avatar-y');
+      if (!zoom || !x || !y) return;
+
+      clampAvatarPan();
+      syncPanSliderBounds();
+      zoom.value = Math.round((currentConfig.avatarScale || 1) * 100);
+      x.value = currentConfig.avatarX || 0;
+      y.value = currentConfig.avatarY || 0;
+      document.getElementById('zoom-value').textContent = `${zoom.value}%`;
+      document.getElementById('x-value').textContent = `${Math.round(Number(x.value))}`;
+      document.getElementById('y-value').textContent = `${Math.round(Number(y.value))}`;
+    }
+
+    function openPhotoEditor() {
+      if (!avatarImageData) {
+        document.getElementById('avatar-file-input').click();
+        return;
+      }
+      syncEditorControls();
+      photoEditorOpen = true;
+      document.body.classList.add('photo-editing');
+      const overlay = document.getElementById('photo-editor-overlay');
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePhotoEditor() {
+      photoEditorOpen = false;
+      activePhotoPointers.clear();
+      pinchStartDistance = 0;
+      document.body.classList.remove('photo-editing');
+      const overlay = document.getElementById('photo-editor-overlay');
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function pointerDistance(a, b) {
+      return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    }
+
+    function refreshEditorValues() {
+      syncEditorControls();
+    }
+
+    function handlePhotoPointerDown(e) {
+      if (!photoEditorOpen || !avatarImageData) return;
+      e.preventDefault();
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      activePhotoPointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+      if (activePhotoPointers.size === 2) {
+        const pts = [...activePhotoPointers.values()];
+        pinchStartDistance = pointerDistance(pts[0], pts[1]);
+        pinchStartScale = currentConfig.avatarScale || 1;
+      }
+    }
+
+    function handlePhotoPointerMove(e) {
+      if (!photoEditorOpen || !avatarImageData || !activePhotoPointers.has(e.pointerId)) return;
+      e.preventDefault();
+      const previous = activePhotoPointers.get(e.pointerId);
+      activePhotoPointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+
+      if (activePhotoPointers.size >= 2) {
+        const pts = [...activePhotoPointers.values()].slice(0, 2);
+        const distance = pointerDistance(pts[0], pts[1]);
+        if (pinchStartDistance > 0) {
+          currentConfig.avatarScale = clamp(pinchStartScale * (distance / pinchStartDistance), 1, 2.2);
+        }
+      } else {
+        const dx = e.clientX - previous.clientX;
+        const dy = e.clientY - previous.clientY;
+        const { maxX, maxY } = getAvatarPanLimits();
+        currentConfig.avatarX = clamp((currentConfig.avatarX || 0) + dx, -maxX, maxX);
+        currentConfig.avatarY = clamp((currentConfig.avatarY || 0) + dy, -maxY, maxY);
+      }
+
+      updateAvatarTransform();
+      refreshEditorValues();
+    }
+
+    function handlePhotoPointerUp(e) {
+      if (!activePhotoPointers.has(e.pointerId)) return;
+      activePhotoPointers.delete(e.pointerId);
+      try { e.currentTarget.releasePointerCapture?.(e.pointerId); } catch (_) {}
+      if (activePhotoPointers.size < 2) pinchStartDistance = 0;
+    }
+
+    function compressImage(file, maxSide = 1600, quality = 0.88) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleAvatarFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      try {
+        avatarImageData = await compressImage(file);
+        currentConfig.avatarScale = 1;
+        currentConfig.avatarX = 0;
+        currentConfig.avatarY = 0;
+        try {
+          localStorage.setItem(AVATAR_IMAGE_KEY, avatarImageData);
+        } catch (storageError) {
+          console.warn('写真の保存容量を超えました。現在の画面では表示できます。', storageError);
+        }
+        renderAvatarImage();
+        syncEditorControls();
+        openPhotoEditor();
+      } catch (e) {
+        console.error(e);
+        alert('写真を読み込めませんでした。別の画像を選んでください。');
+      }
     }
 
     function saveCustomization() {
-      localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig));
+      localStorage.setItem('palmel_custom_config', JSON.stringify(currentConfig));
+      localStorage.setItem('parmel_custom_config', JSON.stringify(currentConfig)); // 旧版との互換用
+      if (avatarImageData) {
+        try { localStorage.setItem(AVATAR_IMAGE_KEY, avatarImageData); } catch(e) {}
+      }
       alert('着せ替え設定を保存しました！');
       window.location.href = 'index.html';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('parmel_custom_config');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          Object.assign(currentConfig, parsed);
+      Object.assign(currentConfig, loadPalcardConfig());
 
-          document.querySelectorAll('.option-btn').forEach(btn => {
-            const type = btn.dataset.type;
-            const val = btn.dataset.value;
-            if (currentConfig[type] === val) {
-              btn.closest('.option-grid').querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-            }
-          });
-          updatePreview();
-        } catch(e) {}
+      avatarImageData = loadPalcardAvatarImage();
+
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        const type = btn.dataset.type;
+        const val = btn.dataset.value;
+        if (btn.disabled || btn.classList.contains('locked-title')) return;
+        if (currentConfig[type] === val) {
+          const grid = btn.closest('.option-grid');
+          if (grid) {
+            grid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          }
+        }
+      });
+
+      const titleGrid = document.getElementById('title-options');
+      if (titleGrid && ![...titleGrid.querySelectorAll('.option-btn')].some(b => b.dataset.value === currentConfig.title)) {
+        titleGrid.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
       }
+
+      const avatar = document.getElementById('pal-avatar');
+      const input = document.getElementById('avatar-file-input');
+      const overlay = document.getElementById('photo-editor-overlay');
+
+      avatar.addEventListener('click', (e) => {
+        if (!photoEditorOpen) openPhotoEditor();
+      });
+      avatar.addEventListener('pointerdown', handlePhotoPointerDown);
+      avatar.addEventListener('pointermove', handlePhotoPointerMove);
+      avatar.addEventListener('pointerup', handlePhotoPointerUp);
+      avatar.addEventListener('pointercancel', handlePhotoPointerUp);
+      input.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        handleAvatarFile(file);
+        input.value = '';
+      });
+
+      document.getElementById('change-photo-btn').addEventListener('click', () => input.click());
+      document.getElementById('photo-editor-close').addEventListener('click', closePhotoEditor);
+      document.getElementById('photo-editor-done').addEventListener('click', closePhotoEditor);
+
+      document.getElementById('pal-avatar-img').addEventListener('load', () => {
+        updateAvatarTransform();
+        syncEditorControls();
+      });
+
+      document.getElementById('avatar-zoom').addEventListener('input', (e) => {
+        currentConfig.avatarScale = Number(e.target.value) / 100;
+        document.getElementById('zoom-value').textContent = `${e.target.value}%`;
+        updateAvatarTransform();
+        syncEditorControls();
+      });
+      document.getElementById('avatar-x').addEventListener('input', (e) => {
+        const { maxX } = getAvatarPanLimits();
+        currentConfig.avatarX = clamp(Number(e.target.value), -maxX, maxX);
+        document.getElementById('x-value').textContent = `${Math.round(currentConfig.avatarX)}`;
+        updateAvatarTransform();
+      });
+      document.getElementById('avatar-y').addEventListener('input', (e) => {
+        const { maxY } = getAvatarPanLimits();
+        currentConfig.avatarY = clamp(Number(e.target.value), -maxY, maxY);
+        document.getElementById('y-value').textContent = `${Math.round(currentConfig.avatarY)}`;
+        updateAvatarTransform();
+      });
+
+      updatePreview();
+      syncEditorControls();
+      syncProfileInputs();
+
+      const bindProfileInput = (id, key) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        const sync = () => {
+          currentConfig[key] = input.value;
+          applyPalcardConfig(document.getElementById('preview-palcard'), currentConfig, { avatarImage: avatarImageData });
+        };
+        input.addEventListener('input', sync);
+        input.addEventListener('change', sync);
+      };
+      bindProfileInput('profile-pet-name', 'petName');
+      bindProfileInput('profile-nickname', 'nickname');
+      bindProfileInput('profile-gender', 'gender');
+      bindProfileInput('profile-species', 'species');
+      bindProfileInput('profile-breed', 'breed');
+      bindProfileInput('profile-birthday', 'birthday');
+      bindProfileInput('profile-message', 'message');
     });
   </script>
 </body>
