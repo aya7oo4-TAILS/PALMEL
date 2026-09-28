@@ -1,0 +1,263 @@
+/* 和風バンドル（桜・波・竹・梅）。通常PALCARDの palcard.css の直後に読み込む。 */
+/* bundle-none はここでは上書きしない。 */
+    .palcard.bundle-sakura::before,
+    .palcard.bundle-wave::before,
+    .palcard.bundle-bamboo::before,
+    .palcard.bundle-ume::before,
+    .palcard.bundle-sakura::after,
+    .palcard.bundle-wave::after,
+    .palcard.bundle-bamboo::after,
+    .palcard.bundle-ume::after {
+      content: none;
+      display: none;
+    }
+
+    /* PALCARD バンドル */
+    /* bundle-none は通常テーマをそのまま表示するため、背景を上書きしない */
+
+    .palcard.bundle-sakura,
+    .palcard.bundle-wave,
+    .palcard.bundle-bamboo,
+    .palcard.bundle-ume {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-color: rgba(229, 192, 123, 0.55);
+      color: #17120c;
+    }
+    .palcard.bundle-sakura { background-image: url('./images/bundle-sakura.jpg'); }
+    .palcard.bundle-wave { background-image: url('./images/bundle-wave.jpg'); }
+    .palcard.bundle-bamboo { background-image: url('./images/bundle-bamboo.jpg'); }
+    .palcard.bundle-ume { background-image: url('./images/bundle-ume.jpg'); }
+    /* バンドル使用時は、左を情報、右を写真窓として使う */
+    .palcard.bundle-sakura .palcard-brand,
+    .palcard.bundle-wave .palcard-brand,
+    .palcard.bundle-bamboo .palcard-brand,
+    .palcard.bundle-ume .palcard-brand {
+      color: rgba(20, 16, 12, 0.68);
+      text-align: left;
+      position: relative;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .palcard.bundle-sakura .palcard-body,
+    .palcard.bundle-wave .palcard-body,
+    .palcard.bundle-bamboo .palcard-body,
+    .palcard.bundle-ume .palcard-body {
+      position: static;
+    }
+
+    .palcard.bundle-sakura .profile-info,
+    .palcard.bundle-wave .profile-info,
+    .palcard.bundle-bamboo .profile-info,
+    .palcard.bundle-ume .profile-info {
+      max-width: 38%;
+      margin-top: 6px;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .palcard.bundle-sakura .pet-name,
+    .palcard.bundle-wave .pet-name,
+    .palcard.bundle-bamboo .pet-name,
+    .palcard.bundle-ume .pet-name {
+      color: #17120c;
+      font-family: 'Shippori Mincho', 'Noto Sans JP', serif;
+      font-size: 1.8rem;
+    }
+
+    .palcard.bundle-sakura .user-title-display,
+    .palcard.bundle-wave .user-title-display,
+    .palcard.bundle-bamboo .user-title-display,
+    .palcard.bundle-ume .user-title-display {
+      color: #7d5c26;
+    }
+
+    .palcard.bundle-sakura .field-label,
+    .palcard.bundle-wave .field-label,
+    .palcard.bundle-bamboo .field-label,
+    .palcard.bundle-ume .field-label {
+      color: rgba(24, 18, 10, 0.62);
+    }
+
+    .palcard.bundle-sakura .field-value,
+    .palcard.bundle-wave .field-value,
+    .palcard.bundle-bamboo .field-value,
+    .palcard.bundle-ume .field-value {
+      color: #211a12;
+    }
+
+    .palcard.bundle-sakura .field-row::after,
+    .palcard.bundle-wave .field-row::after,
+    .palcard.bundle-bamboo .field-row::after,
+    .palcard.bundle-ume .field-row::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 95%;
+      border-bottom: 1px solid rgba(40, 30, 16, 0.15);
+    }
+
+    /* 写真窓はPALCARD全体基準。クリップは wrapper 1段のみ */
+    .palcard.bundle-sakura .right-avatar-container,
+    .palcard.bundle-wave .right-avatar-container,
+    .palcard.bundle-bamboo .right-avatar-container,
+    .palcard.bundle-ume .right-avatar-container {
+      position: absolute;
+      right: auto;
+      bottom: auto;
+      margin: 0;
+      z-index: 2;
+      display: block;
+      pointer-events: none;
+    }
+
+    .palcard.bundle-sakura .right-avatar-container {
+      left: 37.1%;
+      top: 4.6%;
+      width: 57.6%;
+      height: 84.2%;
+    }
+
+    .palcard.bundle-wave .right-avatar-container {
+      left: 34.3%;
+      top: 2.3%;
+      width: 60.1%;
+      height: 88.4%;
+    }
+
+    .palcard.bundle-bamboo .right-avatar-container {
+      left: 36.1%;
+      top: 3.1%;
+      width: 57.1%;
+      height: 86.0%;
+    }
+
+    .palcard.bundle-ume .right-avatar-container {
+      left: 34.0%;
+      top: 1.8%;
+      width: 59.7%;
+      height: 86.7%;
+    }
+
+    .palcard.bundle-sakura .avatar-wrapper,
+    .palcard.bundle-wave .avatar-wrapper,
+    .palcard.bundle-bamboo .avatar-wrapper,
+    .palcard.bundle-ume .avatar-wrapper {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: hidden;
+      pointer-events: auto;
+      -webkit-clip-path: ellipse(49% 49% at 50% 50%);
+      clip-path: ellipse(49% 49% at 50% 50%);
+    }
+
+    .palcard.bundle-sakura .avatar-wrapper::after,
+    .palcard.bundle-wave .avatar-wrapper::after,
+    .palcard.bundle-bamboo .avatar-wrapper::after,
+    .palcard.bundle-ume .avatar-wrapper::after {
+      display: none;
+    }
+
+    .palcard.bundle-sakura .avatar-inner,
+    .palcard.bundle-wave .avatar-inner,
+    .palcard.bundle-bamboo .avatar-inner,
+    .palcard.bundle-ume .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: transparent;
+      isolation: isolate;
+    }
+
+    .palcard.bundle-sakura .avatar-inner img,
+    .palcard.bundle-wave .avatar-inner img,
+    .palcard.bundle-bamboo .avatar-inner img,
+    .palcard.bundle-ume .avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
+
+    .palcard.bundle-sakura .avatar-empty,
+    .palcard.bundle-wave .avatar-empty,
+    .palcard.bundle-bamboo .avatar-empty,
+    .palcard.bundle-ume .avatar-empty {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px;
+      border-radius: inherit;
+      overflow: hidden;
+      color: rgba(255, 255, 255, 0.94);
+      background: rgba(18, 15, 12, 0.30);
+      text-align: center;
+      font-size: 0.58rem;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      transform: none;
+      pointer-events: none;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.72);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+    }
+
+    .palcard.bundle-sakura .avatar-empty > div:last-child,
+    .palcard.bundle-wave .avatar-empty > div:last-child,
+    .palcard.bundle-bamboo .avatar-empty > div:last-child,
+    .palcard.bundle-ume .avatar-empty > div:last-child {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-align: center;
+      writing-mode: horizontal-tb;
+      transform: none;
+    }
+
+    .palcard.bundle-sakura .avatar-empty-icon,
+    .palcard.bundle-wave .avatar-empty-icon,
+    .palcard.bundle-bamboo .avatar-empty-icon,
+    .palcard.bundle-ume .avatar-empty-icon {
+      flex: 0 0 auto;
+      font-size: 1rem;
+      line-height: 1;
+      opacity: 0.95;
+      writing-mode: horizontal-tb;
+      transform: none;
+    }
+
+    .palcard.bundle-sakura .palcard-footer,
+    .palcard.bundle-wave .palcard-footer,
+    .palcard.bundle-bamboo .palcard-footer,
+    .palcard.bundle-ume .palcard-footer {
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .palcard.bundle-sakura .icon-btn,
+    .palcard.bundle-wave .icon-btn,
+    .palcard.bundle-bamboo .icon-btn,
+    .palcard.bundle-ume .icon-btn {
+      background: rgba(255, 250, 238, 0.82);
+      border-color: rgba(120, 88, 34, 0.34);
+      color: #241a0d;
+      backdrop-filter: blur(8px);
+      pointer-events: auto;
+    }

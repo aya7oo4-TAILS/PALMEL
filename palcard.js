@@ -1,4 +1,5 @@
 (function (global) {
+  // 通常PALCARDの初期設定はここだけが正。customize.html はこれをコピーしてから保存値を重ねる。
   var PALCARD_DEFAULTS = {
     theme: 'theme-dark',
     cardEdge: 'cardedge-none',
@@ -90,16 +91,18 @@
       '<rect x="4" y="11" width="16" height="9" rx="1"/><path d="M4 11h16v3H4zM12 11v9"/><path d="M12 11c-1.8-3.8-5.5-3.2-5.5-1.4S10 11 12 11"/><path d="M12 11c1.8-3.8 5.5-3.2 5.5-1.4S14 11 12 11"/>'
     );
 
+    var nameClass = palcardPetNameHasJp(PALCARD_DEFAULTS.petName) ? 'pet-name pet-name-jp' : 'pet-name pet-name-latin';
+
     return (
       '<div class="palcard-body">' +
         '<div class="profile-info">' +
           '<div class="palcard-brand">PALCARD</div>' +
-          '<div id="pal-title" class="user-title-display">SLEEPY</div>' +
+          '<div id="pal-title" class="user-title-display">' + PALCARD_DEFAULTS.title + '</div>' +
           '<div class="pet-name-slot">' +
-            '<div class="pet-name pet-name-latin" id="pal-name">MEL</div>' +
+            '<div class="' + nameClass + '" id="pal-name">' + PALCARD_DEFAULTS.petName + '</div>' +
           '</div>' +
           '<div class="pal-nickname-line">' +
-            '<span id="pal-nickname">メルちゃん</span>' +
+            '<span id="pal-nickname">' + PALCARD_DEFAULTS.nickname + '</span>' +
             '<span id="pal-gender"></span>' +
           '</div>' +
           '<div class="profile-fields">' +
@@ -113,16 +116,16 @@
             '</div>' +
             '<div class="field-row pal-field-birthday">' +
               '<span class="pal-field-icon" aria-hidden="true">' + iconCal + '</span>' +
-              '<div class="field-value" id="pal-birthday">2026.02.10</div>' +
+              '<div class="field-value" id="pal-birthday">' + formatPalcardBirthday(PALCARD_DEFAULTS.birthday) + '</div>' +
             '</div>' +
             '<div class="field-row pal-field-message">' +
               '<span class="pal-field-icon" aria-hidden="true">' + iconMsg + '</span>' +
-              '<div class="field-value" id="pal-message">こんにちは</div>' +
+              '<div class="field-value" id="pal-message">' + PALCARD_DEFAULTS.message + '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
         '<div class="right-avatar-container">' +
-          '<div class="avatar-wrapper frame-none" id="pal-avatar" role="button" aria-label="ペット写真を編集">' +
+          '<div class="avatar-wrapper ' + PALCARD_DEFAULTS.frame + '" id="pal-avatar" role="button" aria-label="ペット写真を編集">' +
             '<div class="avatar-inner">' +
               '<img id="pal-avatar-img" alt="ペット写真">' +
               '<div class="avatar-empty" id="pal-avatar-empty">' +
@@ -131,7 +134,7 @@
               '</div>' +
             '</div>' +
           '</div>' +
-          '<div class="present-pet-name" id="pal-present-name" style="display:none;">MEL</div>' +
+          '<div class="present-pet-name" id="pal-present-name" style="display:none;">' + PALCARD_DEFAULTS.petName + '</div>' +
         '</div>' +
         '<input id="avatar-file-input" type="file" accept="image/*" hidden>' +
       '</div>' +

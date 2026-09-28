@@ -6,6 +6,7 @@
   <title>PALMEL - CUSTOMIZE</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="palcard.css">
+  <link rel="stylesheet" href="bundles/japanese/japanese-bundle.css">
   <style>
     :root {
       --bg-main: #0b0d0e;
@@ -726,24 +727,10 @@
 
   <script src="palcard.js"></script>
   <script>
-    const currentConfig = {
-      theme: 'theme-dark',
-      cardEdge: 'cardedge-none',
-      bundle: 'bundle-none',
-      frame: 'frame-none',
-      title: 'SLEEPY',
-      gridFrame: 'gridframe-standard',
-      petName: 'MEL',
-      birthday: '2026-02-10',
-      nickname: 'メルちゃん',
-      message: 'こんにちは',
-      avatarScale: 1,
-      avatarX: 0,
-      avatarY: 0,
-      gender: '',
-      species: '',
-      breed: ''
-    };
+    const currentConfig = Object.assign(
+      { gridFrame: 'gridframe-standard' },
+      PALCARD_DEFAULTS
+    );
 
     const AVATAR_IMAGE_KEY = 'palmel_avatar_image';
     let avatarImageData = '';
