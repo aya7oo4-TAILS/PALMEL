@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PARMEL - PALS (SNS)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho:wght@500;700&family=M+PLUS+Rounded+1c:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0b0d0e;
+      --card-bg: linear-gradient(135deg, #24292e 0%, #16181b 100%);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      --avatar-bg: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+      --text-main: #f5f6f8;
+      --text-sub: #9aa0a6;
+      --gold: #e5c07b;
+      --radius-card: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+    
+    html, body {
+      width: 100%; height: 100%; background: var(--bg-main); color: var(--text-main);
+      font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; overflow-y: auto;
+    }
+
+    body { display: flex; justify-content: center; padding: 100px 12px 80px; }
+
+    .app-viewport {
+      width: 100%; max-width: 414px; display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .fixed-top-area {
+      position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 414px; background: var(--bg-main);
+      padding: 10px 12px 10px; display: flex; flex-direction: column; gap: 10px;
+      z-index: 8000; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .header-row { display: flex; align-items: center; justify-content: space-between; padding: 2px 0; }
+    .page-title { font-family: 'Cinzel', serif; font-size: 0.95rem; letter-spacing: 0.15em; color: var(--gold); font-weight: bold; }
+
+    .post-trigger-btn {
+      width: 100%; background: rgba(229, 192, 123, 0.12); border: 1px dashed var(--gold);
+      border-radius: 12px; padding: 10px; color: var(--gold); font-size: 0.75rem; 
+      text-align: center; cursor: pointer; font-weight: bold; backdrop-filter: blur(12px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .feed-card {
+      background: #16181b; border: 1px solid var(--card-border); border-radius: var(--radius-card);
+      padding: 14px; display: flex; flex-direction: column; gap: 12px; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .feed-card:hover { border-color: rgba(229, 192, 123, 0.4); }
+
+    .feed-header { display: flex; align-items: center; justify-content: space-between; }
+    .feed-header-left { display: flex; align-items: center; gap: 10px; pointer-events: none; }
+    
+    .feed-avatar-wrapper { width: 40px; height: 40px; border-radius: 50%; padding: 2px; flex-shrink: 0; background: var(--avatar-bg); }
+    .feed-avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #222; }
+    .feed-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+    .feed-user-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .feed-username { font-size: 0.8rem; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .feed-time { font-size: 0.55rem; color: var(--text-sub); }
+
+    .feed-message { font-size: 0.75rem; color: var(--text-main); line-height: 1.4; word-break: break-all; }
+    .feed-single-image { width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; background: #111; }
+    .feed-single-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
+    .grid-item { background: #15181b; border-radius: 8px; display: flex; flex-direction: column; aspect-ratio: 1 / 1.25; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.04); }
+    .grid-label { font-family: 'Cinzel', 'Noto Sans JP', serif; font-size: 0.58rem; letter-spacing: 0.1em; text-align: center; padding: 4px 2px; background: rgba(0, 0, 0, 0.4); color: var(--text-sub); display: flex; align-items: center; justify-content: center; z-index: 2; }
+    
+    .grid-image-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .grid-image-box img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .grid-item.palmel-item .grid-image-box { position: relative; }
+    .grid-item.palmel-item .grid-image-box img.has-image { filter: brightness(0.45); }
+
+    .palmel-overlay-logo {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 5; pointer-events: none; font-family: 'Cinzel', serif; letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.95); text-shadow: 0 0 10px rgba(229, 192, 123, 0.6), 0 0 20px rgba(229, 192, 123, 0.3);
+      font-size: 0.8rem; font-weight: 700; text-align: center; padding: 0 2px;
+    }
+
+    .like-btn { background: none; border: none; color: var(--text-sub); font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; z-index: 2; }
+    .like-btn.liked { color: #ff758c; }
+
+    .loading-indicator { text-align: center; padding: 16px; color: var(--text-sub); font-size: 0.7rem; display: none; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(5, 6, 7, 0.95); backdrop-filter: blur(12px); z-index: 8500; justify-content: center; align-items: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: #16181b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: var(--radius-card); width: 90%; max-width: 380px; max-height: 90vh; padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+    
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 0.7rem; color: var(--text-sub); }
+    .form-textarea { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px; color: #fff; font-size: 0.8rem; outline: none; resize: none; height: 60px; user-select: text; -webkit-user-select: text; }
+    
+    .type-select-row { display: flex; gap: 8px; }
+    .type-btn { flex: 1; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--text-sub); font-size: 0.7rem; cursor: pointer; text-align: center; }
+    .type-btn.active { background: rgba(229,192,123,0.15); border-color: var(--gold); color: var(--gold); font-weight: bold; }
+
+    .photo-select-preview { width: 100%; aspect-ratio: 1 / 1; background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-sub); font-size: 0.7rem; cursor: pointer; overflow: hidden; position: relative; }
+    .photo-select-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+    #palcard-modal { align-items: stretch; padding: 0; }
+    .palcard-modal-container {
+      width: 100%; max-width: 414px; height: 100%; max-height: 100vh; 
+      overflow-y: auto; display: flex; flex-direction: column; gap: 14px; 
+      padding: 12px 16px 100px; background: var(--bg-main); margin: 0 auto;
+      position: relative;
+    }
+
+    .modal-close-bar { display: flex; justify-content: flex-end; align-items: center; margin-bottom: -8px; }
+
+    .palcard-container { perspective: 1000px; width: 100%; aspect-ratio: 1.55 / 1; flex-shrink: 0; cursor: pointer; }
+    .palcard-flipper { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+    .palcard-container.flipped .palcard-flipper { transform: rotateY(180deg); }
+
+    .palcard {
+      position: absolute; inset: 0; background: var(--card-bg); background-size: cover; background-position: center;
+      border-radius: var(--radius-card); padding: 12px 14px 44px; box-shadow: var(--card-shadow); border: 1px solid var(--card-border);
+      display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+    .palcard-back { transform: rotateY(180deg); justify-content: space-between; }
+
+    .palcard-brand { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.35em; color: var(--text-sub); font-weight: 600; text-align: center; margin-bottom: 2px; }
+    .palcard-body { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex: 1; }
+    
+    .profile-info { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: flex-start; margin-top: 10px; position: relative; }
+    .user-title-display { font-size: 0.72rem; color: var(--gold); font-weight: 500; margin-top: 4px; margin-bottom: 3px; letter-spacing: 0.05em; min-height: 0.9rem; }
+
+    .pet-name { 
+      font-family: 'Cinzel', 'Noto Sans JP', sans-serif; font-size: 2.15rem; line-height: 1.3; 
+      padding-top: 4px; margin-top: 0; margin-bottom: 4px; font-weight: 700; color: #fff; 
+      letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; 
+    }
+    
+    .profile-fields { display: flex; flex-direction: column; gap: 1px; margin-top: auto; }
+    .field-row { position: relative; display: flex; align-items: center; padding-bottom: 2px; margin-bottom: 2px; padding-right: 8px; }
+    .field-row::after { content: ''; position: absolute; left: 0; bottom: 0; width: 95%; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .field-label { font-size: 0.52rem; color: var(--text-sub); width: 60px; flex-shrink: 0; }
+    .field-value { color: var(--text-main); font-size: 0.6rem; font-weight: 500; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .right-avatar-container { position: relative; width: 168px; flex-shrink: 0; display: flex; align-items: flex-start; justify-content: center; margin-top: 18px; }
+    .avatar-wrapper { width: 164px; height: 164px; border-radius: 50%; padding: 3px; background: var(--avatar-bg); display: block; }
+    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #1a1d20; }
+    .avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+
+    .back-content { display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; gap: 14px; text-align: center; padding: 10px 0 20px; }
+    .back-owner-title { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--text-sub); }
+    .back-owner-name { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; }
+    .back-sns-list { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; }
+    .back-sns-item { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: var(--text-main); font-size: 0.7rem; text-decoration: none; }
+    .back-sns-item.inactive { opacity: 0.4; pointer-events: none; }
+    .back-flip-tip { font-size: 0.48rem; color: var(--text-sub); letter-spacing: 0.1em; opacity: 0.7; text-align: center; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 414px; height: 60px;
+      background: rgba(15, 17, 20, 0.95); backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex; justify-content: space-around; align-items: center; z-index: 99999;
+    }
+    .nav-btn { background: none; border: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; width: 25%; text-decoration: none; }
+    .nav-btn.active { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <div class="fixed-top-area">
+    <div class="header-row">
+      <div style="width: 30px;"></div>
+      <h1 class="page-title">PALS FEED</h1>
+      <div style="width: 30px;"></div>
+    </div>
+    <button class="post-trigger-btn" onclick="openPostModal()">＋ 投稿する</button>
+  </div>
+
+  <div class="app-viewport">
+    <div id="timeline-container" style="display: flex; flex-direction: column; gap: 14px;"></div>
+    <div id="loading-indicator" class="loading-indicator">読み込み中...</div>
+  </div>
+
+  <div id="post-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="font-family:'Cinzel'; border-bottom:1px solid #333; padding-bottom:6px; color:var(--gold); margin-bottom:4px;">NEW POST</h3>
+      
+      <div class="form-group">
+        <label class="form-label">投稿タイプ</label>
+        <div class="type-select-row">
+          <button type="button" class="type-btn active" id="type-photo-btn" onclick="switchPostType('photo')">1枚の写真を投稿</button>
+          <button type="button" class="type-btn" id="type-grid-btn" onclick="switchPostType('grid')">9マスを投稿</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="photo-select-container">
+        <label class="form-label">写真を選択</label>
+        <div class="photo-select-preview" id="photo-preview-box" onclick="document.getElementById('hidden-photo-input').click()">
+          <span id="photo-placeholder-text">＋ タップして写真を選択</span>
+          <img id="selected-single-img" style="display: none;">
+        </div>
+        <input type="file" id="hidden-photo-input" accept="image/*" style="display: none;" onchange="onPhotoSelected(event)">
+      </div>
+
+      <div class="form-group" id="grid-preview-container" style="display: none;">
+        <div id="modal-grid-preview" class="grid-container"></div>
+      </div>
+
+      <div class="form-group" id="message-container">
+        <label class="form-label">メッセージ</label>
+        <textarea id="post-message-input" class="form-textarea" placeholder="今日の様子や一言を入力..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <button style="flex:1; padding:10px; background:rgba(255,255,255,0.1); border:none; border-radius:10px; color:#fff; cursor:pointer;" onclick="closePostModal()">キャンセル</button>
+        <button style="flex:1; padding:10px; background:var(--gold); border:none; border-radius:10px; color:#000; font-weight:bold; cursor:pointer;" onclick="submitPost()">投稿する</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="palcard-modal" class="modal-overlay">
+    <div class="palcard-modal-container" id="palcard-modal-inner">
+      
+      <div class="modal-close-bar"></div>
+
+      <div class="palcard-container" id="modal-palcard-container">
+        <div class="palcard-flipper" id="modal-palcard-flipper">
+          
+          <div class="palcard" id="modal-palcard-face">
+            <div class="palcard-brand">PALCARD</div>
+            <div class="palcard-body">
+              <div class="profile-info">
+                <div class="user-title-display">FIRST PAL</div>
+                <div id="modal-pet-name" class="pet-name">MEL</div>
+                <div class="profile-fields">
+                  <div class="field-row"><span class="field-label">生年月日</span><div id="modal-pet-birth" class="field-value">2026.02.10</div></div>
+                  <div class="field-row"><span class="field-label">nickname</span><div id="modal-pet-nickname" class="field-value">メルちゃん</div></div>
+                  <div class="field-row"><span class="field-label">message</span><div id="modal-pet-msg" class="field-value">こんにちは</div></div>
+                  <div class="field-row"><span class="field-label">pallike</span><div id="modal-pet-likes" class="field-value" style="color:var(--gold); font-weight:bold;">♡ 0</div></div>
+                </div>
+              </div>
+              
+              <div class="right-avatar-container">
+                <div class="avatar-wrapper" id="modal-avatar-wrapper">
+                  <div class="avatar-inner"><img id="modal-pet-img" src=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="palcard palcard-back" id="modal-palcard-back">
+            <div class="palcard-brand">PALCARD</div>
+            <div class="back-content">
+              <div>
+                <div class="back-owner-title">OWNER NAME</div>
+                <div id="modal-owner-name" class="back-owner-name">Rui</div>
+              </div>
+              <div class="back-sns-list">
+                <a id="modal-instagram" href="#" target="_blank" class="back-sns-item inactive">📸 Instagramを開く</a>
+                <a id="modal-twitter" href="#" target="_blank" class="back-sns-item inactive">𝕏 (Twitter) を開く</a>
+              </div>
+            </div>
+            <div style="text-align: center;">
+              <span class="back-flip-tip">もう一度タップして表面に戻る</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="modal-profile-grid" class="grid-container"></div>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-btn">MYPAL</a>
+    <a href="album.html" class="nav-btn">ALBUM</a>
+    <a href="palrium.html" class="nav-btn">PALRIUM</a>
+    <a href="pals.html" class="nav-btn active">PALS</a>
+  </nav>
+
+  <script>
+    let currentPostType = 'photo';
+    let selectedPhotoUrl = '';
+    let isLoading = false;
+
+    const baseTemplates = [
+      {
+        name: "モカちゃん", nickname: "モカ", birth: "2024.05.12", message: "お散歩大好きワンコです！", owner: "Rina",
+        avatar: "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg",
+        time: "2時間前", likes: 24, type: "single", msgText: "今日は新しいおもちゃではしゃぎすぎました🐶🐾",
+        image: "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg",
+        images: ["https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg", "", "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg", "", "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg", "", "", "", "https://images.dog.ceo/breeds/poodle-standard/n02113799_2280.jpg"]
+      },
+      {
+        name: "レオン", nickname: "レオンくん", birth: "2023.11.01", message: "ゴールデンレトリバーの男の子です。", owner: "Ken",
+        avatar: "https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg",
+        time: "5時間前", likes: 58, type: "grid",
+        images: ["https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg", "", "https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg", "", "https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg", "", "", "", "https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg"]
+      },
+      {
+        name: "ココア", nickname: "ココアちゃん", birth: "2025.01.15", message: "甘えん坊のポメラニアンです☀️", owner: "Yui",
+        avatar: "https://images.dog.ceo/breeds/pomeranian/n02112137_1450.jpg",
+        time: "1日前", likes: 112, type: "single", msgText: "日向ぼっこ中〜気持ちよさそうにお昼寝しています☀️",
+        image: "https://images.dog.ceo/breeds/pomeranian/n02112137_1450.jpg",
+        images: ["", "https://images.dog.ceo/breeds/pomeranian/n02112137_1450.jpg", "", "https://images.dog.ceo/breeds/pomeranian/n02112137_1450.jpg", "", "", "https://images.dog.ceo/breeds/pomeranian/n02112137_1450.jpg", "", ""]
+      }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      applyCustomConfig();
+      loadMorePosts();
+      window.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
+          loadMorePosts();
+        }
+      });
+      initSwipeToClose();
+      initCardFlipHandler();
+    });
+
+    function applyCustomConfig() {
+      const configSaved = localStorage.getItem('parmel_custom_config');
+      if (!configSaved) return;
+      try {
+        const config = JSON.parse(configSaved);
+        if (config.theme) {
+          const t = config.theme;
+          if (t.bgMain) document.documentElement.style.setProperty('--bg-main', t.bgMain);
+          if (t.textMain) document.documentElement.style.setProperty('--text-main', t.textMain);
+          if (t.textSub) document.documentElement.style.setProperty('--text-sub', t.textSub);
+          if (t.gold) document.documentElement.style.setProperty('--gold', t.gold);
+        }
+        if (config.frame) {
+          const f = config.frame;
+          if (f.cardBg) {
+            document.documentElement.style.setProperty('--card-bg', f.cardBg);
+            const face1 = document.getElementById('modal-palcard-face');
+            const face2 = document.getElementById('modal-palcard-back');
+            if (face1) face1.style.background = f.cardBg;
+            if (face2) face2.style.background = f.cardBg;
+          }
+          if (f.cardBorder) document.documentElement.style.setProperty('--card-border', f.cardBorder);
+          if (f.cardShadow) document.documentElement.style.setProperty('--card-shadow', f.cardShadow);
+          if (f.avatarBg) {
+            document.documentElement.style.setProperty('--avatar-bg', f.avatarBg);
+            const avWrapper = document.getElementById('modal-avatar-wrapper');
+            if (avWrapper) avWrapper.style.background = f.avatarBg;
+          }
+        }
+      } catch(e) {}
+    }
+
+    function initSwipeToClose() {
+      const modal = document.getElementById('palcard-modal');
+      const container = document.getElementById('palcard-modal-inner');
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let isSwiping = false;
+      let hasMoved = false;
+
+      container.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        isSwiping = true;
+        hasMoved = false;
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        if (!isSwiping) return;
+        currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const diffX = currentX - startX;
+        const diffY = Math.abs(currentY - startY);
+
+        if (Math.abs(diffX) > 10 || diffY > 10) {
+          hasMoved = true;
+        }
+
+        if (diffX > 15 && diffX > diffY) {
+          modal.style.transition = 'none';
+          modal.style.transform = `translateX(${diffX}px)`;
+          modal.style.opacity = `${Math.max(0, 1 - (diffX / window.innerWidth) * 1.5)}`;
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchend', () => {
+        if (!isSwiping) return;
+        isSwiping = false;
+        const diffX = currentX - startX;
+        modal.style.transition = 'transform 0.25s ease-out, opacity 0.25s ease-out';
+        
+        if (diffX > 70) {
+          modal.style.transform = `translateX(100%)`;
+          modal.style.opacity = '0';
+          setTimeout(() => {
+            modal.classList.remove('active');
+            modal.style.transform = '';
+            modal.style.opacity = '';
+          }, 250);
+        } else {
+          modal.style.transform = '';
+          modal.style.opacity = '';
+        }
+      });
+    }
+
+    function initCardFlipHandler() {
+      const cardContainer = document.getElementById('modal-palcard-container');
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      cardContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      cardContainer.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const moveX = Math.abs(touchEndX - touchStartX);
+        const moveY = Math.abs(touchEndY - touchStartY);
+
+        if (moveX < 10 && moveY < 10) {
+          cardContainer.classList.toggle('flipped');
+        }
+      });
+    }
+
+    function loadMorePosts() {
+      if (isLoading) return;
+      isLoading = true;
+      document.getElementById('loading-indicator').style.display = 'block';
+
+      setTimeout(() => {
+        const timeline = document.getElementById('timeline-container');
+
+        for (let i = 0; i < 3; i++) {
+          const template = baseTemplates[Math.floor(Math.random() * baseTemplates.length)];
+          const card = document.createElement('div');
+          card.className = 'feed-card';
+
+          let contentHtml = '';
+          let messageHtml = '';
+
+          if (template.type === 'grid') {
+            const gridLabels = ['MONTHLY', 'CHARMPOINT', 'FREE', 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'NOSE＋PALMEL'];
+            let gridItemsHtml = '';
+            gridLabels.forEach((lbl, idx) => {
+              const isPalmel = (idx === 8);
+              const extraClass = isPalmel ? ' palmel-item' : '';
+              const imgSrc = template.images[idx] ? template.images[idx] : '';
+              const hasImageClass = (isPalmel && imgSrc) ? ' has-image' : '';
+              const palmelOverlay = isPalmel ? `<div class="palmel-overlay-logo">PALMEL</div>` : '';
+
+              gridItemsHtml += `
+                <div class="grid-item${extraClass}">
+                  <div class="grid-label">${lbl}</div>
+                  <div class="grid-image-box">
+                    <img src="${imgSrc}" class="${hasImageClass}" style="${imgSrc ? 'display:block;' : 'display:none;'}">
+                    ${palmelOverlay}
+                  </div>
+                </div>
+              `;
+            });
+            contentHtml = `<div class="grid-container">${gridItemsHtml}</div>`;
+          } else {
+            if (template.msgText) messageHtml = `<div class="feed-message">${template.msgText}</div>`;
+            if (template.image) contentHtml = `<div class="feed-single-image"><img src="${template.image}"></div>`;
+          }
+
+          const randomLikes = template.likes + Math.floor(Math.random() * 5);
+
+          card.innerHTML = `
+            <div class="feed-header">
+              <div class="feed-header-left">
+                <div class="feed-avatar-wrapper">
+                  <div class="feed-avatar-inner"><img src="${template.avatar}" alt=""></div>
+                </div>
+                <div class="feed-user-info">
+                  <span class="feed-username">${template.name}</span>
+                  <span class="feed-time">${template.time}</span>
+                </div>
+              </div>
+              <button class="like-btn" onclick="event.stopPropagation(); toggleLike(this)">♡ <span class="like-count">${randomLikes}</span></button>
+            </div>
+            ${messageHtml}
+            ${contentHtml}
+          `;
+
+          card.onclick = () => {
+            openPalCardModal({
+              name: template.name,
+              nickname: template.nickname || template.name,
+              birth: template.birth || "2025.01.01",
+              message: template.message || template.msgText || "こんにちは",
+              owner: template.owner || "Owner",
+              avatar: template.avatar,
+              likes: randomLikes,
+              images: template.images || []
+            });
+          };
+
+          timeline.appendChild(card);
+        }
+
+        document.getElementById('loading-indicator').style.display = 'none';
+        isLoading = false;
+      }, 500);
+    }
+
+    function submitPost() {
+      const msg = document.getElementById('post-message-input').value.trim();
+      if (currentPostType === 'photo' && !msg && !selectedPhotoUrl) {
+        alert('メッセージまたは写真を入力してください。');
+        return;
+      }
+
+      let profileName = 'MEL';
+      let profileNickname = 'メルちゃん';
+      let profileBirth = '2026.02.10';
+      let profileMsg = 'こんにちは';
+      let ownerName = 'Rui';
+      let avatarUrl = 'https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg';
+      let myImages = [];
+      let freeTitle = 'FREE';
+
+      const profileSaved = localStorage.getItem('parmel_profile_data');
+      if (profileSaved) {
+        try {
+          const p = JSON.parse(profileSaved);
+          if (p.name) profileName = p.name;
+          if (p.nickname) profileNickname = p.nickname;
+          if (p.birth) profileBirth = p.birth;
+          if (p.message) profileMsg = p.message;
+          if (p.owner) ownerName = p.owner;
+          if (p.avatar) avatarUrl = p.avatar;
+        } catch(e) {}
+      }
+
+      const gridSaved = localStorage.getItem('parmel_grid_data');
+      if (gridSaved) {
+        try {
+          const gridData = JSON.parse(gridSaved);
+          myImages = gridData.images || [];
+          if (gridData.freeLabel) freeTitle = gridData.freeLabel;
+        } catch(e) {}
+      }
+
+      const card = document.createElement('div');
+      card.className = 'feed-card';
+
+      let contentHtml = '';
+      let messageHtml = '';
+
+      if (currentPostType === 'grid') {
+        const gridLabels = ['MONTHLY', 'CHARMPOINT', freeTitle, 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'NOSE＋PALMEL'];
+        let gridItemsHtml = '';
+        gridLabels.forEach((lbl, i) => {
+          const isPalmel = (i === 8);
+          const extraClass = isPalmel ? ' palmel-item' : '';
+          const imgSrc = myImages[i] ? myImages[i] : '';
+          const hasImageClass = (isPalmel && imgSrc) ? ' has-image' : '';
+          const palmelOverlay = isPalmel ? `<div class="palmel-overlay-logo">PALMEL</div>` : '';
+
+          gridItemsHtml += `
+            <div class="grid-item${extraClass}">
+              <div class="grid-label">${lbl}</div>
+              <div class="grid-image-box">
+                <img src="${imgSrc}" class="${hasImageClass}" style="${imgSrc ? 'display:block;' : 'display:none;'}">
+                ${palmelOverlay}
+              </div>
+            </div>
+          `;
+        });
+        contentHtml = `<div class="grid-container">${gridItemsHtml}</div>`;
+      } else {
+        if (msg) messageHtml = `<div class="feed-message">${msg}</div>`;
+        if (selectedPhotoUrl) contentHtml = `<div class="feed-single-image"><img src="${selectedPhotoUrl}"></div>`;
+      }
+
+      card.innerHTML = `
+        <div class="feed-header">
+          <div class="feed-header-left">
+            <div class="feed-avatar-wrapper">
+              <div class="feed-avatar-inner"><img src="${avatarUrl}" alt=""></div>
+            </div>
+            <div class="feed-user-info">
+              <span class="feed-username">${profileName}</span>
+              <span class="feed-time">たった今</span>
+            </div>
+          </div>
+          <button class="like-btn" onclick="event.stopPropagation(); toggleLike(this)">♡ <span class="like-count">0</span></button>
+        </div>
+        ${messageHtml}
+        ${contentHtml}
+      `;
+
+      card.onclick = () => {
+        openPalCardModal({
+          name: profileName, nickname: profileNickname, birth: profileBirth,
+          message: profileMsg, owner: ownerName, avatar: avatarUrl, likes: 0, images: myImages, freeLabel: freeTitle
+        });
+      };
+
+      const timeline = document.getElementById('timeline-container');
+      timeline.insertBefore(card, timeline.firstChild);
+
+      closePostModal();
+      document.getElementById('post-message-input').value = '';
+      selectedPhotoUrl = '';
+      document.getElementById('selected-single-img').style.display = 'none';
+      document.getElementById('photo-placeholder-text').style.display = 'block';
+      switchPostType('photo');
+
+      alert('タイムラインに投稿しました！');
+    }
+
+    function openPalCardModal(data) {
+      const container = document.getElementById('modal-palcard-container');
+      container.classList.remove('flipped');
+
+      document.getElementById('modal-pet-name').innerText = data.name;
+      adjustModalNameFontSize(data.name);
+
+      document.getElementById('modal-pet-nickname').innerText = data.nickname;
+      document.getElementById('modal-pet-birth').innerText = data.birth;
+      document.getElementById('modal-pet-msg').innerText = data.message;
+      document.getElementById('modal-pet-likes').innerText = data.likes;
+      document.getElementById('modal-pet-img').src = data.avatar;
+      document.getElementById('modal-owner-name').innerText = data.owner;
+
+      const modalGridEl = document.getElementById('modal-profile-grid');
+      modalGridEl.innerHTML = '';
+
+      const freeLbl = data.freeLabel || 'FREE';
+      const gridLabels = ['MONTHLY', 'CHARMPOINT', freeLbl, 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'NOSE＋PALMEL'];
+      
+      gridLabels.forEach((lbl, i) => {
+        const isPalmel = (i === 8);
+        const extraClass = isPalmel ? ' palmel-item' : '';
+        const imgSrc = (data.images && data.images[i]) ? data.images[i] : '';
+        const hasImageClass = (isPalmel && imgSrc) ? ' has-image' : '';
+        const palmelOverlay = isPalmel ? `<div class="palmel-overlay-logo">PALMEL</div>` : '';
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `grid-item${extraClass}`;
+        itemDiv.innerHTML = `
+          <div class="grid-label">${lbl}</div>
+          <div class="grid-image-box">
+            <img src="${imgSrc}" class="${hasImageClass}" style="${imgSrc ? 'display:block;' : 'display:none;'}">
+            ${palmelOverlay}
+          </div>
+        `;
+        modalGridEl.appendChild(itemDiv);
+      });
+
+      const modalEl = document.getElementById('palcard-modal');
+      modalEl.style.transition = 'none';
+      modalEl.style.transform = '';
+      modalEl.style.opacity = '';
+      modalEl.classList.add('active');
+
+      const modalInner = document.getElementById('palcard-modal-inner');
+      if (modalInner) modalInner.scrollTop = 0;
+    }
+
+    function adjustModalNameFontSize(nameText) {
+      const nameEl = document.getElementById('modal-pet-name');
+      if (!nameEl) return;
+      const len = nameText.length;
+      if (len <= 4) nameEl.style.fontSize = '2.15rem';
+      else if (len <= 6) nameEl.style.fontSize = '1.7rem';
+      else if (len <= 8) nameEl.style.fontSize = '1.35rem';
+      else nameEl.style.fontSize = '1.1rem';
+    }
+
+    function toggleLike(btn) {
+      btn.classList.toggle('liked');
+      const countSpan = btn.querySelector('.like-count');
+      let count = parseInt(countSpan.innerText);
+      if (btn.classList.contains('liked')) {
+        btn.innerHTML = '♥ <span class="like-count">' + (count + 1) + '</span>';
+        btn.style.color = '#ff758c';
+      } else {
+        btn.innerHTML = '♡ <span class="like-count">' + (count - 1) + '</span>';
+        btn.style.color = 'var(--text-sub)';
+      }
+    }
+
+    function switchPostType(type) {
+      currentPostType = type;
+      const gridBtn = document.getElementById('type-grid-btn');
+      const photoBtn = document.getElementById('type-photo-btn');
+      const photoContainer = document.getElementById('photo-select-container');
+      const gridContainer = document.getElementById('grid-preview-container');
+      const messageContainer = document.getElementById('message-container');
+
+      if (type === 'photo') {
+        photoBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+        photoContainer.style.display = 'flex';
+        gridContainer.style.display = 'none';
+        messageContainer.style.display = 'flex';
+      } else {
+        gridBtn.classList.add('active');
+        photoBtn.classList.remove('active');
+        photoContainer.style.display = 'none';
+        gridContainer.style.display = 'flex';
+        messageContainer.style.display = 'none';
+        renderModalGridPreview();
+      }
+    }
+
+    function renderModalGridPreview() {
+      const gridSaved = localStorage.getItem('parmel_grid_data');
+      let images = [];
+      let freeTitle = 'FREE';
+      if (gridSaved) {
+        try {
+          const gridData = JSON.parse(gridSaved);
+          images = gridData.images || [];
+          if (gridData.freeLabel) freeTitle = gridData.freeLabel;
+        } catch(e) {}
+      }
+
+      const gridLabels = ['MONTHLY', 'CHARMPOINT', freeTitle, 'FOOD', 'MAIN', 'SLEEPING', 'TOYS', 'FUNNYSHOT', 'NOSE＋PALMEL'];
+      const modalGridEl = document.getElementById('modal-grid-preview');
+      modalGridEl.innerHTML = '';
+
+      gridLabels.forEach((lbl, i) => {
+        const isPalmel = (i === 8);
+        const extraClass = isPalmel ? ' palmel-item' : '';
+        const imgSrc = images[i] ? images[i] : '';
+        const hasImageClass = (isPalmel && imgSrc) ? ' has-image' : '';
+        const palmelOverlay = isPalmel ? `<div class="palmel-overlay-logo">PALMEL</div>` : '';
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `grid-item${extraClass}`;
+        itemDiv.innerHTML = `
+          <div class="grid-label">${lbl}</div>
+          <div class="grid-image-box">
+            <img src="${imgSrc}" class="${hasImageClass}" style="${imgSrc ? 'display:block;' : 'display:none;'}">
+            ${palmelOverlay}
+          </div>
+        `;
+        modalGridEl.appendChild(itemDiv);
+      });
+    }
+
+    function onPhotoSelected(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          selectedPhotoUrl = e.target.result;
+          const imgEl = document.getElementById('selected-single-img');
+          imgEl.src = selectedPhotoUrl;
+          imgEl.style.display = 'block';
+          document.getElementById('photo-placeholder-text').style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function openPostModal() {
+      document.getElementById('post-modal').classList.add('active');
+    }
+
+    function closePostModal() {
+      document.getElementById('post-modal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
