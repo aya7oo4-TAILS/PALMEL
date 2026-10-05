@@ -359,7 +359,8 @@
       gap: 3px;
       font-size: 0.62rem;
       cursor: pointer;
-      width: 25%;
+      flex: 1;
+      justify-content: center;
       text-decoration: none;
     }
     .nav-btn.active { color: var(--gold); }
@@ -403,7 +404,6 @@
     <a href="index.html" class="nav-btn" id="btn-mypal">MYPAL</a>
     <a href="album.html" class="nav-btn active" id="btn-album">ALBUM</a>
     <a href="palrium.html" class="nav-btn" id="btn-exchange">PALRIUM</a>
-    <a href="pals.html" class="nav-btn" id="btn-feed">PALS</a>
   </nav>
 
   <script>
