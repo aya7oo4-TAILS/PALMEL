@@ -63,6 +63,7 @@
     /* ホーム専用：フリップ用の上書き */
     .palcard-container {
       perspective: 1000px;
+      -webkit-perspective: 1000px;
       flex-shrink: 0;
       cursor: pointer;
     }
@@ -72,12 +73,15 @@
       width: 100%;
       height: 100%;
       transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      -webkit-transition: -webkit-transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       pointer-events: none;
     }
 
     .palcard-container.flipped .palcard-flipper {
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
     }
 
     .palcard {
@@ -86,9 +90,28 @@
       pointer-events: auto;
     }
 
-    .palcard-back {
+    .palcard-flipper > .palcard {
+      transform: rotateY(0deg);
+      -webkit-transform: rotateY(0deg);
+    }
+
+    .palcard-back,
+    .palcard-flipper > .palcard.palcard-back {
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
       justify-content: space-between;
+    }
+
+    /* iPhone Safari は表面に3D transformが無いと backface-visibility を無視し、裏面に表面の裏側（左右反転）を描く */
+    @supports (-webkit-touch-callout: none) {
+      .palcard-flipper > .palcard {
+        transform: rotateY(0deg) translateZ(1px);
+        -webkit-transform: rotateY(0deg) translateZ(1px);
+      }
+      .palcard-flipper > .palcard.palcard-back {
+        transform: rotateY(180deg) translateZ(1px);
+        -webkit-transform: rotateY(180deg) translateZ(1px);
+      }
     }
 
     /* 背面カード専用のデザインレイアウト */
